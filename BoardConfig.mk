@@ -21,13 +21,13 @@
 # definition file).
 #
 
-PLATFORM_PATH := device/oppo/r11
+PLATFORM_PATH := device/oppo/r11s
 
 TARGET_SPECIFIC_HEADER_PATH := $(PLATFORM_PATH)/include
 
 
 # Assertions
-TARGET_OTA_ASSERT_DEVICE := r11,R11,r11plus,R11Plus,r11plusk,R11Plusk
+TARGET_OTA_ASSERT_DEVICE := r11s,R11s,r11splus,R11sPlus
 
 # Use Snapdragon LLVM, if available
 TARGET_USE_SDCLANG := true
@@ -71,7 +71,7 @@ TARGET_KERNEL_APPEND_DTB := true
 TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
 #TARGET_KERNEL_SOURCE := kernel/oppo/sdm660
-#TARGET_KERNEL_CONFIG := lineageos_r11_defconfig
+#TARGET_KERNEL_CONFIG := lineageos_r11s_defconfig
 #TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
 
 # QCOM hardware
@@ -196,8 +196,8 @@ TARGET_NO_RPC := true
 USE_DEVICE_SPECIFIC_GPS := true
 
 # Init
-TARGET_INIT_VENDOR_LIB := libinit_r11
-TARGET_RECOVERY_DEVICE_MODULES := libinit_r11
+TARGET_INIT_VENDOR_LIB := libinit_r11s
+TARGET_RECOVERY_DEVICE_MODULES := libinit_r11s
 TARGET_PLATFORM_DEVICE_BASE := /devices/soc/
 
 # Keystore
@@ -267,4 +267,4 @@ WIFI_DRIVER_MODULE_NAME := "wlan"
 WPA_SUPPLICANT_VERSION := VER_0_8_X
 
 # inherit from the proprietary version
--include vendor/oppo/r11/BoardConfigVendor.mk
+-include vendor/oppo/r11s/BoardConfigVendor.mk

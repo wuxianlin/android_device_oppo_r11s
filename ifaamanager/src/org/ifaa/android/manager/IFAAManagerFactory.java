@@ -72,6 +72,12 @@ public class IFAAManagerFactory {
                 model = "OPPO-R6051";
             } else if (Build.MODEL.equals("OPPO A77") || Build.MODEL.equals("OPPO A77t")) {
                 model = "OPPO-R7001";
+            } else if (Build.MODEL.equals("OPPO R11s") || Build.MODEL.equals("OPPO R11st") || Build.MODEL.equals("OPPO R11s Plus") || Build.MODEL.equals("OPPO R11s Plust")) {
+                model = "OPPO-R7011";
+            } else if (Build.MODEL.equals("CPH1723") || Build.MODEL.equals("CPH1725") || Build.MODEL.equals("CPH1727")) {
+                model = "OPPO-R7321";
+            } else if (Build.MODEL.equals("OPPO A79") || Build.MODEL.equals("OPPO A79t") || Build.MODEL.equals("OPPO A79k") || Build.MODEL.equals("OPPO A79kt") || Build.MODEL.equals("OPPO A73") || Build.MODEL.equals("OPPO A73t")) {
+               model = "OPPO-R7031";
             }
             return model;
         }

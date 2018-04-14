@@ -17,14 +17,14 @@
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
-# Inherit from r11 device
-$(call inherit-product, device/oppo/r11/device.mk)
+# Inherit from r11s device
+$(call inherit-product, device/oppo/r11s/device.mk)
 
 # Inherit some common Lineage stuff.
 $(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
-PRODUCT_NAME := lineage_r11
-PRODUCT_DEVICE := r11
+PRODUCT_NAME := lineage_r11s
+PRODUCT_DEVICE := r11s
 PRODUCT_MANUFACTURER := OPPO
 PRODUCT_BRAND := OPPO
 

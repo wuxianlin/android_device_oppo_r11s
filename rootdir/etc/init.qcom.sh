@@ -188,12 +188,7 @@ case "$target" in
                                     setprop qemu.hw.mainkeys 0
                                     ;;
                        "MTP")
-                                    #ifdef VENDOR_EDIT
-                                    #Bin.Yan@Swdp.Android.BuildConfig, 2017/02/17, Close virtual keys
-                                    setprop qemu.hw.mainkeys 1
-                                    #else
-                                    #setprop qemu.hw.mainkeys 0
-                                    #endif /* VENDOR_EDIT */
+                                    setprop qemu.hw.mainkeys 0
                                     ;;
                        "RCM")
                                     setprop qemu.hw.mainkeys 0
@@ -304,12 +299,7 @@ case "$target" in
                                     setprop qemu.hw.mainkeys 0
                                     ;;
                        "MTP")
-                                    #ifdef VENDOR_EDIT
-                                    #Bin.Yan@Swdp.Android.BuildConfig, 2016/08/01, Close virtual keys
-                                    setprop qemu.hw.mainkeys 1
-                                    #else
-                                    #setprop qemu.hw.mainkeys 0
-                                    #endif /* VENDOR_EDIT */
+                                    setprop qemu.hw.mainkeys 0
                                     ;;
                        "RCM")
                                     setprop qemu.hw.mainkeys 0
@@ -338,13 +328,8 @@ case "$target" in
                                     setprop qemu.hw.mainkeys 0
                                     ;;
                        "MTP")
-                                     #ifdef VENDOR_EDIT
-                                     #Bin.Yan@Swdp.Android.BuildConfig, 2016/08/01, Close virtual keys
-                                     setprop qemu.hw.mainkeys 1
-                                     #else
-                                     #setprop qemu.hw.mainkeys 0
-                                     #endif /* VENDOR_EDIT */
-				     ;;
+                                    setprop qemu.hw.mainkeys 0
+                                    ;;
                        "RCM")
                                     setprop qemu.hw.mainkeys 0
                                     ;;

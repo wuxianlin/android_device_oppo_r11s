@@ -16,6 +16,7 @@
     <!-- static parameters below -->
     <LowBrightnessCutoff units='uint'>20</LowBrightnessCutoff>
     <LuxEndPoint units='uint'>0</LuxEndPoint>
+    <MaxBrightnessLevel units='uint'>1023</MaxBrightnessLevel>
     <EnableGradientDetection units='uint'>0</EnableGradientDetection>
     <GradientDetectionThreshold units='uint'>80</GradientDetectionThreshold>
     <PowerProfileTableLength units='uint'>8</PowerProfileTableLength>

@@ -1,12 +1,25 @@
 #
-# system.prop for R11
+# system.prop for R11s
 #
 persist.power.useautobrightadj=true
-persist.dbg.volte_avail_ovr=1
-persist.dbg.vt_avail_ovr=1
+persist.radio.volte_timer=0
+persist.radio.multisim.config=dsds
+gsm.lte.ca.support=1
+ro.qualcomm.foss=1
+ro.qualcomm.display.paneltype=1
+config.foss.xml=1
+config.foss.path=/system/etc/FOSSConfig.xml
+ro.qcom.ad=1
+ro.qcom.ad.sensortype=2
+ro.qcom.ad.calib.data=/system/etc/OPPO_OLED_AD_calib.cfg
+ro.camera.dualcam.type=2
+persist.camera.aifb=1
+persist.camera.filter.version=1
+ro.camera.temperature.limit=480
 persist.radio.lte_vrte_ltd=1
 persist.cne.subscription_aware=false
 persist.radio.cs_srv_type=1
+persist.radio.ril_extra_debug=1
 ro.cutoff_voltage_mv=3200
 ro.qti.sensors.wu=false
 persist.bluetooth.disableabsvol=true
@@ -207,7 +220,7 @@ ro.qti.sdk.sensors.gestures=false
 
 #ifdef VENDOR_EDIT
 #HongBo@Camera OPPO 2017/02/21  Expose aux camera for below packages
-camera.aux.packagelist=org.codeaurora.snapcam,com.oppo.camera,org.cyanogenmod.snap
+camera.aux.packagelist=org.codeaurora.snapcam,com.oppo.camera,com.oppo.engineermode,com.coloros.healthcheck
 #else
 #Expose aux camera for below packages
 #camera.aux.packagelist=org.codeaurora.snapcam
@@ -233,20 +246,6 @@ ro.frp.pst=/dev/block/bootdevice/by-name/frp
 persist.dirac.acs.controller=qem
 persist.dirac.acs.ignore_error=1
 drm.service.enabled=true
-persist.sys.nsbrain.feature=1
-persist.sys.enable.neo=1
-persist.sys.neuron_system=29
-persist.sys.procmon_enable=1
-persist.sys.neuron.channel=true
-persist.sys.ns.limitpkg=1
-persist.sys.ns.screenoncpu=0.01
-persist.sys.ns.pollinggap=15000
-persist.sys.ns_pmctrl=1
-persist.sys.oiface.enable=2
-persist.sys.hardcoder.name=oiface
-persist.sys.oiface.feature=oiface:1f,oifaceim:0
-persist.sys.elsa.enable=299
-ro.elsa=true
 af.fast_track_multiplier=1
 audio_hal.period_size=192
 ro.qc.sdk.audio.fluencetype=none

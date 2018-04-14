@@ -64,8 +64,26 @@
             <Limit name="measured-frame-rate-320x180" range="100-120" />
             <Limit name="measured-frame-rate-640x360" range="45-50" />
             <Limit name="measured-frame-rate-1280x720" range="30-35" />
+        <!-- #ifndef VENDOR_EDIT -->
+        <!-- Xiaopeng.Hu@PSW.MM.MediaServer.Cts.1116891, 2017/09/23,  -->
+        <!-- Modify for testVp8Goog0Perf1920x1080 cts failed -->
+        <!--
             <Limit name="measured-frame-rate-1920x1080" range="20-30" />
+        -->
+        <!-- #else  //VENDOR_EDIT -->
+            <Limit name="measured-frame-rate-1920x1080" range="10-20" />
+        <!-- #endif //VENDOR_EDIT -->
         </MediaCodec>
+<!-- #ifdef VENDOR_EDIT -->
+<!-- Jiamin.Zhu@PSW.MM.MediaServer.Cts.1202660, 2018/03/06, -->
+<!-- Add for android.video.cts.VideoEncoderDecoderTest#testAvcOther1Perf cts -->
+        <MediaCodec name="OMX.oppo.h264.encoder" type="video/avc" update="true">
+            <Limit name="measured-frame-rate-320x240" range="185-185" />
+            <Limit name="measured-frame-rate-720x480" range="87-87" />
+            <Limit name="measured-frame-rate-1280x720" range="40-40" />
+            <Limit name="measured-frame-rate-1920x1080" range="15-15" />
+        </MediaCodec>
+<!-- #endif //VENDOR_EDIT -->
     </Encoders>
     <Decoders>
         <MediaCodec name="OMX.qcom.video.decoder.avc" type="video/avc" update="true">

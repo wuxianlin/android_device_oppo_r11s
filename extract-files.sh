@@ -18,7 +18,7 @@
 
 set -e
 
-DEVICE=r11
+DEVICE=r11s
 VENDOR=oppo
 
 # Load extract_utils and do some sanity checks

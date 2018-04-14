@@ -25,15 +25,15 @@
 
 LOCAL_PATH := $(call my-dir)
 
-ifeq ($(TARGET_DEVICE),r11)
+ifeq ($(TARGET_DEVICE),r11s)
 
 include $(call all-makefiles-under,$(LOCAL_PATH))
 
 include $(CLEAR_VARS)
 
-include device/oppo/r11/tftp.mk
+include device/oppo/r11s/tftp.mk
 
-include device/oppo/r11/kernel/AndroidKernel.mk
+include device/oppo/r11s/kernel/AndroidKernel.mk
 
 # Create a link for the WCNSS config file, which ends up as a writable
 # version in /data/misc/wifi

@@ -21,7 +21,7 @@
 # definition file).
 #
 
-$(call inherit-product-if-exists, vendor/oppo/r11/r11-vendor.mk)
+$(call inherit-product-if-exists, vendor/oppo/r11s/r11s-vendor.mk)
 
 # Overlays
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
@@ -110,24 +110,14 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/audio_policy_configuration.xml:system/etc/audio_policy_configuration.xml \
     $(LOCAL_PATH)/audio/audio_policy.conf:system/etc/audio_policy.conf \
     $(LOCAL_PATH)/audio/listen_platform_info.xml:system/etc/listen_platform_info.xml \
-    $(LOCAL_PATH)/audio/mixer_paths_16051.xml:system/etc/mixer_paths_16051.xml \
-    $(LOCAL_PATH)/audio/mixer_paths_16103.xml:system/etc/mixer_paths_16103.xml \
-    $(LOCAL_PATH)/audio/mixer_paths_16118.xml:system/etc/mixer_paths_16118.xml \
+    $(LOCAL_PATH)/audio/mixer_paths_17011.xml:system/etc/mixer_paths_17011.xml \
+    $(LOCAL_PATH)/audio/mixer_paths_17021.xml:system/etc/mixer_paths_17021.xml \
     $(LOCAL_PATH)/audio/sound_trigger_mixer_paths_wcd9330.xml:system/etc/sound_trigger_mixer_paths_wcd9330.xml \
     $(LOCAL_PATH)/audio/sound_trigger_mixer_paths_wcd9335.xml:system/etc/sound_trigger_mixer_paths_wcd9335.xml \
     $(LOCAL_PATH)/audio/sound_trigger_mixer_paths_wcd9340.xml:system/etc/sound_trigger_mixer_paths_wcd9340.xml \
     $(LOCAL_PATH)/audio/sound_trigger_mixer_paths.xml:system/etc/sound_trigger_mixer_paths.xml \
     $(LOCAL_PATH)/audio/sound_trigger_platform_info.xml:system/etc/sound_trigger_platform_info.xml
 
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/audio/16051/default_volume_tables.xml:system/etc/audio/16051/default_volume_tables.xml \
-    $(LOCAL_PATH)/audio/16051/r_submix_audio_policy_configuration.xml:system/etc/audio/16051/r_submix_audio_policy_configuration.xml \
-    $(LOCAL_PATH)/audio/16051/audio_policy_volumes.xml:system/etc/audio/16051/audio_policy_volumes.xml \
-    $(LOCAL_PATH)/audio/16051/audio_policy_configuration.xml:system/etc/audio/16051/audio_policy_configuration.xml \
-    $(LOCAL_PATH)/audio/16103/default_volume_tables.xml:system/etc/audio/16103/default_volume_tables.xml \
-    $(LOCAL_PATH)/audio/16103/r_submix_audio_policy_configuration.xml:system/etc/audio/16103/r_submix_audio_policy_configuration.xml \
-    $(LOCAL_PATH)/audio/16103/audio_policy_volumes.xml:system/etc/audio/16103/audio_policy_volumes.xml \
-    $(LOCAL_PATH)/audio/16103/audio_policy_configuration.xml:system/etc/audio/16103/audio_policy_configuration.xml
 
 PRODUCT_COPY_FILES += \
     $(TOPDIR)frameworks/av/services/audiopolicy/config/a2dp_audio_policy_configuration.xml:/system/etc/a2dp_audio_policy_configuration.xml \
@@ -166,14 +156,10 @@ PRODUCT_PACKAGES += \
 
 # Display calibration
 PRODUCT_PACKAGES += \
-    16051_OLED_AD_calib.cfg \
-    16103_LCD_AD_calib.cfg \
-    16118_OLED_AD_calib.cfg \
-    FOSSConfig-Oppo16118.xml \
+    OPPO_OLED_AD_calib.cfg \
     FOSSConfig.xml \
-    qdcm_calib_data_oppo16051samsung_s6e3fa3_1080p_cmd_mode_dsi_panel.xml \
-    qdcm_calib_data_oppo16103jdi_r63452_1080p_cmd_mode_dsi_panel.xml \
-    qdcm_calib_data_oppo16118samsung_s6e3fa3_1080p_cmd_mode_dsi_panel.xml
+    qdcm_calib_data_oppo17021samsung_sofeg01_s_1080p_cmd_mode_dsi_panel.xml \
+    qdcm_calib_data_oppo17011samsung_sofeg01_s_1080p_cmd_mode_dsi_panel.xml
 
 # Doze mode
 PRODUCT_PACKAGES += \
@@ -181,8 +167,9 @@ PRODUCT_PACKAGES += \
 
 # Fingerprint
 PRODUCT_PACKAGES += \
-    fingerprintd \
     gatekeeperd
+
+#    fingerprintd \
 
 # For android_filesystem_config.h
 PRODUCT_PACKAGES += \
@@ -216,8 +203,6 @@ PRODUCT_COPY_FILES += \
 
 # Keylayout
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/keylayout/touchpanel_kpd.kl:system/usr/keylayout/touchpanel_kpd.kl \
-    $(LOCAL_PATH)/keylayout/uinput-fpc.kl:system/usr/keylayout/uinput-fpc.kl \
     $(LOCAL_PATH)/keylayout/gpio-keys.kl:system/usr/keylayout/gpio-keys.kl
 
 # Lights
@@ -231,6 +216,7 @@ PRODUCT_PACKAGES += \
 # Media
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media_codecs.xml:system/etc/media_codecs.xml \
+    $(LOCAL_PATH)/configs/media_codecs_oppo_video.xml:system/etc/media_codecs_oppo_video.xml \
     $(LOCAL_PATH)/configs/media_codecs_performance.xml:system/etc/media_codecs_performance.xml \
     $(LOCAL_PATH)/configs/media_profiles.xml:system/etc/media_profiles.xml
 

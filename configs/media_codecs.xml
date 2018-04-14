@@ -396,5 +396,10 @@ Only the three quirks included above are recognized at this point:
         </MediaCodec>
     </Decoders>
     <Include href="media_codecs_google_video.xml" />
+<!-- #ifdef VENDOR_EDIT -->
+<!-- Jiamin.Zhu@PSW.MM.MediaServer.Record.1194839, 2018/03/06, -->
+<!-- Add for wechat video using voh264enc. -->
+    <Include href="media_codecs_oppo_video.xml" />
+<!-- #endif //VENDOR_EDIT -->
     <Include href="media_codecs_ffmpeg.xml" />
 </MediaCodecs>

@@ -72,7 +72,7 @@ config_bt ()
   btsoc=`getprop qcom.bluetooth.soc`
 
   case $baseband in
-    "apq")
+    "apq" | "sdc")
         setprop ro.qualcomm.bluetooth.opp true
         setprop ro.qualcomm.bluetooth.ftp true
         setprop ro.qualcomm.bluetooth.nap false
@@ -113,14 +113,20 @@ config_bt ()
               ;;
         esac
         ;;
-    "msm")
+    "msm" | "sdm")
         setprop ro.qualcomm.bluetooth.opp true
         setprop ro.qualcomm.bluetooth.hfp true
         setprop ro.qualcomm.bluetooth.hsp true
         setprop ro.qualcomm.bluetooth.pbap true
         setprop ro.qualcomm.bluetooth.ftp true
         setprop ro.qualcomm.bluetooth.nap true
-        setprop ro.bluetooth.sap true
+        #ifdef VENDOR_EDIT
+        #Min.Yi@Connectivity.BT.Basic.Customize, 2017/05/17,
+        #Modify for disable the SAP
+        #setprop ro.bluetooth.sap true
+        #else
+        setprop ro.bluetooth.sap false
+        #endif //VENDOR_EDIT
         setprop ro.bluetooth.dun true
         case $btsoc in
           "ath3k")
