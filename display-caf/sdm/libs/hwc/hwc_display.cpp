@@ -35,6 +35,8 @@
 #include <utils/formats.h>
 #include <utils/rect.h>
 #include <utils/debug.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <sync/sync.h>
 #include <cutils/properties.h>
 #include <qd_utils.h>
@@ -55,15 +57,6 @@
 #define __CLASS__ "HWCDisplay"
 
 namespace sdm {
-
-static void ApplyDeInterlaceAdjustment(Layer *layer) {
-  // De-interlacing adjustment
-  if (layer->input_buffer.flags.interlace) {
-    float height = (layer->src_rect.bottom - layer->src_rect.top) / 2.0f;
-    layer->src_rect.top = ROUND_UP_ALIGN_DOWN(layer->src_rect.top / 2.0f, 2);
-    layer->src_rect.bottom = layer->src_rect.top + floorf(height);
-  }
-}
 
 void HWCColorMode::Init() {
   int ret = PopulateColorModes();
@@ -434,6 +427,7 @@ int HWCDisplay::PrepareLayerParams(hwc_layer_1_t *hwc_layer, Layer* layer) {
   LayerBuffer &layer_buffer = layer->input_buffer;
 
   if (pvt_handle) {
+    layer_buffer.planes[0].fd = pvt_handle->fd;
     layer_buffer.format = GetSDMFormat(pvt_handle->format, pvt_handle->flags);
     int aligned_width, aligned_height;
     int unaligned_width, unaligned_height;
@@ -489,7 +483,8 @@ int HWCDisplay::PrepareLayerParams(hwc_layer_1_t *hwc_layer, Layer* layer) {
       int ubwc_enabled = 0;
       int flags = 0;
       HWCDebugHandler::Get()->GetProperty("debug.gralloc.enable_fb_ubwc", &ubwc_enabled);
-      if (ubwc_enabled == 1) {
+      bool linear = layer_stack_.output_buffer && !IsUBWCFormat(layer_stack_.output_buffer->format);
+      if ((ubwc_enabled == 1) && !linear) {
         usage |= GRALLOC_USAGE_PRIVATE_ALLOC_UBWC;
         flags |= private_handle_t::PRIV_FLAGS_UBWC_ALIGNED;
       }
@@ -518,7 +513,6 @@ void HWCDisplay::CommitLayerParams(hwc_layer_1_t *hwc_layer, Layer *layer) {
     layer_buffer.planes[0].offset = pvt_handle->offset;
     layer_buffer.planes[0].stride = UINT32(pvt_handle->width);
     layer_buffer.size = pvt_handle->size;
-    layer_buffer.fb_id = pvt_handle->fb_id;
   }
 
   // if swapinterval property is set to 0 then close and reset the acquireFd
@@ -572,7 +566,6 @@ int HWCDisplay::PrePrepareLayerStack(hwc_display_contents_1_t *content_list) {
         }
     }
     SetRect(hwc_layer.sourceCropf, &layer->src_rect);
-    ApplyDeInterlaceAdjustment(layer);
 
     uint32_t num_visible_rects = UINT32(hwc_layer.visibleRegionScreen.numRects);
     uint32_t num_dirty_rects = UINT32(hwc_layer.surfaceDamage.numRects);
@@ -716,13 +709,13 @@ int HWCDisplay::PrepareLayerStack(hwc_display_contents_1_t *content_list) {
     if (error != kErrorNone) {
       if (error == kErrorShutDown) {
         shutdown_pending_ = true;
-      } else if (error != kErrorPermission) {
+      } else if ((error != kErrorPermission) && (error != kErrorNoAppLayers)) {
         DLOGE("Prepare failed. Error = %d", error);
         // To prevent surfaceflinger infinite wait, flush the previous frame during Commit()
         // so that previous buffer and fences are released, and override the error.
         flush_ = true;
       } else {
-        DLOGI("Prepare failed for Display = %d Error = %d", type_, error);
+        DLOGV("Prepare failed for Display = %d Error = %d", type_, error);
       }
       return 0;
     }
@@ -990,6 +983,7 @@ LayerBufferFormat HWCDisplay::GetSDMFormat(const int32_t &source, const int flag
     case HAL_PIXEL_FORMAT_RGBA_1010102:        format = kFormatRGBA1010102Ubwc;         break;
     case HAL_PIXEL_FORMAT_RGBX_1010102:        format = kFormatRGBX1010102Ubwc;         break;
     case HAL_PIXEL_FORMAT_YCbCr_420_TP10_UBWC: format = kFormatYCbCr420TP10Ubwc;        break;
+    case HAL_PIXEL_FORMAT_YCbCr_420_P010_UBWC: format = kFormatYCbCr420P010Ubwc;        break;
     default:
       DLOGE("Unsupported format type for UBWC %d", source);
       return kFormatInvalid;
@@ -1027,6 +1021,7 @@ LayerBufferFormat HWCDisplay::GetSDMFormat(const int32_t &source, const int flag
   case HAL_PIXEL_FORMAT_XBGR_2101010:             format = kFormatXBGR2101010;              break;
   case HAL_PIXEL_FORMAT_YCbCr_420_P010:           format = kFormatYCbCr420P010;             break;
   case HAL_PIXEL_FORMAT_YCbCr_420_TP10_UBWC:      format = kFormatYCbCr420TP10Ubwc;         break;
+  case HAL_PIXEL_FORMAT_YCbCr_420_P010_UBWC:      format = kFormatYCbCr420P010Ubwc;         break;
   default:
     DLOGW("Unsupported format type = %d", source);
     return kFormatInvalid;

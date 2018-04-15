@@ -31,13 +31,15 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <fcntl.h>
+#include <android-base/logging.h>
+#include <android-base/properties.h>
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
-#include "vendor_init.h"
 #include "property_service.h"
-#include "log.h"
-#include "util.h"
+#include "vendor_init.h"
+
+using android::init::property_set;
 
 void property_override(char const prop[], char const value[])
 {
@@ -50,6 +52,12 @@ void property_override(char const prop[], char const value[])
         __system_property_add(prop, strlen(prop), value, strlen(value));
 }
 
+void property_override_dual(char const system_prop[], char const vendor_prop[], char const value[])
+{
+    property_override(system_prop, value);
+    property_override(vendor_prop, value);
+}
+
 static int read_file2(const char *fname, char *data, int max_size)
 {
     int fd, rc;
@@ -59,7 +67,7 @@ static int read_file2(const char *fname, char *data, int max_size)
 
     fd = open(fname, O_RDONLY);
     if (fd < 0) {
-        ERROR("failed to open '%s'\n", fname);
+        LOG(ERROR) << "failed to open '" << fname << "'";
         return 0;
     }
 
@@ -110,16 +118,16 @@ void vendor_load_properties() {
     if (read_file2(prj_file, prj_version, sizeof(prj_version)) && read_file2(operator_file, operator_name, sizeof(operator_name))) {
         if (strstr(prj_version, "17011")) {
             if (strstr(operator_name, "8")) {
-                property_override("ro.product.model", "OPPO R11s");
+                property_override_dual("ro.product.model", "ro.vendor.product.model", "OPPO R11s");
                 property_set("ro.separate.soft", "17011");
-                property_override("ro.product.device", "R11s");
+                property_override_dual("ro.product.device", "ro.vendor.product.device", "R11s");
                 property_override("ro.product.name", "R11s");
                 property_override("ro.build.product", "R11s");
                 property_set("ro.rf_version", "TDD_FDD_Ch_A_17011");
             } else if (strstr(operator_name, "2")) {
-                property_override("ro.product.model", "OPPO R11st");
+                property_override_dual("ro.product.model", "ro.vendor.product.model", "OPPO R11st");
                 property_set("ro.separate.soft", "17013");
-                property_override("ro.product.device", "R11s");
+                property_override_dual("ro.product.device", "ro.vendor.product.device", "R11s");
                 property_override("ro.product.name", "R11st");
                 property_override("ro.build.product", "R11st");
                 property_set("ro.rf_version", "TDD_FDD_Ch_17013");
@@ -128,16 +136,16 @@ void vendor_load_properties() {
             property_set("ro.power_profile.override", "zzz_power_profile_17011");
         } else if (strstr(prj_version, "17021")) {
             if (strstr(operator_name, "8")) {
-                property_override("ro.product.model", "OPPO R11s Plus");
+                property_override_dual("ro.product.model", "ro.vendor.product.model", "OPPO R11s Plus");
                 property_set("ro.separate.soft", "16118");
-                property_override("ro.product.device", "R11sPlus");
+                property_override_dual("ro.product.device", "ro.vendor.product.device", "R11sPlus");
                 property_override("ro.product.name", "R11sPlus");
                 property_override("ro.build.product", "R11sPlus");
                 property_set("ro.rf_version", "TDD_FDD_Ch_A_17021");
             } else if (strstr(operator_name, "2")) {
-                property_override("ro.product.model", "OPPO R11s Plust");
+                property_override_dual("ro.product.model", "ro.vendor.product.model", "OPPO R11s Plust");
                 property_set("ro.separate.soft", "17023");
-                property_override("ro.product.device", "R11sPlus");
+                property_override_dual("ro.product.device", "ro.vendor.product.device", "R11sPlus");
                 property_override("ro.product.name", "R11sPlust");
                 property_override("ro.build.product", "R11sPlust");
                 property_set("ro.rf_version", "TDD_FDD_Ch_17023");

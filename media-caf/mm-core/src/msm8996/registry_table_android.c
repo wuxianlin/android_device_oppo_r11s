@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------
-Copyright (c) 2014-2016, The Linux Foundation. All rights reserved.
+Copyright (c) 2014-2017, The Linux Foundation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -56,22 +56,6 @@ omx_core_cb_type core[] =
     }
   },
   {
-    "OMX.qcom.video.decoder.avc.dsmode",
-    NULL, // Create instance function
-         // Unique instance handle
-    {
-      NULL,
-      NULL,
-      NULL,
-      NULL
-    },
-    NULL,   // Shared object library handle
-    "libOmxVideoDSMode.so",
-    {
-      "video_decoder.avc"
-    }
-  },
-  {
     "OMX.qcom.video.decoder.avc.secure",
     NULL, // Create instance function
     // Unique instance handle
@@ -87,23 +71,6 @@ omx_core_cb_type core[] =
       "video_decoder.avc"
     }
   },
-  {
-    "OMX.qcom.video.decoder.avc.secure.dsmode",
-    NULL, // Create instance function
-    // Unique instance handle
-    {
-      NULL,
-      NULL,
-      NULL,
-      NULL
-    },
-    NULL,   // Shared object library handle
-    "libOmxVideoDSMode.so",
-    {
-      "video_decoder.avc"
-    }
-  },
-
   {
     "OMX.qcom.video.decoder.divx4",
     NULL,   // Create instance function
@@ -169,22 +136,6 @@ omx_core_cb_type core[] =
     }
   },
   {
-    "OMX.qcom.video.decoder.mpeg4.secure",
-    NULL, // Create instance function
-    // Unique instance handle
-    {
-      NULL,
-      NULL,
-      NULL,
-      NULL
-    },
-    NULL,   // Shared object library handle
-    "libOmxVdec.so",
-    {
-      "video_decoder.mpeg4"
-    }
-  },
-  {
     "OMX.qcom.video.decoder.mpeg2",
     NULL, // Create instance function
     // Unique instance handle
@@ -234,38 +185,6 @@ omx_core_cb_type core[] =
   },
   {
     "OMX.qcom.video.decoder.vc1.secure",
-    NULL, // Create instance function
-    // Unique instance handle
-    {
-      NULL,
-      NULL,
-      NULL,
-      NULL
-    },
-    NULL,   // Shared object library handle
-    "libOmxVdec.so",
-    {
-      "video_decoder.vc1"
-    }
-  },
-  {
-    "OMX.qcom.video.decoder.wmv",
-    NULL, // Create instance function
-    // Unique instance handle
-    {
-      NULL,
-      NULL,
-      NULL,
-      NULL
-    },
-    NULL,   // Shared object library handle
-    "libOmxVdec.so",
-    {
-      "video_decoder.vc1"
-    }
-  },
-  {
-    "OMX.qcom.video.decoder.wmv.secure",
     NULL, // Create instance function
     // Unique instance handle
     {
@@ -458,22 +377,6 @@ omx_core_cb_type core[] =
   },
   {
     "OMX.qcom.video.encoder.hevc",
-    NULL,   // Create instance function
-    // Unique instance handle
-    {
-      NULL,
-      NULL,
-      NULL,
-      NULL
-    },
-    NULL,   // Shared object library handle
-    "libOmxVenc.so",
-    {
-      "video_encoder.hevc"
-    }
-  },
-  {
-    "OMX.qcom.video.encoder.hevc.secure",
     NULL,   // Create instance function
     // Unique instance handle
     {
@@ -711,38 +614,6 @@ omx_core_cb_type core[] =
     }
   },
   {
-    "OMX.qcom.audio.encoder.g711mlaw",
-    NULL,   // Create instance function
-    // Unique instance handle
-    {
-      NULL,
-      NULL,
-      NULL,
-      NULL
-    },
-    NULL,   // Shared object library handle
-    "libOmxG711Enc.so",
-    {
-      "audio_encoder.g711"
-    }
-  },
-  {
-    "OMX.qcom.audio.encoder.g711alaw",
-    NULL,   // Create instance function
-    // Unique instance handle
-    {
-      NULL,
-      NULL,
-      NULL,
-      NULL
-    },
-    NULL,   // Shared object library handle
-    "libOmxG711Enc.so",
-    {
-      "audio_encoder.g711"
-    }
-  },
-  {
     "OMX.qcom.audio.encoder.amrwb",
     NULL,   // Create instance function
     // Unique instance handle
@@ -756,32 +627,6 @@ omx_core_cb_type core[] =
     }
   },
   {
-    "OMX.qcom.audio.decoder.g711mlaw",
-    NULL,   // Create instance function
-    // Unique instance handle
-    {
-      NULL
-    },
-    NULL,   // Shared object library handle
-    "libOmxG711Dec.so",
-    {
-      "audio_decoder.g711"
-    }
-  },
-  {
-    "OMX.qcom.audio.decoder.g711alaw",
-    NULL,   // Create instance function
-    // Unique instance handle
-    {
-      NULL
-    },
-    NULL,   // Shared object library handle
-    "libOmxG711Dec.so",
-    {
-      "audio_decoder.g711"
-    }
-  },
-  {
     "OMX.qcom.audio.decoder.amrwb",
     NULL,   // Create instance function
     // Unique instance handle
@@ -791,7 +636,7 @@ omx_core_cb_type core[] =
     NULL,   // Shared object library handle
     "libOmxAmrDec.so",
     {
-     "audio_decoder.amrwb"
+     "audio_decoder.amr"
     }
   },
   {
@@ -804,26 +649,10 @@ omx_core_cb_type core[] =
     NULL,   // Shared object library handle
     "libOmxAmrDec.so",
     {
-      "audio_decoder.amrnb"
+      "audio_decoder.amr"
     }
   },
- {
-    "OMX.qcom.audio.decoder.aac",
-    NULL,   // Create instance function
-    // Unique instance handle
-    {
-      NULL,
-      NULL,
-      NULL,
-      NULL
-    },
-    NULL,   // Shared object library handle
-    "libOmxAacDec.so",
-    {
-      "audio_decoder.aac"
-    }
-  },
- {
+  {
     "OMX.qcom.audio.decoder.multiaac",
     NULL,   // Create instance function
     // Unique instance handle
@@ -840,19 +669,19 @@ omx_core_cb_type core[] =
     }
   },
   {
-    "AIV.play.generic",
-    NULL, // Create instance function
-    // Unique instance handle
+    "OMX.QCOM.CUST.COMP.START",
+    NULL, //Create instance function
+    //Unique instance handle
     {
       NULL,
       NULL,
       NULL,
       NULL
     },
-    NULL,  // Shared object library handle
-    "libAivPlay.so",
+    NULL,
+    NULL,   // Shared object library handle
     {
-      "AIV.play.role.generic"
+      NULL
     }
   },
   {
@@ -872,6 +701,102 @@ omx_core_cb_type core[] =
     }
   },
   {
+    "OMX.qcom.video.decoder.avc.dsmode",
+    NULL, // Create instance function
+         // Unique instance handle
+    {
+      NULL,
+      NULL,
+      NULL,
+      NULL
+    },
+    NULL,   // Shared object library handle
+    "libOmxVideoDSMode.so",
+    {
+      "video_decoder.avc"
+    }
+  },
+  {
+    "OMX.qcom.video.decoder.avc.secure.dsmode",
+    NULL, // Create instance function
+    // Unique instance handle
+    {
+      NULL,
+      NULL,
+      NULL,
+      NULL
+    },
+    NULL,   // Shared object library handle
+    "libOmxVideoDSMode.so",
+    {
+      "video_decoder.avc"
+    }
+  },
+  {
+    "OMX.qcom.video.decoder.mpeg4.secure",
+    NULL, // Create instance function
+    // Unique instance handle
+    {
+      NULL,
+      NULL,
+      NULL,
+      NULL
+    },
+    NULL,   // Shared object library handle
+    "libOmxVdec.so",
+    {
+      "video_decoder.mpeg4"
+    }
+  },
+  {
+    "OMX.qcom.video.decoder.wmv",
+    NULL, // Create instance function
+    // Unique instance handle
+    {
+      NULL,
+      NULL,
+      NULL,
+      NULL
+    },
+    NULL,   // Shared object library handle
+    "libOmxVdec.so",
+    {
+      "video_decoder.vc1"
+    }
+  },
+  {
+    "OMX.qcom.video.decoder.wmv.secure",
+    NULL, // Create instance function
+    // Unique instance handle
+    {
+      NULL,
+      NULL,
+      NULL,
+      NULL
+    },
+    NULL,   // Shared object library handle
+    "libOmxVdec.so",
+    {
+      "video_decoder.vc1"
+    }
+  },
+  {
+    "OMX.qcom.video.encoder.hevc.secure",
+    NULL,   // Create instance function
+    // Unique instance handle
+    {
+      NULL,
+      NULL,
+      NULL,
+      NULL
+    },
+    NULL,   // Shared object library handle
+    "libOmxVenc.so",
+    {
+      "video_encoder.hevc"
+    }
+  },
+  {
     "OMX.qti.vdec.vpp",
     NULL, // Create instance function
     // Unique instance handle
@@ -885,6 +810,22 @@ omx_core_cb_type core[] =
     "libOmxVpp.so",
     {
       "video_decoder.vpp"
+    }
+  },
+  {
+    "OMX.qcom.audio.decoder.aac",
+    NULL,   // Create instance function
+    // Unique instance handle
+    {
+      NULL,
+      NULL,
+      NULL,
+      NULL
+    },
+    NULL,   // Shared object library handle
+    "libOmxAacDec.so",
+    {
+      "audio_decoder.aac"
     }
   }
 };

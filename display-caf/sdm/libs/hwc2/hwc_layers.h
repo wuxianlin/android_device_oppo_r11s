@@ -39,8 +39,12 @@
 
 namespace sdm {
 
-DisplayError SetCSC(const MetaData_t *meta_data, ColorMetaData *color_metadata);
-
+DisplayError SetCSC(const private_handle_t *pvt_handle, ColorMetaData *color_metadata);
+bool GetColorPrimary(const int32_t &dataspace, ColorPrimaries *color_primary);
+bool GetTransfer(const int32_t &dataspace, GammaTransfer *gamma_transfer);
+void GetRange(const int32_t &dataspace, ColorRange *color_range);
+bool GetSDMColorSpace(const int32_t &dataspace, ColorMetaData *color_metadata);
+bool IsBT2020(const ColorPrimaries &color_primary);
 enum GeometryChanges {
   kNone         = 0x000,
   kBlendMode    = 0x001,
@@ -52,6 +56,7 @@ enum GeometryChanges {
   kZOrder       = 0x040,
   kAdded        = 0x080,
   kRemoved      = 0x100,
+  kBufferGeometry = 0x200,
 };
 
 class HWCLayer {
@@ -68,6 +73,7 @@ class HWCLayer {
   HWC2::Error SetLayerCompositionType(HWC2::Composition type);
   HWC2::Error SetLayerDataspace(int32_t dataspace);
   HWC2::Error SetLayerDisplayFrame(hwc_rect_t frame);
+  HWC2::Error SetCursorPosition(int32_t x, int32_t y);
   HWC2::Error SetLayerPlaneAlpha(float alpha);
   HWC2::Error SetLayerSourceCrop(hwc_frect_t crop);
   HWC2::Error SetLayerSurfaceDamage(hwc_region_t damage);
@@ -78,10 +84,15 @@ class HWCLayer {
   HWC2::Composition GetClientRequestedCompositionType() { return client_requested_; }
   void UpdateClientCompositionType(HWC2::Composition type) { client_requested_ = type; }
   HWC2::Composition GetDeviceSelectedCompositionType() { return device_selected_; }
+  int32_t GetLayerDataspace() { return dataspace_; }
   uint32_t GetGeometryChanges() { return geometry_changes_; }
   void ResetGeometryChanges() { geometry_changes_ = GeometryChanges::kNone; }
   void PushReleaseFence(int32_t fence);
   int32_t PopReleaseFence(void);
+  bool ValidateAndSetCSC();
+  bool SupportLocalConversion(ColorPrimaries working_primaries);
+  void ResetValidation() { needs_validate_ = false; }
+  bool NeedsValidation() { return (needs_validate_ || geometry_changes_); }
 
  private:
   Layer *layer_ = nullptr;
@@ -92,6 +103,8 @@ class HWCLayer {
   std::queue<int32_t> release_fences_;
   int ion_fd_ = -1;
   HWCBufferAllocator *buffer_allocator_ = NULL;
+  int32_t dataspace_ =  HAL_DATASPACE_UNKNOWN;
+  bool needs_validate_ = true;
 
   // Composition requested by client(SF)
   HWC2::Composition client_requested_ = HWC2::Composition::Device;
@@ -105,13 +118,12 @@ class HWCLayer {
   LayerBufferFormat GetSDMFormat(const int32_t &source, const int flags);
   LayerBufferS3DFormat GetS3DFormat(uint32_t s3d_format);
   DisplayError SetMetaData(const private_handle_t *pvt_handle, Layer *layer);
-  DisplayError SetCSC(const MetaData_t *meta_data, ColorMetaData *color_metadata);
   DisplayError SetIGC(IGC_t source, LayerIGC *target);
   uint32_t RoundToStandardFPS(float fps);
 };
 
 struct SortLayersByZ {
-  bool operator()(const HWCLayer *lhs, const HWCLayer *rhs) {
+  bool operator()(const HWCLayer *lhs, const HWCLayer *rhs) const {
     return lhs->GetZ() < rhs->GetZ();
   }
 };

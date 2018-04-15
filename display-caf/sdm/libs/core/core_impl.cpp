@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2014 - 2016, The Linux Foundation. All rights reserved.
+* Copyright (c) 2014 - 2017, The Linux Foundation. All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without modification, are permitted
 * provided that the following conditions are met:
@@ -73,6 +73,9 @@ DisplayError CoreImpl::Init() {
     goto CleanupOnError;
   }
 
+  if (hw_info_intf_ == NULL) {
+    return kErrorResources;
+  }
   error = hw_info_intf_->GetHWResourceInfo(&hw_resource_);
   if (error != kErrorNone) {
     goto CleanupOnError;
@@ -125,15 +128,15 @@ DisplayError CoreImpl::CreateDisplay(DisplayType type, DisplayEventHandler *even
   switch (type) {
   case kPrimary:
     display_base = new DisplayPrimary(event_handler, hw_info_intf_, buffer_sync_handler_,
-                                      &comp_mgr_);
+                                      buffer_allocator_, &comp_mgr_);
     break;
   case kHDMI:
     display_base = new DisplayHDMI(event_handler, hw_info_intf_, buffer_sync_handler_,
-                                   &comp_mgr_);
+                                   buffer_allocator_, &comp_mgr_);
     break;
   case kVirtual:
     display_base = new DisplayVirtual(event_handler, hw_info_intf_, buffer_sync_handler_,
-                                      &comp_mgr_);
+                                      buffer_allocator_, &comp_mgr_);
     break;
   default:
     DLOGE("Spurious display type %d", type);

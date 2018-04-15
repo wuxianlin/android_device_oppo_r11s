@@ -68,6 +68,7 @@ class CompManager : public DumpImpl {
   DisplayError ValidateScaling(const LayerRect &crop, const LayerRect &dst, bool rotate90);
   DisplayError ValidateCursorPosition(Handle display_ctx, HWLayers *hw_layers, int x, int y);
   bool SupportLayerAsCursor(Handle display_ctx, HWLayers *hw_layers);
+  DisplayError ValidateAndSetCursorPosition(Handle display_ctx, HWLayers *hw_layers, int x, int y);
   bool SetDisplayState(Handle display_ctx, DisplayState state, DisplayType display_type);
   DisplayError SetMaxBandwidthMode(HWBwModes mode);
   DisplayError GetScaleLutConfig(HWScaleLutInfo *lut_info);
@@ -100,6 +101,7 @@ class CompManager : public DumpImpl {
     bool valid_cursor = false;
     PUConstraints pu_constraints = {};
     bool scaled_composition = false;
+    DisplayConfigVariableInfo fb_config = {};
   };
 
   Locker locker_;
@@ -110,6 +112,7 @@ class CompManager : public DumpImpl {
   bool safe_mode_ = false;              // Flag to notify all displays to be in resource crunch
                                         // mode, where strategy manager chooses the best strategy
                                         // that uses optimal number of pipes for each display
+  bool secure_external_layer_ = false;
   HWResourceInfo hw_res_info_;
   BufferAllocator *buffer_allocator_ = NULL;
   ExtensionInterface *extension_intf_ = NULL;

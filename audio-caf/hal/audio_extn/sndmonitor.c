@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2016, The Linux Foundation. All rights reserved.
+* Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are
@@ -57,6 +57,12 @@
 
 #include "audio_hw.h"
 #include "audio_extn.h"
+
+#ifdef DYNAMIC_LOG_ENABLED
+#include <log_xml_parser.h>
+#define LOG_MASK HAL_MOD_FILE_SND_MONITOR
+#include <log_utils.h>
+#endif
 
 //#define MONITOR_DEVICE_EVENTS
 #define CPE_MAGIC_NUM 0x2000
@@ -147,9 +153,10 @@ static int add_new_sndcard(int card, int fd)
 
     char *state = read_state(fd);
 
-    if (!state)
+    if (!state) {
+        free(s);
         return -1;
-
+    }
     bool online = state && !strcmp(state, "ONLINE");
 
     ALOGV("card %d initial state %s %d", card, state, online);
@@ -221,8 +228,10 @@ static int enum_sndcards()
         }
 
         ret = add_new_sndcard(atoi(ptr), fd);
-        if (ret != 0)
+        if (ret != 0) {
+            close(fd);
             continue;
+        }
 
         num_cards++;
 
@@ -249,8 +258,10 @@ static int enum_sndcards()
             continue;
 
         ret = add_new_sndcard(CPE_MAGIC_NUM+num_cpe, fd);
-        if (ret != 0)
+        if (ret != 0) {
+            close(fd);
             continue;
+        }
 
         num_cpe++;
         num_cards++;
@@ -537,7 +548,8 @@ void *monitor_thread_loop(void *args __unused)
             ++i;
         }
     }
-
+    if (pfd)
+        free(pfd);
     return NULL;
 }
 
@@ -617,9 +629,11 @@ int audio_extn_snd_mon_deinit()
 
     write(sndmonitor.intpipe[1], "Q", 1);
     pthread_join(sndmonitor.monitor_thread, (void **) NULL);
+    free_dev_events();
     listeners_deinit();
     free_sndcards();
-    free_dev_events();
+    close(sndmonitor.intpipe[0]);
+    close(sndmonitor.intpipe[1]);
     sndmonitor.initcheck = 0;
     return 0;
 }
@@ -633,13 +647,13 @@ int audio_extn_snd_mon_init()
     sndmonitor.initcheck = false;
 
     if (pipe(sndmonitor.intpipe) < 0)
-        return -ENODEV;
+        goto pipe_error;
 
     if (enum_sndcards() < 0)
-        return -ENODEV;
+        goto enum_sncards_error;
 
     if (listeners_init() < 0)
-        return -ENODEV;
+        goto listeners_error;
 
 #ifdef MONITOR_DEVICE_EVENTS
     enum_dev_events(); // failure here isn't fatal
@@ -650,14 +664,20 @@ int audio_extn_snd_mon_init()
                              monitor_thread_loop, NULL);
 
     if (ret) {
-        free_sndcards();
-        free_dev_events();
-        close(sndmonitor.intpipe[0]);
-        close(sndmonitor.intpipe[1]);
-        return -ENODEV;
+        goto monitor_thread_create_error;
     }
     sndmonitor.initcheck = true;
     return 0;
+
+monitor_thread_create_error:
+    listeners_deinit();
+listeners_error:
+    free_sndcards();
+enum_sncards_error:
+    close(sndmonitor.intpipe[0]);
+    close(sndmonitor.intpipe[1]);
+pipe_error:
+    return -ENODEV;
 }
 
 int audio_extn_snd_mon_register_listener(void *stream, snd_mon_cb cb)

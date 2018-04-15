@@ -1,4 +1,5 @@
-#!/system/bin/sh
+#! /vendor/bin/sh
+
 # Copyright (c) 2010-2013, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -39,36 +40,8 @@ target="$1"
 serialno="$2"
 
 btsoc=""
-
-# No path is set up at this point so we have to do it here.
-PATH=/sbin:/system/sbin:/system/bin:/system/xbin
-export PATH
-
 #ifdef VENDOR_EDIT
-#Yuan.Huang@Connectivity.Wifi.Network.internet.FN10, 2016/11/09
-#Add for make WCNSS_qcom_cfg.ini Rom-update.
-if [ -s /system/etc/wifi/WCNSS_qcom_cfg_version ]; then
-    system_version=`cat /system/etc/wifi/WCNSS_qcom_cfg_version`
-else
-    system_version=1
-fi
-
-if [ -s /persist/WCNSS_qcom_cfg_version ]; then
-    persist_version=`cat /persist/WCNSS_qcom_cfg_version`
-else
-    persist_version=0
-fi
-if [ ! -s /persist/WCNSS_qcom_cfg.ini -o $system_version -gt $persist_version ]; then
-    cp /system/etc/wifi/WCNSS_qcom_cfg.ini \
-            /persist/WCNSS_qcom_cfg.ini
-    chown system:wifi /persist/WCNSS_qcom_cfg.ini
-    chmod 660 /persist/WCNSS_qcom_cfg.ini
-    echo "$system_version" > /persist/WCNSS_qcom_cfg_version
-fi
-#endif /* VENDOR_EDIT */
-
-#ifdef VENDOR_EDIT
-#Qiulei@Connectivity.WiFi.Hardware.FP16, 2017/03/06,
+#Min.Yi@PSW.CN.Wifi.Hardware.1065227, 2017/11/21,
 #Add for : bin for according project
 prj_version=`cat /proc/oppoVersion/prjVersion`
 case $prj_version in
@@ -76,10 +49,10 @@ case $prj_version in
      pcb_version=`cat /proc/wlan_res`
         case $pcb_version in
         "1" )
-        cp /system/etc/wifi/bdwlan_16103.bin /persist/bdwlan.bin
+        cp /vendor/etc/wifi/bdwlan_16103.bin /persist/bdwlan.bin
         ;;
      *)
-        cp /system/etc/wifi/bdwlan_16103_second.bin /persist/bdwlan.bin
+        cp /vendor/etc/wifi/bdwlan_16103_second.bin /persist/bdwlan.bin
         ;;
         esac
     ;;
@@ -87,23 +60,70 @@ case $prj_version in
      pcb_version=`cat /proc/oppoVersion/modemType`
         case $pcb_version in
         "7" | "8"| "9"| "10" )
-        cp /system/etc/wifi/bdwlan_16051_second.bin /persist/bdwlan.bin
+        cp /vendor/etc/wifi/bdwlan_16051_second.bin /persist/bdwlan.bin
         ;;
      *)
-        cp /system/etc/wifi/bdwlan_16051.bin /persist/bdwlan.bin
+        cp /vendor/etc/wifi/bdwlan_16051.bin /persist/bdwlan.bin
+
         ;;
        esac
      ;;
     "17011"| "17013"| "17015" )
-    cp /system/etc/wifi/bdwlan_17011.bin /persist/bdwlan.bin
+    cp /vendor/etc/wifi/bdwlan_17011.bin /persist/bdwlan.bin
     ;;
     "17021"| "17023"| "17123" )
-    cp /system/etc/wifi/bdwlan_17021.bin /persist/bdwlan.bin
+    cp /vendor/etc/wifi/bdwlan_17021.bin /persist/bdwlan.bin
+    ;;
+    "17081" )
+    cp /vendor/etc/wifi/bdwlan_17081.bin /persist/bdwlan.bin
+    ;;
+    "17085" )
+    cp /vendor/etc/wifi/bdwlan_17085.bin /persist/bdwlan.bin
     ;;
 esac
 chmod 666 /persist/bdwlan.bin
 chown system:wifi /persist/bdwlan.bin
-#endif /* VENDOR_EDIT */
+
+
+
+#Yuan.Huang@PSW.CN.Wifi.Network.internet.1074197, 2016/11/09,
+#Add for make WCNSS_qcom_cfg.ini Rom-update.
+if [ -s /vendor/etc/wifi/WCNSS_qcom_cfg.ini ]; then
+	system_version=`head -1 /vendor/etc/wifi/WCNSS_qcom_cfg.ini | grep OppoVersion | cut -d= -f2`
+	if [ "${system_version}x" = "x" ]; then
+		system_version=1
+	fi
+else
+	system_version=1
+fi
+
+#if WCNSS_qcom_cfg_version exists, dut upgrades from android 7.0
+if [ -s /persist/WCNSS_qcom_cfg_version ]; then
+	persist_version=0
+	rm /persist/WCNSS_qcom_cfg_version
+else
+	if [ -s /persist/WCNSS_qcom_cfg.ini ]; then
+		persist_version=`head -1 /persist/WCNSS_qcom_cfg.ini | grep OppoVersion | cut -d= -f2`
+		if [ "${persist_version}x" = "x" ]; then
+			persist_version=0
+		fi
+	else
+		persist_version=0
+	fi
+fi
+
+if [ ! -s /persist/WCNSS_qcom_cfg.ini -o $system_version -gt $persist_version ]; then
+    cp /vendor/etc/wifi/WCNSS_qcom_cfg.ini \
+            /persist/WCNSS_qcom_cfg.ini
+    chown system:wifi /persist/WCNSS_qcom_cfg.ini
+    chmod 660 /persist/WCNSS_qcom_cfg.ini
+fi
+
+#else /* VENDOR_EDIT */
+if false; then
+# No path is set up at this point so we have to do it here.
+PATH=/sbin:/system/sbin:/system/bin:/system/xbin
+export PATH
 
 # Trigger WCNSS platform driver
 trigger_wcnss()
@@ -562,6 +582,5 @@ case "$target" in
     *)
       ;;
 esac
-
-# Run audio init script
-/system/bin/sh /system/etc/init.qcom.audio.sh "$target" "$btsoc"
+fi
+#endif /* VENDOR_EDIT */

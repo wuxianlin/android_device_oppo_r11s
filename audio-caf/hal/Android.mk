@@ -8,7 +8,7 @@ LOCAL_ARM_MODE := arm
 
 AUDIO_PLATFORM := $(TARGET_BOARD_PLATFORM)
 
-ifneq ($(filter msm8974 msm8226 msm8610 apq8084 msm8994 msm8992 msm8996 msm8998,$(TARGET_BOARD_PLATFORM)),)
+ifneq ($(filter msm8974 msm8226 msm8610 apq8084 msm8994 msm8992 msm8996 msm8998 apq8098_latv sdm845,$(TARGET_BOARD_PLATFORM)),)
   # B-family platform uses msm8974 code base
   AUDIO_PLATFORM = msm8974
   MULTIPLE_HW_VARIANTS_ENABLED := true
@@ -30,8 +30,11 @@ endif
 ifneq ($(filter msm8996,$(TARGET_BOARD_PLATFORM)),)
   LOCAL_CFLAGS := -DPLATFORM_MSM8996
 endif
-ifneq ($(filter msm8998,$(TARGET_BOARD_PLATFORM)),)
+ifneq ($(filter msm8998 apq8098_latv,$(TARGET_BOARD_PLATFORM)),)
   LOCAL_CFLAGS := -DPLATFORM_MSM8998
+endif
+ifneq ($(filter sdm845,$(TARGET_BOARD_PLATFORM)),)
+  LOCAL_CFLAGS := -DPLATFORM_SDM845
 endif
 endif
 
@@ -51,12 +54,14 @@ LOCAL_SRC_FILES := \
 	audio_hw.c \
 	voice.c \
 	platform_info.c \
-	$(AUDIO_PLATFORM)/platform.c
+	$(AUDIO_PLATFORM)/platform.c \
+        acdb.c
 
 LOCAL_SRC_FILES += audio_extn/audio_extn.c \
                    audio_extn/utils.c
 LOCAL_C_INCLUDES += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 LOCAL_ADDITIONAL_DEPENDENCIES += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+LOCAL_CFLAGS += -DUSE_VENDOR_EXTN
 
 ifeq ($(strip $(AUDIO_FEATURE_ENABLED_HDMI_EDID)),true)
     LOCAL_CFLAGS += -DHDMI_EDID
@@ -175,6 +180,11 @@ ifneq ($(strip $(DOLBY_DDP)),true)
 endif
 endif
 
+ifeq ($(strip $(AUDIO_FEATURE_ENABLED_FLAC_OFFLOAD)),true)
+    LOCAL_CFLAGS += -DFLAC_OFFLOAD_ENABLED
+    LOCAL_CFLAGS += -DCOMPRESS_METADATA_NEEDED
+endif
+
 ifeq ($(strip $(AUDIO_FEATURE_ENABLED_EXTN_FLAC_DECODER)),true)
     LOCAL_CFLAGS += -DFLAC_OFFLOAD_ENABLED
     LOCAL_CFLAGS += -DCOMPRESS_METADATA_NEEDED
@@ -276,8 +286,9 @@ endif
 LOCAL_SHARED_LIBRARIES := \
 	liblog \
 	libcutils \
+	libhardware \
 	libtinyalsa \
-	libtinycompress \
+	libtinycompress_vendor \
 	libaudioroute \
 	libdl \
 	libaudioutils \
@@ -288,6 +299,7 @@ LOCAL_C_INCLUDES += \
 	external/tinycompress/include \
 	system/media/audio_utils/include \
 	external/expat/lib \
+	hardware/libhardware/include \
 	$(call include-path-for, audio-route) \
 	$(call include-path-for, audio-effects) \
 	$(LOCAL_PATH)/$(AUDIO_PLATFORM) \
@@ -343,7 +355,34 @@ ifeq ($(strip $(AUDIO_FEATURE_ENABLED_GEF_SUPPORT)),true)
     LOCAL_SRC_FILES += audio_extn/gef.c
 endif
 
+ifeq ($(strip $($AUDIO_FEATURE_ADSP_HDLR_ENABLED)),true)
+    LOCAL_CFLAGS += -DAUDIO_EXTN_ADSP_HDLR_ENABLED
+    LOCAL_SRC_FILES += audio_extn/adsp_hdlr.c
+endif
+
+ifeq ($(strip $(AUDIO_FEATURE_ENABLED_DYNAMIC_LOG)), true)
+    LOCAL_CFLAGS += -DDYNAMIC_LOG_ENABLED
+    LOCAL_C_INCLUDES += $(TARGET_OUT_HEADERS)/mm-audio/audio-log-utils
+    LOCAL_SHARED_LIBRARIES += libaudio_log_utils
+endif
+
+ifeq ($(strip $($AUDIO_FEATURE_IP_HDLR_ENABLED)),true)
+    LOCAL_CFLAGS += -DAUDIO_EXTN_IP_HDLR_ENABLED
+    LOCAL_SRC_FILES += audio_extn/ip_hdlr_intf.c
+endif
+
+ifneq ($(strip $(AUDIO_FEATURE_ENABLED_EXT_AMPLIFIER)),false)
+    LOCAL_CFLAGS += -DEXT_AMPLIFIER_ENABLED
+    LOCAL_SRC_FILES += audio_extn/audio_amplifier.c
+endif
+
+ifeq ($(strip $(AUDIO_FEATURE_ELLIPTIC_ULTRASOUND_SUPPORT)),true)
+    LOCAL_CFLAGS += -DELLIPTIC_ULTRASOUND_ENABLED
+    LOCAL_SRC_FILES += audio_extn/ultrasound.c
+endif
+
 LOCAL_CFLAGS += -Wall -Werror
+LOCAL_CLANG_CFLAGS += -Wno-unused-variable -Wno-unused-function -Wno-missing-field-initializers
 
 LOCAL_COPY_HEADERS_TO   := mm-audio
 LOCAL_COPY_HEADERS      := audio_extn/audio_defs.h
@@ -358,6 +397,8 @@ LOCAL_MODULE := audio.primary.$(TARGET_BOARD_PLATFORM)
 LOCAL_MODULE_RELATIVE_PATH := hw
 
 LOCAL_MODULE_TAGS := optional
+
+LOCAL_VENDOR_MODULE := true
 
 include $(BUILD_SHARED_LIBRARY)
 

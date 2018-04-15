@@ -140,16 +140,147 @@ struct aptx_dec_param {
    struct aptx_dec_bt_addr bt_addr;
 };
 
+struct audio_avt_device_drift_param {
+   /* Flag to indicate if resync is required on the client side for
+    * drift correction. Flag is set to TRUE for the first get_param response
+    * after device interface starts. This flag value can be used by client
+    * to identify if device interface restart has happened and if any
+    * re-sync is required at their end for drift correction.
+    */
+    uint32_t        resync_flag;
+    /* Accumulated drift value in microseconds. This value is updated
+     * every 100th ms.
+     * Positive drift value indicates AV timer is running faster than device.
+     * Negative drift value indicates AV timer is running slower than device.
+     */
+    int32_t         avt_device_drift_value;
+    /* Lower 32 bits of the 64-bit absolute timestamp of reference
+     * timer in microseconds.
+     */
+    uint32_t        ref_timer_abs_ts_lsw;
+    /* Upper 32 bits of the 64-bit absolute timestamp of reference
+     * timer in microseconds.
+     */
+    uint32_t        ref_timer_abs_ts_msw;
+};
+
+/*use these for setting infine window.i.e free run mode */
+#define AUDIO_MAX_RENDER_START_WINDOW 0x8000000000000000
+#define AUDIO_MAX_RENDER_END_WINDOW   0x7FFFFFFFFFFFFFFF
+
+struct audio_out_render_window_param {
+   uint64_t        render_ws; /* render window start value in microseconds*/
+   uint64_t        render_we; /* render window end value in microseconds*/
+};
+
+struct audio_out_start_delay_param {
+   uint64_t        start_delay; /* session start delay in microseconds*/
+};
+
+struct audio_out_enable_drift_correction {
+   bool        enable; /* enable drift correction*/
+};
+
+struct audio_out_correct_drift {
+    /*
+     * adjust time in microseconds, a positive value
+     * to advance the clock or a negative value to
+     * delay the clock.
+     */
+    int64_t        adjust_time;
+};
+
+/* type of asynchronous write callback events. Mutually exclusive
+ * event enums append those defined for stream_callback_event_t in audio.h */
+typedef enum {
+    AUDIO_EXTN_STREAM_CBK_EVENT_ERROR = 0x2,  /* Remove this enum if its already in audio.h */
+    AUDIO_EXTN_STREAM_CBK_EVENT_ADSP = 0x100      /* callback event from ADSP PP,
+                                                 * corresponding payload will be
+                                                 * sent as is to the client
+                                                 */
+} audio_extn_callback_id;
+
+#define AUDIO_MAX_ADSP_STREAM_CMD_PAYLOAD_LEN 504
+
+typedef enum {
+    AUDIO_STREAM_PP_EVENT = 0,
+    AUDIO_STREAM_ENCDEC_EVENT = 1,
+} audio_event_id;
+
+/* payload format for HAL parameter
+ * AUDIO_EXTN_PARAM_ADSP_STREAM_CMD
+ */
+struct audio_adsp_event {
+ audio_event_id event_type;                  /* type of the event */
+ uint32_t payload_length;                    /* length in bytes of the payload */
+ void    *payload;                           /* the actual payload */
+};
+
+struct audio_out_channel_map_param {
+   uint8_t       channels;                              /* Input Channels */
+   uint8_t       channel_map[AUDIO_CHANNEL_COUNT_MAX];  /* Input Channel Map */
+};
+
+struct audio_device_cfg_param {
+   uint32_t   sample_rate;
+   uint32_t   channels;
+   uint32_t   bit_width;
+   audio_format_t format;
+   audio_devices_t device;
+   uint8_t    channel_map[AUDIO_CHANNEL_COUNT_MAX];
+   uint16_t   channel_allocation;
+};
+
+struct audio_device_config_param {
+   bool use_client_dev_cfg;
+   struct audio_device_cfg_param dev_cfg_params;
+};
+
+typedef struct mix_matrix_params {
+    uint16_t num_output_channels;
+    uint16_t num_input_channels;
+    uint8_t has_output_channel_map;
+    uint32_t output_channel_map[AUDIO_CHANNEL_COUNT_MAX];
+    uint8_t has_input_channel_map;
+    uint32_t input_channel_map[AUDIO_CHANNEL_COUNT_MAX];
+    uint8_t has_mixer_coeffs;
+    float mixer_coeffs[AUDIO_CHANNEL_COUNT_MAX][AUDIO_CHANNEL_COUNT_MAX];
+} mix_matrix_params_t;
+
 typedef union {
     struct source_tracking_param st_params;
     struct sound_focus_param sf_params;
     struct aptx_dec_param aptx_params;
+    struct audio_avt_device_drift_param drift_params;
+    struct audio_out_render_window_param render_window_param;
+    struct audio_out_start_delay_param start_delay;
+    struct audio_out_enable_drift_correction drift_enable_param;
+    struct audio_out_correct_drift drift_correction_param;
+    struct audio_adsp_event adsp_event_params;
+    struct audio_out_channel_map_param channel_map_param;
+    struct audio_device_cfg_param device_cfg;
+    struct mix_matrix_params mm_params;
 } audio_extn_param_payload;
 
 typedef enum {
     AUDIO_EXTN_PARAM_SOURCE_TRACK,
     AUDIO_EXTN_PARAM_SOUND_FOCUS,
-    AUDIO_EXTN_PARAM_APTX_DEC
+    AUDIO_EXTN_PARAM_APTX_DEC,
+    AUDIO_EXTN_PARAM_AVT_DEVICE_DRIFT,
+    AUDIO_EXTN_PARAM_OUT_RENDER_WINDOW, /* PARAM to set render window */
+    AUDIO_EXTN_PARAM_OUT_START_DELAY,
+    /* enable adsp drift correction this must be called before out_write */
+    AUDIO_EXTN_PARAM_OUT_ENABLE_DRIFT_CORRECTION,
+    /* param to set drift value to be adjusted by dsp */
+    AUDIO_EXTN_PARAM_OUT_CORRECT_DRIFT,
+    AUDIO_EXTN_PARAM_ADSP_STREAM_CMD,
+    /* param to set input channel map for playback stream */
+    AUDIO_EXTN_PARAM_OUT_CHANNEL_MAP,
+    AUDIO_EXTN_PARAM_DEVICE_CONFIG,
+    /* Pan/scale params to be set on ASM */
+    AUDIO_EXTN_PARAM_OUT_MIX_MATRIX_PARAMS,
+    /* Downmix params to be set on ADM */
+    AUDIO_EXTN_PARAM_CH_MIX_MATRIX_PARAMS
 } audio_extn_param_id;
 
 #endif /* AUDIO_DEFS_H */

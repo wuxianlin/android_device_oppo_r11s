@@ -33,6 +33,12 @@ Tonemapper::Tonemapper()
   lutXformTexture = 0;
   programID = 0;
   eglImageWrapper = new EGLImageWrapper();
+
+  lutXformScaleOffset[0] = 1.0f;
+  lutXformScaleOffset[1] = 0.0f;
+
+  tonemapScaleOffset[0] = 1.0f;
+  tonemapScaleOffset[1] = 0.0f;
 }
 
 //-----------------------------------------------------------------------------
@@ -55,7 +61,7 @@ Tonemapper::~Tonemapper()
 
 //-----------------------------------------------------------------------------
 Tonemapper *Tonemapper::build(int type, void *colorMap, int colorMapSize, void *lutXform,
-                              int lutXformSize)
+                              int lutXformSize, bool isSecure)
 //-----------------------------------------------------------------------------
 {
   if (colorMapSize <= 0) {
@@ -66,15 +72,23 @@ Tonemapper *Tonemapper::build(int type, void *colorMap, int colorMapSize, void *
   // build new tonemapper
   Tonemapper *tonemapper = new Tonemapper();
 
-  tonemapper->engineContext = engine_initialize();
+  tonemapper->engineContext = engine_initialize(isSecure);
 
   engine_bind(tonemapper->engineContext);
 
   // load the 3d lut
   tonemapper->tonemapTexture = engine_load3DTexture(colorMap, colorMapSize, 0);
+  tonemapper->tonemapScaleOffset[0] = ((float)(colorMapSize-1))/((float)(colorMapSize));
+  tonemapper->tonemapScaleOffset[1] = 1.0f/(2.0f*colorMapSize);
+
   // load the non-uniform xform
   tonemapper->lutXformTexture = engine_load1DTexture(lutXform, lutXformSize, 0);
   bool bUseXform = (tonemapper->lutXformTexture != 0) && (lutXformSize != 0);
+  if( bUseXform )
+  {
+      tonemapper->lutXformScaleOffset[0] = ((float)(lutXformSize-1))/((float)(lutXformSize));
+      tonemapper->lutXformScaleOffset[1] = 1.0f/(2.0f*lutXformSize);
+  }
 
   // create the program
   const char *fragmentShaders[3];
@@ -114,6 +128,13 @@ int Tonemapper::blit(const void *dst, const void *src, int srcFenceFd)
 
   // bind the program
   engine_setProgram(programID);
+
+  engine_setData2f(3, tonemapScaleOffset);
+  bool bUseXform = (lutXformTexture != 0);
+  if( bUseXform )
+  {
+    engine_setData2f(4, lutXformScaleOffset);
+  }
 
   // set destination
   engine_setDestination(dst_buffer->getFramebuffer(), 0, 0, dst_buffer->getWidth(),

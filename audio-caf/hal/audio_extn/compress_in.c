@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2016, The Linux Foundation. All rights reserved.
+* Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are
@@ -51,6 +51,11 @@
 #include "audio_defs.h"
 #include "sound/compress_params.h"
 
+#ifdef DYNAMIC_LOG_ENABLED
+#include <log_xml_parser.h>
+#define LOG_MASK HAL_MOD_FILE_COMPR_IN
+#include <log_utils.h>
+#endif
 /* default timestamp metadata definition if not defined in kernel*/
 #ifndef COMPRESSED_TIMESTAMP_FLAG
 #define COMPRESSED_TIMESTAMP_FLAG 0
@@ -116,7 +121,7 @@ static audio_usecase_t get_cin_usecase(void)
     unsigned int i, num_usecase = sizeof(cin_usecases) / sizeof(cin_usecases[0]);
     char value[PROPERTY_VALUE_MAX] = {0};
 
-    property_get("audio.record.multiple.enabled", value, NULL);
+    property_get("vendor.audio.record.multiple.enabled", value, NULL);
     if (!(atoi(value) || !strncmp("true", value, 4)))
         num_usecase = 1; /* If prop is not set, limit the num of record usecases to 1 */
 

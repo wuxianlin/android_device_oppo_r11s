@@ -1,24 +1,24 @@
 package org.ifaa.android.manager;
 
-import android.alipay.IAlipayService;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.IBinder.DeathRecipient;
-import android.os.RemoteException;
-import android.os.ServiceManager;
 import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.util.Log;
 
 public class IFAAManagerFactory {
     public static final String TAG = "IFAAManagerFactory";
-    private static IFAAManager mFAAManager;
+    private static IFAAManager sFAAManager;
 
     private static class IFAAManagerOppo extends IFAAManagerV2 implements DeathRecipient {
-        private static IAlipayService mAlipayService = null;
+        private int mAlikeyStatus;
+        private FingerprintManager mFingerprintManager;
+        private boolean mHasAlikeyStatus;
 
         private static final int BIOTypeFingerprint = 0x01;
         private static final int BIOTypeIris = 0x02;
@@ -27,6 +27,8 @@ public class IFAAManagerFactory {
         private static final int ACTIVITY_START_FAILED = -1;
 
         private IFAAManagerOppo() {
+            mHasAlikeyStatus = false;
+            mFingerprintManager = null;
         }
 
         static {
@@ -87,20 +89,14 @@ public class IFAAManagerFactory {
         }
 
         public byte[] processCmdV2(Context context, byte[] param) {
-            if (mAlipayService == null) {
-                mAlipayService = getAliPayService();
+            if (mFingerprintManager == null) {
+                mFingerprintManager = (FingerprintManager) context.getSystemService("fingerprint");
             }
-            if (mAlipayService == null) {
-                Log.w(IFAAManagerFactory.TAG, "processCmdV2: no oppo.com.alipayService!");
-                return null;
+            if (mFingerprintManager != null) {
+                return mFingerprintManager.alipayInvokeCommand(param);
             }
-            byte[] receiveBuffer = null;
-            try {
-                receiveBuffer = mAlipayService.processCmdV2(param);
-            } catch (RemoteException e) {
-                Log.e(IFAAManagerFactory.TAG, "processCmdV2 failed", e);
-            }
-            return receiveBuffer;
+            Log.w(IFAAManagerFactory.TAG, "processCmdV2: no FingerprintManager!");
+            return null;
         }
 
         public String bytesToHexString(byte[] src) {
@@ -119,21 +115,6 @@ public class IFAAManagerFactory {
         }
 
         public void binderDied() {
-            mAlipayService = null;
-        }
-
-        public IAlipayService getAliPayService() {
-            IAlipayService alipayService = IAlipayService.Stub.asInterface(ServiceManager.getService("oppo.com.alipayService"));
-            try {
-                alipayService.asBinder().linkToDeath(this, 0);
-            } catch (RemoteException e) {
-                Log.e(IFAAManagerFactory.TAG, "Failed to open oppo.com.alipayService HAL", e);
-                alipayService = null;
-            }
-            if (alipayService == null) {
-                Log.e(IFAAManagerFactory.TAG, "alipayService = null, Failed to open oppo.com.alipayService HAL");
-            }
-            return alipayService;
         }
     }
 
@@ -141,9 +122,9 @@ public class IFAAManagerFactory {
         if (authType != 1) {
             return null;
         }
-        if (mFAAManager == null) {
-            mFAAManager = new IFAAManagerOppo();
+        if (sFAAManager == null) {
+            sFAAManager = new IFAAManagerOppo();
         }
-        return mFAAManager;
+        return sFAAManager;
     }
 }

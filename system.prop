@@ -2,27 +2,31 @@
 # system.prop for R11s
 #
 persist.power.useautobrightadj=true
-persist.radio.volte_timer=0
+ro.telephony.default_network=22,18
 persist.radio.multisim.config=dsds
 gsm.lte.ca.support=1
+persist.dbg.vt_avail_ovr=1
 ro.qualcomm.foss=1
 ro.qualcomm.display.paneltype=1
 config.foss.xml=1
-config.foss.path=/system/etc/FOSSConfig.xml
+config.foss.path=/vendor/etc/FOSSConfig.xml
 ro.qcom.ad=1
 ro.qcom.ad.sensortype=2
-ro.qcom.ad.calib.data=/system/etc/OPPO_OLED_AD_calib.cfg
+ro.qcom.ad.calib.data=/vendor/etc/OPPO_OLED_AD_calib.cfg
 ro.camera.dualcam.type=2
 persist.camera.aifb=1
-persist.camera.filter.version=1
+ro.camera.filter.version=1
 ro.camera.temperature.limit=480
-persist.radio.lte_vrte_ltd=1
+persist.vendor.radio.lte_vrte_ltd=1
 persist.cne.subscription_aware=false
-persist.radio.cs_srv_type=1
-persist.radio.ril_extra_debug=1
+persist.vendor.radio.cs_srv_type=1
+persist.vendor.radio.report_codec=1
 ro.cutoff_voltage_mv=3200
-ro.qti.sensors.wu=false
+ro.vendor.sensors.wu=false
 persist.bluetooth.disableabsvol=true
+persist.bt.iot.enablelogging=true
+persist.bt.soc.alwayson=true
+persist.rcs.supported=0
 #
 # system.prop for sdm660
 #
@@ -42,18 +46,14 @@ persist.rild.nitz_short_ons_3=
 ril.subscription.types=NV,RUIM
 DEVICE_PROVISIONED=1
 
-##ifdef VENDOR_EDIT
-#yipeng.sun@NW.AP.Cfg.930582, 2017/03/06
-#add for search network manually
-persist.radio.rat_on=legacy
-##endif  /*VENDOR_EDIT*/
-
 #
 # Set network mode to (T/L/G/W/1X/EVDO, T/G/W/L) for 7+5 mode device on DSDS mode
 #
 ro.telephony.default_network=22,20
 
+debug.sf.enable_hwc_vds=1
 debug.sf.hw=1
+debug.sf.latch_unsignaled=1
 debug.gralloc.enable_fb_ubwc=1
 dalvik.vm.heapsize=36m
 dev.pm.dyn_samplingrate=1
@@ -74,22 +74,24 @@ media.stagefright.enable-scan=true
 mmp.enable.3g2=true
 media.aac_51_output_enabled=true
 mm.enable.smoothstreaming=true
+media.settings.xml=/vendor/etc/media_profiles_vendor.xml
 #codecs:(PARSER_)AAC AC3 AMR_NB AMR_WB ASF AVI DTS FLV 3GP 3G2 MKV MP2PS MP2TS MP3 OGG QCP WAV FLAC AIFF APE DSD
 mm.enable.qcom_parser=13631487
 persist.mm.enable.prefetch=true
 
 #property to enable narrow search range for video encoding
 vidc.enc.target_support_bframe=1
-vidc.enc.disable_bframes=1
-vidc.dec.enable.downscalar=1
-video.disable.ubwc=1
+vendor.vidc.enc.disable_bframes=1
+vendor.vidc.dec.enable.downscalar=1
 
 # enable PQ feature by default
-vidc.enc.disable.pq=false
+vendor.vidc.enc.disable.pq=false
 
 # Additional buffers shared between Camera and Video
 vidc.enc.dcvs.extra-buff-count=2
 
+#Netflix custom property
+ro.netflix.bsp_rev=Q660-13149-1
 
 #
 # system props for the data modules
@@ -100,23 +102,17 @@ persist.data.mode=concurrent
 #system props for time-services
 persist.timed.enable=true
 
-#
-# system prop for opengles version
-#
-# 196610 is decimal for 0x30002 to report major/minor versions as 3/2
-ro.opengles.version=196610
-
 # system property for maximum number of HFP client connections
 bt.max.hfpclient.connections=1
 #force disable Bluetooth AAC by default
 persist.bt.a2dp.aac_disable=true
 
-#ifdef VENDOR_EDIT
-#YongPeng.Yi@MultiMedia.Display.LCD.Feature, 2017/02/20,
-#remove for cabl, no project use this feature
 # System property for cabl
-#ro.qualcomm.cabl=2
-#endif /*VENDOR_EDIT*/
+#ifdef VENDOR_EDIT
+# Goushengjun@PWD.MM.Display.Feature, 2016/07/18  Add for close cabl
+# System property for cabl
+# ro.qualcomm.cabl=2
+#endif /* VENDOR_EDIT */
 
 #
 # System props for telephony
@@ -127,18 +123,15 @@ telephony.lteOnCdmaDevice=1
 #
 persist.fuse_sdcard=true
 
-#system prop for Bluetooth SOC type
-qcom.bluetooth.soc=cherokee
-
 #system prop for wipower support
-#ifdef VENDOR_EDIT
-#Shangxiu.Gao@Connectivity.BT.Basic.Customize.A32, 2017/03/14
-#Add for : disable wipower
+#ifndef VENDOR_EDIT
+#Shangxiu.Gao@PSW.CN.BT.Basic.Customize.941529, 2017/03/14
+#remove for disable wipower
+#ro.bluetooth.emb_wp_mode=true
+#ro.bluetooth.wipower=true
+#else /* VENDOR_EDIT */
 ro.bluetooth.wipower=false
 ro.bluetooth.emb_wp_mode=false
-#else  /* VENDOR_EDIT */
-# ro.bluetooth.wipower=true
-# ro.bluetooth.emb_wp_mode=true
 #endif /* VENDOR_EDIT */
 
 #
@@ -162,11 +155,11 @@ persist.data.df.dev_name=rmnet_usb0
 # 1 is camera1
 # 2 or anything else is camera2
 ##ifndef VENDOR_EDIT
-#Qingguang.Zhang@NW.AP.Call.967121, 2017/04/19
+#Qingguang.Zhang@NW.AP.Call.1154227, 2017/11/22
 #modify for cannot send video image to remote side
 #persist.radio.VT_CAM_INTERFACE=2
 ##else  /*VENDOR_EDIT*/
-persist.radio.VT_CAM_INTERFACE=1
+persist.vendor.qti.telephony.vt_cam_interface=1
 ##endif  /*VENDOR_EDIT*/
 
 #property to enable user to access Google WFD settings
@@ -183,44 +176,32 @@ ro.nfc.port=I2C
 ro.vendor.at_library=libqti-at.so
 
 #min/max cpu in core control
-ro.core_ctl_min_cpu=2
-ro.core_ctl_max_cpu=4
+ro.vendor.qti.core_ctl_min_cpu=2
+ro.vendor.qti.core_ctl_max_cpu=4
 
-# enable navigation bar
-qemu.hw.mainkeys=0
+#Bringup properties
+persist.radio.atfwd.start=true
 
 #property to enable VDS WFD solution
 persist.hwc.enable_vds=1
 
 #Increase cached app limit
-#ifdef VENDOR_EDIT
-#Jiemin.Zhu@Swdp.Android.Performance.Memory, 2017/04/08, add for keep default of bg_apps_limit
-#ro.sys.fw.bg_apps_limit=60
-#endif /* VENDOR_EDIT */
+ro.vendor.qti.sys.fw.bg_apps_limit=60
 
 #Settings to enable sensors
 #Device Orientation sensor
-ro.qti.sensors.dev_ori=true
-#ifdef VENDOR_EDIT
-#zhq@Bsp.Sensor, 2017/04/18, add for dpc sensor
-ro.qti.sensors.dpc=true
-#endif
+ro.vendor.sensors.dev_ori=true
 #Persistent Motion Detector
-ro.qti.sensors.pmd=true
+ro.vendor.sensors.pmd=true
 #Stationary Detector
-ro.qti.sensors.sta_detect=true
+ro.vendor.sensors.sta_detect=true
 #Motion Detector
-ro.qti.sensors.mot_detect=true
-#Facing
-ro.qti.sensors.facing=false
-#CMC
-ro.qti.sensors.cmc=false
-#Gesture
-ro.qti.sdk.sensors.gestures=false
+ro.vendor.sensors.mot_detect=true
 
+#Expose aux camera for below packages
 #ifdef VENDOR_EDIT
 #HongBo@Camera OPPO 2017/02/21  Expose aux camera for below packages
-camera.aux.packagelist=org.codeaurora.snapcam,com.oppo.camera,com.oppo.engineermode,com.coloros.healthcheck
+vendor.camera.aux.packagelist=org.codeaurora.snapcam,com.oppo.camera,com.oppo.engineermode,com.coloros.healthcheck
 #else
 #Expose aux camera for below packages
 #camera.aux.packagelist=org.codeaurora.snapcam
@@ -230,56 +211,18 @@ camera.aux.packagelist=org.codeaurora.snapcam,com.oppo.camera,com.oppo.engineerm
 persist.camera.preview.ubwc=0
 
 # Create zram disk
-ro.config.zram=true
+ro.vendor.qti.config.zram=true
 
-#Set cutoff voltage to 3200mV
-ro.cutoff_voltage_mv=3200
+#set maximum supported adapter voltage
+persist.chg.max_volt_mv=9000
 
-persist.nfc.smartcard.config=SIM1,eSE1
-ro.vendor.extension_library=libqti-perfd-client.so
-ro.hardware.power_library=/system/lib/hw/power.qcom.so
-persist.radio.apm_sim_not_pwdn=1
-persist.radio.sib16_support=1
-persist.radio.custom_ecc=1
-persist.radio.multisim.config=dsds
-ro.frp.pst=/dev/block/bootdevice/by-name/frp
-persist.dirac.acs.controller=qem
-persist.dirac.acs.ignore_error=1
-drm.service.enabled=true
-af.fast_track_multiplier=1
-audio_hal.period_size=192
-ro.qc.sdk.audio.fluencetype=none
-persist.audio.fluence.voicecall=true
-persist.audio.fluence.voicerec=false
-persist.audio.fluence.speaker=true
-tunnel.audio.encode=false
-persist.audio.ras.enabled=false
-audio.offload.buffer.size.kb=64
-audio.offload.min.duration.secs=30
-audio.offload.video=true
-audio.offload.pcm.16bit.enable=true
-audio.offload.pcm.24bit.enable=true
-audio.offload.track.enable=true
-audio.deep_buffer.media=true
-audio.heap.size.multiplier=7
-use.voice.path.for.pcm.voip=true
-audio.offload.multiaac.enable=true
-audio.dolby.ds2.enabled=true
-audio.dolby.ds2.hardbypass=true
-audio.offload.multiple.enabled=false
-audio.offload.passthrough=false
-ro.qc.sdk.audio.ssr=false
-audio.offload.gapless.enabled=true
-audio.safx.pbe.enabled=true
-audio.parser.ip.buffer.size=262144
-flac.sw.decoder.24bit.support=true
-persist.bt.a2dp_offload_cap=sbc-aptx-aac
-use.qti.sw.alac.decoder=true
-use.qti.sw.ape.decoder=true
-qcom.hw.aac.encoder=true
-fm.a2dp.conc.disabled=true
-audio.noisy.broadcast.delay=600
-persist.audio.hifi.int_codec=true
-audio.offload.pstimeout.secs=3
-fastrpc.process.attrs=1
-ro.mdtp.package_name2=com.qualcomm.qti.securemsm.mdtp.MdtpDemo
+#Property to enable display default color mode
+vendor.display.enable_default_color_mode=1
+
+# Property for backup NTP Server
+persist.backup.ntpServer="0.pool.ntp.org"
+# enable IZat OptInApp overlay
+persist.vendor.overlay.izat.optin=rro
+
+#Disable Skip Validate
+sdm.debug.disable_skip_validate=1

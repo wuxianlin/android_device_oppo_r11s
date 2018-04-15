@@ -36,6 +36,7 @@
 #include <private/hw_info_types.h>
 #include <bitset>
 #include <vector>
+#include <drm_lib_loader.h>
 
 #include "hw_info_interface.h"
 
@@ -56,6 +57,14 @@ class HWInfoDRM: public HWInfoInterface {
   DisplayError GetDynamicBWLimits(HWResourceInfo *hw_resource);
   void GetSDMFormat(uint32_t drm_format, uint64_t drm_format_modifier,
                     std::vector<LayerBufferFormat> *sdm_formats);
+  void GetSDMFormat(uint32_t v4l2_format, LayerBufferFormat *sdm_format);
+  void GetRotatorFormatsForType(int fd, uint32_t type,
+                                std::vector<LayerBufferFormat> *supported_formats);
+  DisplayError GetRotatorSupportedFormats(uint32_t v4l2_index, HWResourceInfo *hw_resource);
+  void PopulateSupportedFmts(HWSubBlockType sub_blk_type, const sde_drm::DRMPlaneTypeInfo  &info,
+                             HWResourceInfo *hw_resource);
+  void PopulatePipeCaps(const sde_drm::DRMPlaneTypeInfo &info, HWResourceInfo *hw_resource);
+
 
   sde_drm::DRMManagerInterface *drm_mgr_intf_ = {};
   bool default_mode_ = false;
@@ -64,6 +73,8 @@ class HWInfoDRM: public HWInfoInterface {
   static const int kHWMdssVersion5 = 500;  // MDSS_V5
   static const int kMaxStringLength = 1024;
   static HWResourceInfo *hw_resource_;
+
+  drm_utils::DRMLibLoader *drm_lib = nullptr;
 };
 
 }  // namespace sdm

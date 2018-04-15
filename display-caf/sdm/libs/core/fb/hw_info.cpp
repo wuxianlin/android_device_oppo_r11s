@@ -154,7 +154,9 @@ DisplayError HWInfo::GetHWResourceInfo(HWResourceInfo *hw_resource) {
   while (Sys::getline_(fs, line)) {
     // parse the line and update information accordingly
     if (!ParseString(line.c_str(), tokens, max_count, ":, =\n", &token_count)) {
-      if (!strncmp(tokens[0], "hw_rev", strlen("hw_rev"))) {
+      if (!strncmp(tokens[0], "mdp_version", strlen("mdp_version"))) {
+        hw_resource_->hw_version = UINT32(atoi(tokens[1]));  // HW Version 3/5
+      } else if (!strncmp(tokens[0], "hw_rev", strlen("hw_rev"))) {
         hw_resource_->hw_revision = UINT32(atoi(tokens[1]));  // HW Rev, v1/v2
       } else if (!strncmp(tokens[0], "rot_input_fmts", strlen("rot_input_fmts"))) {
         ParseFormats(&tokens[1], (token_count - 1), kHWRotatorInput, hw_resource_);
@@ -168,6 +170,8 @@ DisplayError HWInfo::GetHWResourceInfo(HWResourceInfo *hw_resource) {
         hw_resource_->max_scale_down = UINT32(atoi(tokens[1]));
       } else if (!strncmp(tokens[0], "max_upscale_ratio", strlen("max_upscale_ratio"))) {
         hw_resource_->max_scale_up = UINT32(atoi(tokens[1]));
+      } else if (!strncmp(tokens[0], "rot_dwnscale_max", strlen("rot_dwnscale_max"))) {
+        hw_resource_->rot_downscale_max = FLOAT(atoi(tokens[1]));
       } else if (!strncmp(tokens[0], "max_bandwidth_low", strlen("max_bandwidth_low"))) {
         hw_resource_->max_bandwidth_low = UINT64(atol(tokens[1]));
       } else if (!strncmp(tokens[0], "max_bandwidth_high", strlen("max_bandwidth_high"))) {

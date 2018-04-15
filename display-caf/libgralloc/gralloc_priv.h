@@ -120,6 +120,8 @@
 #define HAL_PIXEL_FORMAT_YCbCr_420_P010          0x11F
 #define HAL_PIXEL_FORMAT_CbYCrY_422_I            0x120
 #define HAL_PIXEL_FORMAT_BGR_888                 0x121
+#define HAL_PIXEL_FORMAT_RAW8                    0x123
+#define HAL_PIXEL_FORMAT_YCbCr_420_P010_UBWC     0x124
 
 #define HAL_PIXEL_FORMAT_INTERLACE               0x180
 
@@ -247,8 +249,6 @@ struct private_handle_t : public native_handle {
         uint64_t base_metadata __attribute__((aligned(8)));
         int unaligned_width;   // holds width client asked to allocate
         int unaligned_height;  // holds height client asked to allocate
-        unsigned int gem_handle;
-        unsigned int fb_id;
 
 #ifdef __cplusplus
         static const int sNumFds = 2;
@@ -265,7 +265,7 @@ struct private_handle_t : public native_handle {
             base(0), offset_metadata(0), gpuaddr(0),
             format(format), width(width), height(height),
             base_metadata(0), unaligned_width(width),
-            unaligned_height(height), gem_handle(0), fb_id(0)
+            unaligned_height(height)
         {
             version = (int) sizeof(native_handle);
             numInts = sNumInts();

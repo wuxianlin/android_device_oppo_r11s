@@ -15,12 +15,12 @@
  */
 
 #define CAMERA_PARAMETERS_EXTRA_C \
-const char CameraParameters::KEY_APP_MASK[] = "app-mask"; \
-const char CameraParameters::KEY_MAX_LONG_EXPOSURE_TIME[] = "max-long-exposure-time"; \
-const char CameraParameters::KEY_DNG_RAW_SIZE[] = "dng-raw-size"; \
-const char CameraParameters::KEY_SENSOR_ID[] = "sensor-id"; \
-const char CameraParameters::KEY_FACE_PREVIEW_PARAM[] = "face-beauty-preview-param"; \
-const char CameraParameters::KEY_REMOSAIC_FACE_BEAUTY[] = "is-remosaic-fb";
+const char KEY_APP_MASK[] = "app-mask"; \
+const char KEY_MAX_LONG_EXPOSURE_TIME[] = "max-long-exposure-time"; \
+const char KEY_DNG_RAW_SIZE[] = "dng-raw-size"; \
+const char KEY_SENSOR_ID[] = "sensor-id"; \
+const char KEY_FACE_PREVIEW_PARAM[] = "face-beauty-preview-param"; \
+const char KEY_REMOSAIC_FACE_BEAUTY[] = "is-remosaic-fb";
 
 #define CAMERA_PARAMETERS_EXTRA_H \
     static const char KEY_APP_MASK[]; \

@@ -4,18 +4,20 @@ include $(LOCAL_PATH)/../../../common.mk
 ifeq ($(use_hwc2),false)
 
 LOCAL_MODULE                  := hwcomposer.$(TARGET_BOARD_PLATFORM)
+LOCAL_VENDOR_MODULE           := true
 LOCAL_MODULE_RELATIVE_PATH    := hw
 LOCAL_MODULE_TAGS             := optional
 LOCAL_C_INCLUDES              := $(common_includes)
+LOCAL_HEADER_LIBRARIES        := display_headers
 
-LOCAL_CFLAGS                  := -Wno-missing-field-initializers -Wno-unused-parameter \
-                                 -std=c++11 -fcolor-diagnostics\
-                                 -DLOG_TAG=\"SDM\" $(common_flags)
+LOCAL_CFLAGS                  := $(common_flags) -Wno-missing-field-initializers -Wno-unused-parameter \
+                                 -std=c++11 -fcolor-diagnostics -Wno-sign-conversion -DLOG_TAG=\"SDM\"
 LOCAL_CLANG                   := true
 
 LOCAL_SHARED_LIBRARIES        := libsdmcore libqservice libbinder libhardware libhardware_legacy \
                                  libutils libcutils libsync libmemalloc libqdutils libdl \
-                                 libpowermanager libsdmutils libgpu_tonemapper  libc++ liblog
+                                 libpowermanager libsdmutils libgpu_tonemapper  libc++ liblog \
+                                 libdrmutils libui libbfqio_vendor
 
 LOCAL_SRC_FILES               := hwc_session.cpp \
                                  hwc_display.cpp \

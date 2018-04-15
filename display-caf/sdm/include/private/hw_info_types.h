@@ -36,8 +36,8 @@
 namespace sdm {
 using std::string;
 
-const int kMaxSDELayers = 16;   // Maximum number of layers that can be handled by hardware in a
-                                // given layer stack.
+const int kMaxSDELayers = 16;   // Maximum number of layers that can be handled by MDP5 hardware
+                                // in a given layer stack.
 #define MAX_PLANES 4
 
 #define MAX_DETAIL_ENHANCE_CURVE 3
@@ -119,6 +119,7 @@ struct HWDynBwLimitInfo {
 struct HWPipeCaps {
   PipeType type = kPipeTypeUnused;
   uint32_t id = 0;
+  uint32_t master_pipe_id = 0;
   uint32_t max_rects = 1;
 };
 
@@ -141,6 +142,11 @@ struct HWDestScalarInfo {
   uint32_t max_scale_up = 1;
 };
 
+enum SmartDMARevision {
+  V1,
+  V2,
+};
+
 struct HWResourceInfo {
   uint32_t hw_version = 0;
   uint32_t hw_revision = 0;
@@ -156,6 +162,7 @@ struct HWResourceInfo {
   uint32_t num_smp_per_pipe = 0;
   uint32_t max_scale_up = 1;
   uint32_t max_scale_down = 1;
+  float rot_downscale_max = 0.0f;
   uint64_t max_bandwidth_low = 0;
   uint64_t max_bandwidth_high = 0;
   uint32_t max_mixer_width = 2048;
@@ -191,7 +198,7 @@ struct HWResourceInfo {
   HWDestScalarInfo hw_dest_scalar_info;
   bool has_avr = false;
   bool has_hdr = false;
-
+  SmartDMARevision smart_dma_rev = SmartDMARevision::V1;
   void Reset() { *this = HWResourceInfo(); }
 };
 
@@ -234,12 +241,12 @@ struct HWPanelInfo {
   DisplayPort port = kPortDefault;    // Display port
   HWDisplayMode mode = kModeDefault;  // Display mode
   bool partial_update = false;        // Partial update feature
-  int left_align = 0;                 // ROI left alignment restriction
-  int width_align = 0;                // ROI width alignment restriction
-  int top_align = 0;                  // ROI top alignment restriction
-  int height_align = 0;               // ROI height alignment restriction
-  int min_roi_width = 0;              // Min width needed for ROI
-  int min_roi_height = 0;             // Min height needed for ROI
+  int left_align = 1;                 // ROI left alignment restriction
+  int width_align = 1;                // ROI width alignment restriction
+  int top_align = 1;                  // ROI top alignment restriction
+  int height_align = 1;               // ROI height alignment restriction
+  int min_roi_width = 1;              // Min width needed for ROI
+  int min_roi_height = 1;             // Min height needed for ROI
   bool needs_roi_merge = false;       // Merge ROI's of both the DSI's
   bool dynamic_fps = false;           // Panel Supports dynamic fps
   bool dfps_porch_mode = false;       // dynamic fps VFP or HFP mode
@@ -424,6 +431,7 @@ struct HWAVRInfo {
 };
 
 struct HWPipeInfo {
+  uint8_t rect = 255;
   uint32_t pipe_id = 0;
   HWSubBlockType sub_block_type = kHWSubBlockMax;
   LayerRect src_roi;
@@ -482,6 +490,7 @@ struct HWLayersInfo {
   bool use_hw_cursor = false;      // Indicates that HWCursor pipe needs to be used for cursor layer
   DestScaleInfoMap dest_scale_info_map = {};
   HWHDRLayerInfo hdr_layer_info = {};
+  Handle pvt_data = NULL;   // Private data used by sdm extension only.
 };
 
 struct HWLayers {

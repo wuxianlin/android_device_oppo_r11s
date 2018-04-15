@@ -48,7 +48,8 @@ class DisplayBase : public DisplayInterface, DumpImpl {
  public:
   DisplayBase(DisplayType display_type, DisplayEventHandler *event_handler,
               HWDeviceType hw_device_type, BufferSyncHandler *buffer_sync_handler,
-              CompManager *comp_manager, HWInfoInterface *hw_info_intf);
+              BufferAllocator *buffer_allocator, CompManager *comp_manager,
+              HWInfoInterface *hw_info_intf);
   virtual ~DisplayBase() { }
   virtual DisplayError Init();
   virtual DisplayError Deinit();
@@ -93,8 +94,10 @@ class DisplayBase : public DisplayInterface, DumpImpl {
                                             PPPendingParams *pending_action);
   virtual DisplayError GetColorModeCount(uint32_t *mode_count);
   virtual DisplayError GetColorModes(uint32_t *mode_count, std::vector<std::string> *color_modes);
+  virtual DisplayError GetColorModeAttr(const std::string &color_mode, AttrVal *attr);
   virtual DisplayError SetColorMode(const std::string &color_mode);
   virtual DisplayError SetColorTransform(const uint32_t length, const double *color_transform);
+  virtual DisplayError GetDefaultColorMode(std::string *color_mode);
   virtual DisplayError ApplyDefaultDisplayMode(void);
   virtual DisplayError SetCursorPosition(int x, int y);
   virtual DisplayError GetRefreshRateRange(uint32_t *min_refresh_rate, uint32_t *max_refresh_rate);
@@ -111,6 +114,9 @@ class DisplayBase : public DisplayInterface, DumpImpl {
   virtual DisplayError GetDisplayPort(DisplayPort *port);
   virtual bool IsPrimaryDisplay();
   virtual DisplayError SetCompositionState(LayerComposition composition_type, bool enable);
+  virtual DisplayError GetClientTargetSupport(uint32_t width, uint32_t height,
+                                              LayerBufferFormat format,
+                                              const ColorMetaData &color_metadata);
 
  protected:
   DisplayError BuildLayerStackStats(LayerStack *layer_stack);
@@ -118,6 +124,8 @@ class DisplayBase : public DisplayInterface, DumpImpl {
   void CommitLayerParams(LayerStack *layer_stack);
   void PostCommitLayerParams(LayerStack *layer_stack);
   DisplayError HandleHDR(LayerStack *layer_stack);
+  DisplayError ValidateScaling(uint32_t width, uint32_t height);
+  DisplayError ValidateDataspace(const ColorMetaData &color_metadata);
 
   // DumpImpl method
   void AppendDump(char *buffer, uint32_t length);
@@ -130,6 +138,10 @@ class DisplayBase : public DisplayInterface, DumpImpl {
   bool NeedsDownScale(const LayerRect &src_rect, const LayerRect &dst_rect, bool needs_rotation);
   DisplayError InitializeColorModes();
   DisplayError SetColorModeInternal(const std::string &color_mode);
+  DisplayError GetValueOfModeAttribute(const AttrVal &attr, const std::string &type,
+                                       std::string *value);
+  DisplayError GetHdrColorMode(std::string *color_mode, bool *found_hdr);
+  bool IsSupportColorModeAttribute(const std::string &color_mode);
 
   recursive_mutex recursive_mutex_;
   DisplayType display_type_;
@@ -138,13 +150,14 @@ class DisplayBase : public DisplayInterface, DumpImpl {
   HWInterface *hw_intf_ = NULL;
   HWPanelInfo hw_panel_info_;
   BufferSyncHandler *buffer_sync_handler_ = NULL;
+  BufferAllocator *buffer_allocator_ {};
   CompManager *comp_manager_ = NULL;
   DisplayState state_ = kStateOff;
   bool active_ = false;
   Handle hw_device_ = 0;
   Handle display_comp_ctx_ = 0;
   HWLayers hw_layers_;
-  bool pending_commit_ = false;
+  bool needs_validate_ = true;
   bool vsync_enable_ = false;
   uint32_t max_mixer_stages_ = 0;
   HWInfoInterface *hw_info_intf_ = NULL;
@@ -156,13 +169,14 @@ class DisplayBase : public DisplayInterface, DumpImpl {
   std::vector<SDEDisplayMode> color_modes_;
   typedef std::map<std::string, SDEDisplayMode *> ColorModeMap;
   ColorModeMap color_mode_map_ = {};
+  typedef std::map<std::string, AttrVal> ColorModeAttrMap;
+  ColorModeAttrMap color_mode_attr_map_ = {};
   HWDisplayAttributes display_attributes_ = {};
   HWMixerAttributes mixer_attributes_ = {};
   DisplayConfigVariableInfo fb_config_ = {};
   uint32_t req_mixer_width_ = 0;
   uint32_t req_mixer_height_ = 0;
   std::string current_color_mode_ = "hal_native";
-  std::string hdr_color_mode_ = "hal_hdr";
   bool hdr_playback_mode_ = false;
   int disable_hdr_lut_gen_ = 0;
 };

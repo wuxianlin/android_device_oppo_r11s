@@ -29,12 +29,19 @@
 
 #define LOG_TAG "keep_alive"
 /*#define LOG_NDEBUG 0*/
+
 #include <stdlib.h>
 #include <cutils/log.h>
 #include "audio_hw.h"
 #include "audio_extn.h"
 #include "platform_api.h"
 #include <platform.h>
+
+#ifdef DYNAMIC_LOG_ENABLED
+#include <log_xml_parser.h>
+#define LOG_MASK HAL_MOD_FILE_KEEP_ALIVE
+#include <log_utils.h>
+#endif
 
 #define SILENCE_INTERVAL 2 /*In secs*/
 
@@ -106,6 +113,11 @@ static void send_cmd_l(request_t r)
 
     struct keep_alive_cmd *cmd =
         (struct keep_alive_cmd *)calloc(1, sizeof(struct keep_alive_cmd));
+
+    if (cmd == NULL) {
+        ALOGE("%s: cmd is NULL", __func__);
+        return -ENOMEM;
+    }
 
     cmd->req = r;
     list_add_tail(&ka.cmd_list, &cmd->node);
@@ -264,6 +276,12 @@ void audio_extn_keep_alive_start()
 
     /*send calibration*/
     usecase = calloc(1, sizeof(struct audio_usecase));
+
+    if (usecase == NULL) {
+        ALOGE("%s: usecase is NULL", __func__);
+        rc = -ENOMEM;
+        goto exit;
+    }
     usecase->type = PCM_PLAYBACK;
     usecase->out_snd_device = snd_device;
 

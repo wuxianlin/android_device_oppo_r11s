@@ -58,6 +58,7 @@ class HWCDisplayPrimary : public HWCDisplay {
   virtual HWC2::Error GetColorModes(uint32_t *out_num_modes, android_color_mode_t *out_modes);
   virtual HWC2::Error SetColorMode(android_color_mode_t mode);
   virtual HWC2::Error SetColorTransform(const float *matrix, android_color_transform_t hint);
+  virtual HWC2::Error RestoreColorTransform();
   virtual int Perform(uint32_t operation, ...);
   virtual void SetSecureDisplay(bool secure_display_active);
   virtual DisplayError Refresh();
@@ -101,6 +102,7 @@ class HWCDisplayPrimary : public HWCDisplay {
   bool dump_output_to_file_ = false;
   BufferInfo output_buffer_info_ = {};
   void *output_buffer_base_ = nullptr;
+  int default_mode_status_ = 0;
 };
 
 }  // namespace sdm

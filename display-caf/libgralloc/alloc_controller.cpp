@@ -73,6 +73,10 @@
 #define ION_SC_PREVIEW_FLAGS ION_SECURE
 #endif
 
+#ifndef COLOR_FMT_P010_UBWC
+#define COLOR_FMT_P010_UBWC 9
+#endif
+
 using namespace gralloc;
 using namespace qdutils;
 using namespace android;
@@ -243,6 +247,8 @@ void AdrenoMemInfo::getAlignedWidthAndHeight(int width, int height, int format,
                 aligned_w = ALIGN(width, alignment);
                 break;
             case HAL_PIXEL_FORMAT_RAW16:
+            case HAL_PIXEL_FORMAT_Y16:
+            case HAL_PIXEL_FORMAT_Y8:
                 aligned_w = ALIGN(width, 16);
                 break;
             case HAL_PIXEL_FORMAT_RAW12:
@@ -250,6 +256,9 @@ void AdrenoMemInfo::getAlignedWidthAndHeight(int width, int height, int format,
                 break;
             case HAL_PIXEL_FORMAT_RAW10:
                 aligned_w = ALIGN(width * 10 / 8, 8);
+                break;
+            case HAL_PIXEL_FORMAT_RAW8:
+                aligned_w = ALIGN(width, 8);
                 break;
             case HAL_PIXEL_FORMAT_YCbCr_420_SP_TILED:
                 aligned_w = ALIGN(width, 128);
@@ -411,6 +420,9 @@ ADRENOPIXELFORMAT AdrenoMemInfo::getGpuPixelFormat(int hal_format)
             return ADRENO_PIXELFORMAT_NV12_EXT;
         case HAL_PIXEL_FORMAT_YCbCr_420_TP10_UBWC:
             return ADRENO_PIXELFORMAT_TP10;
+        case HAL_PIXEL_FORMAT_YCbCr_420_P010:
+        case HAL_PIXEL_FORMAT_YCbCr_420_P010_UBWC:
+            return ADRENO_PIXELFORMAT_P010;
         case HAL_PIXEL_FORMAT_RGBA_1010102:
             return ADRENO_PIXELFORMAT_R10G10B10A2_UNORM;
         case HAL_PIXEL_FORMAT_RGBX_1010102:
@@ -554,6 +566,7 @@ unsigned int getSize(int format, int width, int height, int usage,
         case HAL_PIXEL_FORMAT_RGBA_5551:
         case HAL_PIXEL_FORMAT_RGBA_4444:
         case HAL_PIXEL_FORMAT_RAW16:
+        case HAL_PIXEL_FORMAT_Y16:
             size = alignedw * alignedh * 2;
             break;
         case HAL_PIXEL_FORMAT_RAW12:
@@ -562,7 +575,10 @@ unsigned int getSize(int format, int width, int height, int usage,
         case HAL_PIXEL_FORMAT_RAW10:
             size = ALIGN(alignedw * alignedh, 4096);
             break;
-
+        case HAL_PIXEL_FORMAT_RAW8:
+        case HAL_PIXEL_FORMAT_Y8:
+            size = alignedw * alignedh;
+            break;
             // adreno formats
         case HAL_PIXEL_FORMAT_YCrCb_420_SP_ADRENO:  // NV21
             size  = ALIGN(alignedw*alignedh, 4096);
@@ -792,15 +808,22 @@ int getYUVPlaneInfo(private_handle_t* hnd, struct android_ycbcr* ycbcr)
                                   COLOR_FMT_NV12_BPP10_UBWC, ycbcr);
             ycbcr->chroma_step = 3;
         break;
-
+        case HAL_PIXEL_FORMAT_YCbCr_420_P010_UBWC:
+            getYuvUbwcSPPlaneInfo(hnd->base, width, height,
+                                  COLOR_FMT_P010_UBWC, ycbcr);
+            ycbcr->chroma_step = 4;
+        break;
         case HAL_PIXEL_FORMAT_YCrCb_420_SP:
         case HAL_PIXEL_FORMAT_YCrCb_422_SP:
         case HAL_PIXEL_FORMAT_YCrCb_420_SP_ADRENO:
         case HAL_PIXEL_FORMAT_YCrCb_420_SP_VENUS:
         case HAL_PIXEL_FORMAT_NV21_ZSL:
         case HAL_PIXEL_FORMAT_RAW16:
+        case HAL_PIXEL_FORMAT_Y16:
         case HAL_PIXEL_FORMAT_RAW12:
         case HAL_PIXEL_FORMAT_RAW10:
+        case HAL_PIXEL_FORMAT_RAW8:
+        case HAL_PIXEL_FORMAT_Y8:
             getYuvSPPlaneInfo(hnd->base, width, height, 1, ycbcr);
             std::swap(ycbcr->cb, ycbcr->cr);
         break;
@@ -901,6 +924,7 @@ static bool isUBwcFormat(int format)
     {
         case HAL_PIXEL_FORMAT_YCbCr_420_SP_VENUS_UBWC:
         case HAL_PIXEL_FORMAT_YCbCr_420_TP10_UBWC:
+        case HAL_PIXEL_FORMAT_YCbCr_420_P010_UBWC:
             return true;
         default:
             return false;
@@ -972,6 +996,11 @@ static void getYuvUBwcWidthHeight(int width, int height, int format,
             // The macro returns the stride which is 4/3 times the width, hence * 3/4
             aligned_w = (VENUS_Y_STRIDE(COLOR_FMT_NV12_BPP10_UBWC, width) * 3) / 4;
             aligned_h = VENUS_Y_SCANLINES(COLOR_FMT_NV12_BPP10_UBWC, height);
+            break;
+        case HAL_PIXEL_FORMAT_YCbCr_420_P010_UBWC:
+            // The macro returns the stride which is 2 times the width, hence / 2
+            aligned_w = (VENUS_Y_STRIDE(COLOR_FMT_P010_UBWC, width) / 2);
+            aligned_h = VENUS_Y_SCANLINES(COLOR_FMT_P010_UBWC, height);
             break;
         default:
             ALOGE("%s: Unsupported pixel format: 0x%x", __FUNCTION__, format);
@@ -1055,6 +1084,9 @@ static unsigned int getUBwcSize(int width, int height, int format,
         case HAL_PIXEL_FORMAT_YCbCr_420_TP10_UBWC:
             size = VENUS_BUFFER_SIZE(COLOR_FMT_NV12_BPP10_UBWC, width, height);
             break;
+        case HAL_PIXEL_FORMAT_YCbCr_420_P010_UBWC:
+            size = VENUS_BUFFER_SIZE(COLOR_FMT_P010_UBWC, width, height);
+            break;
         default:
             ALOGE("%s: Unsupported pixel format: 0x%x", __FUNCTION__, format);
             break;
@@ -1097,4 +1129,95 @@ int getRgbDataAddress(private_handle_t* hnd, void** rgb_data)
 
     *rgb_data = (void*)(hnd->base + meta_size);
     return err;
+}
+
+int getBufferLayout(private_handle_t *hnd, uint32_t stride[4],
+        uint32_t offset[4], uint32_t *num_planes) {
+    if (!hnd || !stride || !offset || !num_planes) {
+        return -EINVAL;
+    }
+
+    struct android_ycbcr yuvInfo = {};
+    *num_planes = 1;
+    stride[0] = 0;
+
+    switch (hnd->format) {
+        case HAL_PIXEL_FORMAT_RGB_565:
+        case HAL_PIXEL_FORMAT_BGR_565:
+        case HAL_PIXEL_FORMAT_RGBA_5551:
+        case HAL_PIXEL_FORMAT_RGBA_4444:
+            stride[0] = hnd->width * 2;
+            break;
+        case HAL_PIXEL_FORMAT_RGB_888:
+            stride[0] = hnd->width * 3;
+            break;
+        case HAL_PIXEL_FORMAT_RGBA_8888:
+        case HAL_PIXEL_FORMAT_BGRA_8888:
+        case HAL_PIXEL_FORMAT_RGBX_8888:
+        case HAL_PIXEL_FORMAT_BGRX_8888:
+        case HAL_PIXEL_FORMAT_RGBA_1010102:
+        case HAL_PIXEL_FORMAT_ARGB_2101010:
+        case HAL_PIXEL_FORMAT_RGBX_1010102:
+        case HAL_PIXEL_FORMAT_XRGB_2101010:
+        case HAL_PIXEL_FORMAT_BGRA_1010102:
+        case HAL_PIXEL_FORMAT_ABGR_2101010:
+        case HAL_PIXEL_FORMAT_BGRX_1010102:
+        case HAL_PIXEL_FORMAT_XBGR_2101010:
+            stride[0] = hnd->width * 4;
+            break;
+    }
+
+    // Format is RGB
+    if (stride[0]) {
+        return 0;
+    }
+
+    (*num_planes)++;
+    int ret = getYUVPlaneInfo(hnd, &yuvInfo);
+    if (ret < 0) {
+        ALOGE("%s failed", __FUNCTION__);
+        return ret;
+    }
+
+    stride[0] = static_cast<uint32_t>(yuvInfo.ystride);
+    offset[0] = static_cast<uint32_t>(
+                    reinterpret_cast<uint64_t>(yuvInfo.y) - hnd->base);
+    stride[1] = static_cast<uint32_t>(yuvInfo.cstride);
+    switch (hnd->format) {
+        case HAL_PIXEL_FORMAT_YCbCr_420_SP:
+        case HAL_PIXEL_FORMAT_YCbCr_422_SP:
+        case HAL_PIXEL_FORMAT_YCbCr_420_SP_VENUS:
+        case HAL_PIXEL_FORMAT_NV12_ENCODEABLE:
+        case HAL_PIXEL_FORMAT_YCbCr_420_SP_VENUS_UBWC:
+        case HAL_PIXEL_FORMAT_YCbCr_420_P010:
+        case HAL_PIXEL_FORMAT_YCbCr_420_TP10_UBWC:
+        case HAL_PIXEL_FORMAT_YCbCr_420_P010_UBWC:
+            offset[1] = static_cast<uint32_t>(
+                    reinterpret_cast<uint64_t>(yuvInfo.cb) - hnd->base);
+            break;
+        case HAL_PIXEL_FORMAT_YCrCb_420_SP:
+        case HAL_PIXEL_FORMAT_YCrCb_420_SP_VENUS:
+        case HAL_PIXEL_FORMAT_YCrCb_422_SP:
+            offset[1] = static_cast<uint32_t>(
+                    reinterpret_cast<uint64_t>(yuvInfo.cr) - hnd->base);
+            break;
+        case HAL_PIXEL_FORMAT_YV12:
+            offset[1] = static_cast<uint32_t>(
+                    reinterpret_cast<uint64_t>(yuvInfo.cr) - hnd->base);
+            stride[2] = static_cast<uint32_t>(yuvInfo.cstride);
+            offset[2] = static_cast<uint32_t>(
+                    reinterpret_cast<uint64_t>(yuvInfo.cb) - hnd->base);
+            (*num_planes)++;
+            break;
+        default:
+            ALOGW("%s: Unsupported format %s", __FUNCTION__,
+                    qdutils::GetHALPixelFormatString(hnd->format));
+            ret = -EINVAL;
+    }
+
+    if (hnd->flags & private_handle_t::PRIV_FLAGS_UBWC_ALIGNED) {
+        std::fill(offset, offset + 4, 0);
+    }
+
+    return 0;
 }

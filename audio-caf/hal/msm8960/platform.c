@@ -257,7 +257,7 @@ void *platform_init(struct audio_device *adev)
     my_data->fluence_in_voice_rec = false;
     my_data->fluence_type = FLUENCE_NONE;
 
-    property_get("ro.qc.sdk.audio.fluencetype", value, "");
+    property_get("ro.vendor.audio.sdk.fluencetype", value, "");
     if (!strncmp("fluencepro", value, sizeof("fluencepro"))) {
         my_data->fluence_type = FLUENCE_QUAD_MIC;
     } else if (!strncmp("fluence", value, sizeof("fluence"))) {
@@ -267,17 +267,17 @@ void *platform_init(struct audio_device *adev)
     }
 
     if (my_data->fluence_type != FLUENCE_NONE) {
-        property_get("persist.audio.fluence.voicecall",value,"");
+        property_get("persist.vendor.audio.fluence.voicecall",value,"");
         if (!strncmp("true", value, sizeof("true"))) {
             my_data->fluence_in_voice_call = true;
         }
 
-        property_get("persist.audio.fluence.voicerec",value,"");
+        property_get("persist.vendor.audio.fluence.voicerec",value,"");
         if (!strncmp("true", value, sizeof("true"))) {
             my_data->fluence_in_voice_rec = true;
         }
 
-        property_get("persist.audio.fluence.speaker",value,"");
+        property_get("persist.vendor.audio.fluence.speaker",value,"");
         if (!strncmp("true", value, sizeof("true"))) {
             my_data->fluence_in_spkr_mode = true;
         }
@@ -1148,7 +1148,8 @@ int platform_set_channel_map(void *platform __unused, int ch_count __unused,
 
 int platform_set_stream_channel_map(void *platform __unused,
                                     audio_channel_mask_t channel_mask __unused,
-                                    int snd_id __unused)
+                                    int snd_id __unused
+                                    uint8_t *input_channel_map __unused)
 {
     return -ENOSYS;
 }
@@ -1216,6 +1217,12 @@ bool platform_send_gain_dep_cal(void *platform __unused,
 void platform_set_gsm_mode(void *platform __unused, bool enable __unused)
 {
     ALOGE("%s: Not implemented", __func__);
+}
+
+int platform_set_snd_device_name(snd_device_t snd_device __unused,
+                                 const char * name __unused)
+{
+    return -ENOSYS;
 }
 
 bool platform_can_enable_spkr_prot_on_device(snd_device_t snd_device __unused)
@@ -1366,4 +1373,10 @@ int platform_set_acdb_metainfo_key(void *platform __unused, char *name __unused,
                                    int key __unused)
 {
     return 0;
+}
+
+int platform_get_mmap_data_fd(void *platform, int fe_dev, int dir, int *fd,
+                              uint32_t *size)
+{
+    return -ENOSYS;
 }

@@ -25,11 +25,12 @@
 #ifndef __HW_INTERFACE_H__
 #define __HW_INTERFACE_H__
 
+#include <core/buffer_allocator.h>
+#include <core/buffer_sync_handler.h>
 #include <core/display_interface.h>
 #include <private/hw_info_types.h>
 #include <private/color_interface.h>
 #include <utils/constants.h>
-#include <core/buffer_sync_handler.h>
 
 #include "hw_info_interface.h"
 
@@ -58,7 +59,6 @@ class HWEventHandler {
   virtual DisplayError Blank(bool blank) = 0;
   virtual void IdleTimeout() = 0;
   virtual void ThermalEvent(int64_t thermal_level) = 0;
-  virtual void CECMessage(char *message) = 0;
   virtual void IdlePowerCollapse() = 0;
 
  protected:
@@ -68,7 +68,8 @@ class HWEventHandler {
 class HWInterface {
  public:
   static DisplayError Create(DisplayType type, HWInfoInterface *hw_info_intf,
-                             BufferSyncHandler *buffer_sync_handler, HWInterface **intf);
+                             BufferSyncHandler *buffer_sync_handler,
+                             BufferAllocator *buffer_allocator, HWInterface **intf);
   static DisplayError Destroy(HWInterface *intf);
 
   virtual DisplayError Init() = 0;

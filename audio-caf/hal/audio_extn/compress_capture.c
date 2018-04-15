@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 - 2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2013 - 2014, 2017, The Linux Foundation. All rights reserved.
  * Not a Contribution.
  *
  * Copyright (C) 2013 The Android Open Source Project
@@ -34,6 +34,12 @@
 
 #include "sound/compress_params.h"
 #include "sound/compress_offload.h"
+
+#ifdef DYNAMIC_LOG_ENABLED
+#include <log_xml_parser.h>
+#define LOG_MASK HAL_MOD_FILE_COMPR_CAP
+#include <log_utils.h>
+#endif
 
 #ifdef COMPRESS_CAPTURE_ENABLED
 
@@ -74,7 +80,7 @@ bool audio_extn_compr_cap_enabled()
     char prop_value[PROPERTY_VALUE_MAX] = {0};
     bool tunnel_encode = false;
 
-    property_get("tunnel.audio.encode",prop_value,"0");
+    property_get("vendor.audio.tunnel.encode",prop_value,"0");
     if (!strncmp("true", prop_value, sizeof("true")))
         return true;
     else

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2013-2017, The Linux Foundation. All rights reserved.
  * Not a contribution.
  *
  * Copyright (C) 2013 The Android Open Source Project
@@ -33,6 +33,12 @@
 #include "platform.h"
 #include "platform_api.h"
 #include "audio_extn.h"
+
+#ifdef DYNAMIC_LOG_ENABLED
+#include <log_xml_parser.h>
+#define LOG_MASK HAL_MOD_FILE_VOICE
+#include <log_utils.h>
+#endif
 
 struct pcm_config pcm_config_voice_call = {
     .channels = 1,
@@ -210,10 +216,25 @@ int voice_start_usecase(struct audio_device *adev, audio_usecase_t usecase_id)
 
     uc_info->id = usecase_id;
     uc_info->type = VOICE_CALL;
-    uc_info->stream.out = adev->current_call_output ;
-    uc_info->devices = adev->current_call_output ->devices;
+    uc_info->stream.out = adev->current_call_output;
+    uc_info->devices = adev->current_call_output->devices;
+
+    if (popcount(uc_info->devices) == 2) {
+        ALOGE("%s: Invalid combo device(%#x) for voice call", __func__,
+              uc_info->devices);
+        ret = -EIO;
+        goto error_start_voice;
+    }
+
     uc_info->in_snd_device = SND_DEVICE_NONE;
     uc_info->out_snd_device = SND_DEVICE_NONE;
+
+    if (audio_is_bluetooth_sco_device(uc_info->devices) && !adev->bt_sco_on) {
+        ALOGE("start_call: couldn't find BT SCO, SCO is not ready");
+        adev->voice.in_call = false;
+        ret = -EIO;
+        goto error_start_voice;
+    }
 
     list_add_tail(&adev->usecase_list, &uc_info->list);
 

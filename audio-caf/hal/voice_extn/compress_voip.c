@@ -36,6 +36,12 @@
 #include "platform.h"
 #include "voice_extn.h"
 
+#ifdef DYNAMIC_LOG_ENABLED
+#include <log_xml_parser.h>
+#define LOG_MASK HAL_MOD_FILE_COMPR_VOIP
+#include <log_utils.h>
+#endif
+
 #define COMPRESS_VOIP_IO_BUF_SIZE_NB 320
 #define COMPRESS_VOIP_IO_BUF_SIZE_WB 640
 #define COMPRESS_VOIP_IO_BUF_SIZE_SWB 1280
@@ -532,11 +538,11 @@ int voice_extn_compress_voip_start_output_stream(struct stream_out *out)
     int ret = 0;
     struct audio_device *adev = out->dev;
     struct audio_usecase *uc_info;
-    int snd_card_status = get_snd_card_state(adev);
 
     ALOGD("%s: enter", __func__);
 
-    if (SND_CARD_STATE_OFFLINE == snd_card_status) {
+    if (CARD_STATUS_OFFLINE == out->card_status ||
+        CARD_STATUS_OFFLINE == adev->card_status) {
         ret = -ENETRESET;
         ALOGE("%s: sound card is not active/SSR returning error %d ", __func__, ret);
         goto error;
@@ -574,11 +580,11 @@ int voice_extn_compress_voip_start_input_stream(struct stream_in *in)
 {
     int ret = 0;
     struct audio_device *adev = in->dev;
-    int snd_card_status = get_snd_card_state(adev);
 
     ALOGD("%s: enter", __func__);
 
-    if (SND_CARD_STATE_OFFLINE == snd_card_status) {
+    if (CARD_STATUS_OFFLINE == in->card_status ||
+        CARD_STATUS_OFFLINE == adev->card_status) {
         ret = -ENETRESET;
         ALOGE("%s: sound card is not active/SSR returning error %d ", __func__, ret);
         goto error;
@@ -744,7 +750,7 @@ bool voice_extn_compress_voip_pcm_prop_check()
 {
     char prop_value[PROPERTY_VALUE_MAX] = {0};
 
-    property_get("use.voice.path.for.pcm.voip", prop_value, "0");
+    property_get("vendor.voice.path.for.pcm.voip", prop_value, "0");
     if (!strncmp("true", prop_value, sizeof("true")))
     {
         ALOGD("%s: VoIP PCM property is enabled", __func__);

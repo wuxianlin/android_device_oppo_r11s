@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2013-2014, 2017, The Linux Foundation. All rights reserved.
  * Not a Contribution.
  *
  * Copyright (C) 2013 The Android Open Source Project
@@ -34,7 +34,7 @@ const effect_descriptor_t equalizer_descriptor = {
         {0x0bed4300, 0xddd6, 0x11db, 0x8f34, {0x00, 0x02, 0xa5, 0xd5, 0xc5, 0x1b}}, // type
         {0xa0dac280, 0x401c, 0x11e3, 0x9379, {0x00, 0x02, 0xa5, 0xd5, 0xc5, 0x1b}}, // uuid
         EFFECT_CONTROL_API_VERSION,
-        (EFFECT_FLAG_TYPE_INSERT | EFFECT_FLAG_HW_ACC_TUNNEL),
+        (EFFECT_FLAG_TYPE_INSERT | EFFECT_FLAG_HW_ACC_TUNNEL | EFFECT_FLAG_VOLUME_CTRL),
         0, /* TODO */
         1,
         "MSM offload equalizer",
@@ -196,7 +196,7 @@ const char * equalizer_get_preset_name(equalizer_context_t *context,
 int equalizer_get_num_presets(equalizer_context_t *context)
 {
     ALOGV("%s: ctxt %p, presets_num: %d", __func__, context,
-           sizeof(equalizer_preset_names)/sizeof(char *));
+           (int)(sizeof(equalizer_preset_names)/sizeof(char *)));
     return sizeof(equalizer_preset_names)/sizeof(char *);
 }
 
@@ -366,6 +366,7 @@ int equalizer_set_parameter(effect_context_t *context, effect_param_t *p,
     equalizer_context_t *eq_ctxt = (equalizer_context_t *)context;
     int voffset = ((p->psize - 1) / sizeof(int32_t) + 1) * sizeof(int32_t);
     void *value = p->data + voffset;
+    int32_t vsize = (int32_t) p->vsize;
     int32_t *param_tmp = (int32_t *)p->data;
     int32_t param = *param_tmp++;
     int32_t preset;
@@ -379,6 +380,10 @@ int equalizer_set_parameter(effect_context_t *context, effect_param_t *p,
 
     switch (param) {
     case EQ_PARAM_CUR_PRESET:
+        if (vsize < sizeof(int16_t)) {
+           p->status = -EINVAL;
+           break;
+        }
         preset = (int32_t)(*(uint16_t *)value);
 
         if ((preset >= equalizer_get_num_presets(eq_ctxt)) || (preset < 0)) {
@@ -388,6 +393,10 @@ int equalizer_set_parameter(effect_context_t *context, effect_param_t *p,
         equalizer_set_preset(eq_ctxt, preset);
         break;
     case EQ_PARAM_BAND_LEVEL:
+        if (vsize < sizeof(int16_t)) {
+            p->status = -EINVAL;
+            break;
+        }
         band =  *param_tmp;
         level = (int32_t)(*(int16_t *)value);
         if (band < 0 || band >= NUM_EQ_BANDS) {
@@ -401,6 +410,10 @@ int equalizer_set_parameter(effect_context_t *context, effect_param_t *p,
         equalizer_set_band_level(eq_ctxt, band, level);
         break;
     case EQ_PARAM_PROPERTIES: {
+        if (vsize < sizeof(int16_t)) {
+            p->status = -EINVAL;
+            break;
+        }
         int16_t *prop = (int16_t *)value;
         if ((int)prop[0] >= equalizer_get_num_presets(eq_ctxt)) {
             p->status = -EINVAL;
@@ -409,6 +422,13 @@ int equalizer_set_parameter(effect_context_t *context, effect_param_t *p,
         if (prop[0] >= 0) {
             equalizer_set_preset(eq_ctxt, (int)prop[0]);
         } else {
+            if (vsize < (2 + NUM_EQ_BANDS) * sizeof(int16_t)) {
+                android_errorWriteLog(0x534e4554, "37563371");
+                ALOGE("\tERROR EQ_PARAM_PROPERTIES valueSize %d < %d",
+                                  vsize, (2 + NUM_EQ_BANDS) * sizeof(int16_t));
+                p->status = -EINVAL;
+                break;
+            }
             if ((int)prop[1] != NUM_EQ_BANDS) {
                 p->status = -EINVAL;
                 break;

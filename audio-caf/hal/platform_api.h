@@ -31,7 +31,11 @@
 #define SAMPLE_RATE_11025 11025
 #define sample_rate_multiple(sr, base) ((sr % base)== 0?true:false)
 #define MAX_VOLUME_CAL_STEPS 15
-#define ACDB_METAINFO_KEY_MODULE_NAME_LEN 100
+
+typedef enum {
+    PLATFORM,
+    ACDB_EXTN,
+} caller_t;
 
 struct amp_db_and_gain_table {
     float amp;
@@ -140,15 +144,16 @@ bool platform_sound_trigger_usecase_needs_event(audio_usecase_t uc_id);
 int platform_set_snd_device_backend(snd_device_t snd_device, const char * backend,
                                     const char * hw_interface);
 int platform_get_snd_device_backend_index(snd_device_t device);
+const char * platform_get_snd_device_backend_interface(snd_device_t device);
+int platform_set_snd_device_name(snd_device_t snd_device, const char * name);
 
 /* From platform_info.c */
-int platform_info_init(const char *filename, void *);
+int platform_info_init(const char *filename, void *, caller_t);
 
-void platform_snd_card_update(void *platform, int snd_scard_state);
+void platform_snd_card_update(void *platform, card_status_t scard_status);
 
 struct audio_offload_info_t;
 uint32_t platform_get_compress_offload_buffer_size(audio_offload_info_t* info);
-uint32_t platform_get_compress_passthrough_buffer_size(audio_offload_info_t* info);
 
 bool platform_check_and_set_codec_backend_cfg(struct audio_device* adev,
                    struct audio_usecase *usecase, snd_device_t snd_device);
@@ -163,7 +168,15 @@ int platform_set_channel_allocation(void *platform, int channel_alloc);
 int platform_get_edid_info(void *platform);
 int platform_set_channel_map(void *platform, int ch_count, char *ch_map,
                              int snd_id);
-int platform_set_stream_channel_map(void *platform, audio_channel_mask_t channel_mask, int snd_id);
+int platform_set_stream_channel_map(void *platform, audio_channel_mask_t channel_mask,
+                                   int snd_id, uint8_t *input_channel_map);
+int platform_set_stream_pan_scale_params(void *platform,
+                                         int snd_id,
+                                         struct mix_matrix_params mm_params);
+int platform_set_stream_downmix_params(void *platform,
+                                       int snd_id,
+                                       snd_device_t snd_device,
+                                       struct mix_matrix_params mm_params);
 int platform_set_edid_channels_configuration(void *platform, int channels);
 unsigned char platform_map_to_edid_format(int format);
 bool platform_is_edid_supported_format(void *platform, int format);
@@ -202,6 +215,7 @@ bool platform_check_codec_asrc_support(void *platform);
 int platform_get_backend_index(snd_device_t snd_device);
 int platform_get_ext_disp_type(void *platform);
 void platform_invalidate_hdmi_config(void *platform);
+void platform_invalidate_backend_config(void * platform,snd_device_t snd_device);
 
 int platform_send_audio_cal(void* platform, int acdb_dev_id, int acdb_device_type,
     int app_type, int topology_id, int sample_rate, uint32_t module_id, uint32_t param_id,
@@ -223,4 +237,7 @@ unsigned char* platform_get_license(void* platform, int* size);
 int platform_get_max_mic_count(void *platform);
 void platform_check_and_update_copp_sample_rate(void *platform, snd_device_t snd_device,
      unsigned int stream_sr,int *sample_rate);
+int platform_get_max_codec_backend();
+int platform_get_mmap_data_fd(void *platform, int dev, int dir,
+                               int *fd, uint32_t *size);
 #endif // AUDIO_PLATFORM_API_H

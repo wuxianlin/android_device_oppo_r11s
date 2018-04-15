@@ -39,6 +39,11 @@
 #include "platform.h"
 #include "platform_api.h"
 
+#ifdef DYNAMIC_LOG_ENABLED
+#include <log_xml_parser.h>
+#define LOG_MASK HAL_MOD_FILE_HW_INFO
+#include <log_utils.h>
+#endif
 
 struct hardware_info {
     char name[HW_INFO_ARRAY_MAX_SIZE];
@@ -102,6 +107,9 @@ static void update_hardware_info_8x16(struct hardware_info *hw_info, const char 
         strlcpy(hw_info->name, "msm8909", sizeof(hw_info->name));
     } else if (!strcmp(snd_card_name, "msm8909-skue-snd-card")) {
         strlcpy(hw_info->type, "skue", sizeof(hw_info->type));
+        strlcpy(hw_info->name, "msm8909", sizeof(hw_info->name));
+    } else if (!strcmp(snd_card_name, "msm8909-skut-snd-card")) {
+        strlcpy(hw_info->type, "skut", sizeof(hw_info->type));
         strlcpy(hw_info->name, "msm8909", sizeof(hw_info->name));
     } else if (!strcmp(snd_card_name, "msm8939-snd-card-skul")) {
         strlcpy(hw_info->type, "skul", sizeof(hw_info->type));
@@ -167,6 +175,11 @@ static void update_hardware_info_8x16(struct hardware_info *hw_info, const char 
         strlcpy(hw_info->name, "apq8009", sizeof(hw_info->name));
     } else if (!strcmp(snd_card_name, "mdm9607-tomtom-i2s-snd-card")) {
         strlcpy(hw_info->name, "mdm9607", sizeof(hw_info->name));
+    } else if (!strcmp(snd_card_name, "mdm-tasha-i2s-snd-card")) {
+        strlcpy(hw_info->name, "mdm-tasha", sizeof(hw_info->name));
+    } else if (!strcmp(snd_card_name, "msm8909-skuq-snd-card")) {
+        strlcpy(hw_info->type, "skuq", sizeof(hw_info->type));
+        strlcpy(hw_info->name, "msm8909", sizeof(hw_info->name));
     } else {
         ALOGW("%s: Not an 8x16/8909/8917/8920/8937/8939/8940/8952/8953/660 device", __func__);
     }
@@ -196,7 +209,7 @@ void *hw_info_init(const char *snd_card_name)
         strstr(snd_card_name, "msm8937") || strstr(snd_card_name, "msm8917") ||
         strstr(snd_card_name, "msm8940") || strstr(snd_card_name, "msm8920") ||
         strstr(snd_card_name, "sdm660") || strstr(snd_card_name, "apq8009") ||
-		strstr(snd_card_name, "mdm9607")) {
+        strstr(snd_card_name, "mdm9607") || strstr(snd_card_name, "mdm-tasha")) {
         ALOGV("8x16 - variant soundcard");
         update_hardware_info_8x16(hw_info, snd_card_name);
     } else {

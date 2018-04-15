@@ -92,6 +92,12 @@ enum struct DRMOps {
    */
   PLANE_SET_V_DECIMATION,
   /*
+   * Op: Sets source config flags
+   * Arg: uint32_t - Plane ID
+   *      uint32_t - flags to enable or disable a specific op. E.g. deinterlacing
+   */
+  PLANE_SET_SRC_CONFIG,
+  /*
    * Op: Sets frame buffer ID for plane. Set together with CRTC.
    * Arg: uint32_t - Plane ID
    *      uint32_t - Framebuffer ID
@@ -109,6 +115,12 @@ enum struct DRMOps {
    *      uint32_t - Input fence
    */
   PLANE_SET_INPUT_FENCE,
+  /*
+   * Op: Sets scaler config on this plane.
+   * Arg: uint32_t - Plane ID
+   *      uint64_t - Address of the scaler config object (version based)
+   */
+  PLANE_SET_SCALER_CONFIG,
   /*
    * Op: Activate or deactivate a CRTC
    * Arg: uint32_t - CRTC ID
@@ -136,6 +148,12 @@ enum struct DRMOps {
    */
   CRTC_GET_RELEASE_FENCE,
   /*
+   * Op: Sets PP feature
+   * Arg: uint32_t - CRTC ID
+   *      DRMPPFeatureInfo * - PP feature data pointer
+   */
+  CRTC_SET_POST_PROC,
+  /*
    * Op: Returns retire fence for this commit. Should be called after Commit() on
    * DRMAtomicReqInterface.
    * Arg: uint32_t - Connector ID
@@ -156,11 +174,21 @@ enum struct DRMOps {
   CONNECTOR_SET_OUTPUT_FB_ID,
 };
 
+enum struct DRMRotation {
+  FLIP_H = 0x1,
+  FLIP_V = 0x2,
+  ROT_90 = 0x4,
+};
+
 enum struct DRMBlendType {
   UNDEFINED = 0,
   OPAQUE = 1,
   PREMULTIPLIED = 2,
   COVERAGE = 3,
+};
+
+enum struct DRMSrcConfig {
+  DEINTERLACE = 0,
 };
 
 /* Display type to identify a suitable connector */
@@ -187,11 +215,17 @@ enum struct QSEEDVersion {
   V3,
 };
 
+enum struct SmartDMARevision {
+  V1,
+  V2,
+};
+
 /* Per CRTC Resource Info*/
 struct DRMCrtcInfo {
   bool has_src_split;
   uint32_t max_blend_stages;
   QSEEDVersion qseed_version;
+  SmartDMARevision smart_dma_rev;
 };
 
 enum struct DRMPlaneType {
@@ -207,6 +241,8 @@ enum struct DRMPlaneType {
 };
 
 struct DRMPlaneTypeInfo {
+  DRMPlaneType type;
+  uint32_t master_plane_id;
   // FourCC format enum and modifier
   std::vector<std::pair<uint32_t, uint64_t>> formats_supported;
   uint32_t max_linewidth;
@@ -216,13 +252,8 @@ struct DRMPlaneTypeInfo {
   uint32_t max_vertical_deci;
 };
 
-/* All DRM Planes Info*/
-struct DRMPlanesInfo {
-  // Plane id and plane type sorted by highest to lowest priority
-  std::vector<std::pair<uint32_t, DRMPlaneType>> planes;
-  // Plane type and type info
-  std::map<DRMPlaneType, DRMPlaneTypeInfo> types;
-};
+// All DRM Planes as map<Plane_id , plane_type_info> listed from highest to lowest priority
+typedef std::vector<std::pair<uint32_t, DRMPlaneTypeInfo>>  DRMPlanesInfo;
 
 enum struct DRMTopology {
   UNKNOWN,  // To be compat with driver defs in sde_kms.h
@@ -260,6 +291,42 @@ struct DRMConnectorInfo {
 struct DRMDisplayToken {
   uint32_t conn_id;
   uint32_t crtc_id;
+};
+
+enum DRMPPFeatureID {
+  kFeaturePcc,
+  kFeatureIgc,
+  kFeaturePgc,
+  kFeatureMixerGc,
+  kFeaturePaV2,
+  kFeatureDither,
+  kFeatureGamut,
+  kFeaturePADither,
+  kPPFeaturesMax,
+};
+
+enum DRMPPPropType {
+  kPropEnum,
+  kPropRange,
+  kPropBlob,
+  kPropTypeMax,
+};
+
+struct DRMPPFeatureInfo {
+  DRMPPFeatureID id;
+  DRMPPPropType type;
+  uint32_t version;
+  uint32_t payload_size;
+  void *payload;
+};
+
+struct DRMScalerLUTInfo {
+  uint32_t dir_lut_size = 0;
+  uint32_t cir_lut_size = 0;
+  uint32_t sep_lut_size = 0;
+  uint64_t dir_lut = 0;
+  uint64_t cir_lut = 0;
+  uint64_t sep_lut = 0;
 };
 
 /* DRM Atomic Request Property Set.
@@ -331,6 +398,11 @@ class DRMManagerInterface {
   virtual void GetConnectorInfo(uint32_t conn_id, DRMConnectorInfo *info) = 0;
 
   /*
+   * Will query post propcessing feature info of a CRTC.
+   * [output]: DRMPPFeatureInfo: CRTC post processing feature info
+   */
+   virtual void GetCrtcPPInfo(uint32_t crtc_id, DRMPPFeatureInfo &info) = 0;
+  /*
    * Register a logical display to receive a token.
    * Each display pipeline in DRM is identified by its CRTC and Connector(s).
    * On display connect(bootup or hotplug), clients should invoke this interface to
@@ -365,6 +437,13 @@ class DRMManagerInterface {
    * [return]: Error code if the API fails, 0 on success.
    */
   virtual int DestroyAtomicReq(DRMAtomicReqInterface *intf) = 0;
+  /*
+   * Sets the global scaler LUT
+   * [input]: LUT Info
+   * [return]: Error code if the API fails, 0 on success.
+   */
+  virtual int SetScalerLUT(const DRMScalerLUTInfo &lut_info) = 0;
 };
+
 }  // namespace sde_drm
 #endif  // __DRM_INTERFACE_H__

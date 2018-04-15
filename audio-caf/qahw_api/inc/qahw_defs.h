@@ -177,10 +177,19 @@ __BEGIN_DECLS
 /* Query if a2dp  is supported */
 #define QAHW_PARAMETER_KEY_HANDLE_A2DP_DEVICE "isA2dpDeviceSupported"
 
+#define MAX_OUT_CHANNELS 8
+#define MAX_INP_CHANNELS 8
+
 /* type of asynchronous write callback events. Mutually exclusive */
 typedef enum {
     QAHW_STREAM_CBK_EVENT_WRITE_READY, /* non blocking write completed */
-    QAHW_STREAM_CBK_EVENT_DRAIN_READY  /* drain completed */
+    QAHW_STREAM_CBK_EVENT_DRAIN_READY,  /* drain completed */
+    QAHW_STREAM_CBK_EVENT_ERROR,  /* stream hit some error */
+
+    QAHW_STREAM_CBK_EVENT_ADSP = 0x100    /* callback event from ADSP PP,
+                                           * corresponding payload will be
+                                           * sent as is to the client
+                                           */
 } qahw_stream_callback_event_t;
 
 typedef int qahw_stream_callback_t(qahw_stream_callback_event_t event,
@@ -243,18 +252,123 @@ struct qahw_aptx_dec_param {
    struct aptx_dec_bt_addr bt_addr;
 };
 
+struct qahw_avt_device_drift_param {
+   /* Flag to indicate if resync is required on the client side for
+    * drift correction. Flag is set to TRUE for the first get_param response
+    * after device interface starts. This flag value can be used by client
+    * to identify if device interface restart has happened and if any
+    * re-sync is required at their end for drift correction.
+    */
+    uint32_t        resync_flag;
+    /* Accumulated drift value in microseconds.
+     * Positive drift value indicates AV timer is running faster than device.
+     * Negative drift value indicates AV timer is running slower than device.
+     */
+    int32_t         avt_device_drift_value;
+    /* 64-bit absolute timestamp of reference */
+    uint64_t        ref_timer_abs_ts;
+};
+
+/*use these for setting infine window.i.e free run mode */
+#define QAHW_MAX_RENDER_START_WINDOW 0x8000000000000000
+#define QAHW_MAX_RENDER_END_WINDOW   0x7FFFFFFFFFFFFFFF
+
+struct qahw_out_render_window_param {
+   uint64_t        render_ws; /* render window start value microseconds*/
+   uint64_t        render_we; /* render window end value microseconds*/
+};
+
+struct qahw_out_start_delay_param {
+   uint64_t       start_delay; /* session start delay in microseconds*/
+};
+
+struct qahw_out_enable_drift_correction {
+   bool        enable; /* enable drift correction*/
+};
+
+struct qahw_out_correct_drift {
+    /*
+     * adjust time in microseconds, a positive value
+     * to advance the clock or a negative value to
+     * delay the clock.
+     */
+    int64_t        adjust_time;
+};
+
+#define QAHW_MAX_ADSP_STREAM_CMD_PAYLOAD_LEN 512
+
+typedef enum {
+    QAHW_STREAM_PP_EVENT = 0,
+    QAHW_STREAM_ENCDEC_EVENT = 1,
+} qahw_event_id;
+
+/* payload format for HAL parameter
+ * QAHW_PARAM_ADSP_STREAM_CMD
+ */
+struct qahw_adsp_event {
+    qahw_event_id event_type;      /* type of the event */
+    uint32_t payload_length;       /* length in bytes of the payload */
+    void *payload;                 /* the actual payload */
+};
+
+struct qahw_out_channel_map_param {
+   uint8_t       channels;                               /* Input Channels */
+   uint8_t       channel_map[AUDIO_CHANNEL_COUNT_MAX];   /* Input Channel Map */
+};
+
+struct qahw_device_cfg_param {
+   uint32_t   sample_rate;
+   uint32_t   channels;
+   uint32_t   bit_width;
+   audio_format_t format;
+   audio_devices_t device;
+   uint8_t    channel_map[AUDIO_CHANNEL_COUNT_MAX];
+   uint16_t   channel_allocation;
+};
+
+typedef struct qahw_mix_matrix_params {
+    uint16_t num_output_channels;
+    uint16_t num_input_channels;
+    uint8_t has_output_channel_map;
+    uint32_t output_channel_map[AUDIO_CHANNEL_COUNT_MAX];
+    uint8_t has_input_channel_map;
+    uint32_t input_channel_map[AUDIO_CHANNEL_COUNT_MAX];
+    uint8_t has_mixer_coeffs;
+    float mixer_coeffs[AUDIO_CHANNEL_COUNT_MAX][AUDIO_CHANNEL_COUNT_MAX];
+} qahw_mix_matrix_params_t;
+
 typedef union {
     struct qahw_source_tracking_param st_params;
     struct qahw_sound_focus_param sf_params;
     struct qahw_aptx_dec_param aptx_params;
+    struct qahw_avt_device_drift_param drift_params;
+    struct qahw_out_render_window_param render_window_params;
+    struct qahw_out_start_delay_param start_delay;
+    struct qahw_out_enable_drift_correction drift_enable_param;
+    struct qahw_out_correct_drift drift_correction_param;
+    struct qahw_adsp_event adsp_event_params;
+    struct qahw_out_channel_map_param channel_map_params;
+    struct qahw_device_cfg_param device_cfg_params;
+    struct qahw_mix_matrix_params mix_matrix_params;
 } qahw_param_payload;
 
 typedef enum {
     QAHW_PARAM_SOURCE_TRACK,
     QAHW_PARAM_SOUND_FOCUS,
-    QAHW_PARAM_APTX_DEC
+    QAHW_PARAM_APTX_DEC,
+    QAHW_PARAM_AVT_DEVICE_DRIFT,  /* PARAM to query AV timer vs device drift */
+    QAHW_PARAM_OUT_RENDER_WINDOW, /* PARAM to set render window */
+    QAHW_PARAM_OUT_START_DELAY, /* PARAM to set session start delay*/
+    /* enable adsp drift correction this must be called before out_write */
+    QAHW_PARAM_OUT_ENABLE_DRIFT_CORRECTION,
+    /* param to set drift value to be adjusted by dsp */
+    QAHW_PARAM_OUT_CORRECT_DRIFT,
+    QAHW_PARAM_ADSP_STREAM_CMD,
+    QAHW_PARAM_OUT_CHANNEL_MAP,    /* PARAM to set i/p channel map */
+    QAHW_PARAM_DEVICE_CONFIG,      /* PARAM to set device config */
+    QAHW_PARAM_OUT_MIX_MATRIX_PARAMS,
+    QAHW_PARAM_CH_MIX_MATRIX_PARAMS,
 } qahw_param_id;
-
 
 __END_DECLS
 

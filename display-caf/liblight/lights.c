@@ -61,6 +61,9 @@ char const*const BLUE_LED_FILE
 char const*const LCD_FILE
         = "/sys/class/leds/lcd-backlight/brightness";
 
+char const*const LCD_FILE2
+        = "/sys/class/backlight/panel0-backlight/brightness";
+
 char const*const BUTTON_FILE
         = "/sys/class/leds/button-backlight/brightness";
 
@@ -75,9 +78,6 @@ char const*const BLUE_BLINK_FILE
 
 char const*const PERSISTENCE_FILE
         = "/sys/class/graphics/fb0/msm_fb_persist_mode";
-
-char const*const PANEL_BL_EXTN_FILE
-        = "/sys/class/graphics/fb0/panel_bl_extn";
 
 /**
  * device methods
@@ -154,7 +154,11 @@ set_light_backlight(struct light_device_t* dev,
     g_last_backlight_mode = state->brightnessMode;
 
     if (!err) {
-        err = write_int(LCD_FILE, brightness);
+        if (!access(LCD_FILE, F_OK)) {
+            err = write_int(LCD_FILE, brightness);
+        } else {
+            err = write_int(LCD_FILE2, brightness);
+        }
     }
 
     pthread_mutex_unlock(&g_lock);
@@ -350,18 +354,21 @@ static int open_lights(const struct hw_module_t* module, char const* name,
             property_get("persist.display.max_brightness", property, "255");
             g_brightness_max = atoi(property);
             set_brightness_ext_init();
-            write_int(PANEL_BL_EXTN_FILE, 1);
             set_light = set_light_backlight_ext;
-        } else {
-            write_int(PANEL_BL_EXTN_FILE, 0);
+        } else
             set_light = set_light_backlight;
-        }
     } else if (0 == strcmp(LIGHT_ID_BATTERY, name))
         set_light = set_light_battery;
     else if (0 == strcmp(LIGHT_ID_NOTIFICATIONS, name))
         set_light = set_light_notifications;
-    else if (0 == strcmp(LIGHT_ID_BUTTONS, name))
-        set_light = set_light_buttons;
+    else if (0 == strcmp(LIGHT_ID_BUTTONS, name)) {
+        if (!access(BUTTON_FILE, F_OK)) {
+          // enable light button when the file is present
+          set_light = set_light_buttons;
+        } else {
+          return -EINVAL;
+        }
+    }
     else if (0 == strcmp(LIGHT_ID_ATTENTION, name))
         set_light = set_light_attention;
     else

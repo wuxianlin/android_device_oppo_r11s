@@ -1,0 +1,2576 @@
+/home/wuxianlin/android/lineage-15.1/out/target/product/r11s/obj/KERNEL_OBJ/.headers_install_deps: \
+  kernel/oppo/sdm660/Makefile \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/posix_types.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/hwcap.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/unistd.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/fcntl.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/perf_regs.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/sigcontext.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/auxvec.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/bitsperlong.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/stat.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/siginfo.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/signal.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/byteorder.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/ptrace.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/kvm.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/param.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/setup.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/statfs.h \
+  kernel/oppo/sdm660/arch/arm64/include/uapi/asm/ucontext.h \
+  kernel/oppo/sdm660/include/uapi/media/radio-iris.h \
+  kernel/oppo/sdm660/include/uapi/media/msmb_isp.h \
+  kernel/oppo/sdm660/include/uapi/media/msm_camera.h \
+  kernel/oppo/sdm660/include/uapi/media/msm_camsensor_sdk.h \
+  kernel/oppo/sdm660/include/uapi/media/msm_gestures.h \
+  kernel/oppo/sdm660/include/uapi/media/msm_sde_rotator.h \
+  kernel/oppo/sdm660/include/uapi/media/msm_jpeg_dma.h \
+  kernel/oppo/sdm660/include/uapi/media/msm_vpu.h \
+  kernel/oppo/sdm660/include/uapi/media/msm_isp.h \
+  kernel/oppo/sdm660/include/uapi/media/msmb_pproc.h \
+  kernel/oppo/sdm660/include/uapi/media/msm_vidc.h \
+  kernel/oppo/sdm660/include/uapi/media/radio-iris-commands.h \
+  kernel/oppo/sdm660/include/uapi/media/msmb_generic_buf_mgr.h \
+  kernel/oppo/sdm660/include/uapi/media/msm_fd.h \
+  kernel/oppo/sdm660/include/uapi/media/msm_cam_sensor.h \
+  kernel/oppo/sdm660/include/uapi/media/msm_gemini.h \
+  kernel/oppo/sdm660/include/uapi/media/msmb_ispif.h \
+  kernel/oppo/sdm660/include/uapi/media/msm_media_info.h \
+  kernel/oppo/sdm660/include/uapi/media/ais/msm_ais.h \
+  kernel/oppo/sdm660/include/uapi/media/ais/msm_ais_isp.h \
+  kernel/oppo/sdm660/include/uapi/media/ais/msm_ais_sensor_sdk.h \
+  kernel/oppo/sdm660/include/uapi/media/ais/msm_ais_sensor.h \
+  kernel/oppo/sdm660/include/uapi/media/ais/msm_ais_buf_mgr.h \
+  kernel/oppo/sdm660/include/uapi/media/ais/msm_ais_ispif.h \
+  kernel/oppo/sdm660/include/uapi/media/msm_jpeg.h \
+  kernel/oppo/sdm660/include/uapi/media/msmb_camera.h \
+  kernel/oppo/sdm660/include/uapi/media/msm_mercury.h \
+  kernel/oppo/sdm660/include/uapi/rdma/rdma_user_cm.h \
+  kernel/oppo/sdm660/include/uapi/rdma/ib_user_sa.h \
+  kernel/oppo/sdm660/include/uapi/rdma/rdma_netlink.h \
+  kernel/oppo/sdm660/include/uapi/rdma/ib_user_cm.h \
+  kernel/oppo/sdm660/include/uapi/rdma/ib_user_verbs.h \
+  kernel/oppo/sdm660/include/uapi/rdma/hfi/hfi1_user.h \
+  kernel/oppo/sdm660/include/uapi/rdma/ib_user_mad.h \
+  kernel/oppo/sdm660/include/uapi/linux/patchkey.h \
+  kernel/oppo/sdm660/include/uapi/linux/ppdev.h \
+  kernel/oppo/sdm660/include/uapi/linux/gfs2_ondisk.h \
+  kernel/oppo/sdm660/include/uapi/linux/videodev2.h \
+  kernel/oppo/sdm660/include/uapi/linux/ivtv.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_ah.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_rt.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_frag.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_NPT.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_opts.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_LOG.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_ipv6header.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6_tables.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_mh.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_hl.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_REJECT.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_HL.h \
+  kernel/oppo/sdm660/include/uapi/linux/btrfs.h \
+  kernel/oppo/sdm660/include/uapi/linux/omapfb.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio_sbc.h \
+  kernel/oppo/sdm660/include/uapi/linux/posix_types.h \
+  kernel/oppo/sdm660/include/uapi/linux/hdreg.h \
+  kernel/oppo/sdm660/include/uapi/linux/tiocl.h \
+  kernel/oppo/sdm660/include/uapi/linux/i8k.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_plip.h \
+  kernel/oppo/sdm660/include/uapi/linux/b1lli.h \
+  kernel/oppo/sdm660/include/uapi/linux/keyboard.h \
+  kernel/oppo/sdm660/include/uapi/linux/types.h \
+  kernel/oppo/sdm660/include/uapi/linux/rds.h \
+  kernel/oppo/sdm660/include/uapi/linux/kexec.h \
+  kernel/oppo/sdm660/include/uapi/linux/esoc_ctrl.h \
+  kernel/oppo/sdm660/include/uapi/linux/wait.h \
+  kernel/oppo/sdm660/include/uapi/linux/hdlcdrv.h \
+  kernel/oppo/sdm660/include/uapi/linux/coda.h \
+  kernel/oppo/sdm660/include/uapi/linux/smcinvoke.h \
+  kernel/oppo/sdm660/include/uapi/linux/net_dropmon.h \
+  kernel/oppo/sdm660/include/uapi/linux/time.h \
+  kernel/oppo/sdm660/include/uapi/linux/atmioc.h \
+  kernel/oppo/sdm660/include/uapi/linux/joystick.h \
+  kernel/oppo/sdm660/include/uapi/linux/ncp_mount.h \
+  kernel/oppo/sdm660/include/uapi/linux/nfc/nfcinfo.h \
+  kernel/oppo/sdm660/include/uapi/linux/errno.h \
+  kernel/oppo/sdm660/include/uapi/linux/cm4000_cs.h \
+  kernel/oppo/sdm660/include/uapi/linux/kfd_ioctl.h \
+  kernel/oppo/sdm660/include/uapi/linux/reiserfs_fs.h \
+  kernel/oppo/sdm660/include/uapi/linux/mii.h \
+  kernel/oppo/sdm660/include/uapi/linux/unistd.h \
+  kernel/oppo/sdm660/include/uapi/linux/msdos_fs.h \
+  kernel/oppo/sdm660/include/uapi/linux/psci.h \
+  kernel/oppo/sdm660/include/uapi/linux/qrng.h \
+  kernel/oppo/sdm660/include/uapi/linux/blktrace_api.h \
+  kernel/oppo/sdm660/include/uapi/linux/llc.h \
+  kernel/oppo/sdm660/include/uapi/linux/fips_status.h \
+  kernel/oppo/sdm660/include/uapi/linux/toshiba.h \
+  kernel/oppo/sdm660/include/uapi/linux/isdn.h \
+  kernel/oppo/sdm660/include/uapi/linux/thermal.h \
+  kernel/oppo/sdm660/include/uapi/linux/target_core_user.h \
+  kernel/oppo/sdm660/include/uapi/linux/kernel-page-flags.h \
+  kernel/oppo/sdm660/include/uapi/linux/kdev_t.h \
+  kernel/oppo/sdm660/include/uapi/linux/n_r3964.h \
+  kernel/oppo/sdm660/include/uapi/linux/dlm_plock.h \
+  kernel/oppo/sdm660/include/uapi/linux/mdio.h \
+  kernel/oppo/sdm660/include/uapi/linux/uio.h \
+  kernel/oppo/sdm660/include/uapi/linux/fcntl.h \
+  kernel/oppo/sdm660/include/uapi/linux/uuid.h \
+  kernel/oppo/sdm660/include/uapi/linux/cramfs_fs.h \
+  kernel/oppo/sdm660/include/uapi/linux/virtio_scsi.h \
+  kernel/oppo/sdm660/include/uapi/linux/memfd.h \
+  kernel/oppo/sdm660/include/uapi/linux/connector.h \
+  kernel/oppo/sdm660/include/uapi/linux/raw.h \
+  kernel/oppo/sdm660/include/uapi/linux/virtio_ids.h \
+  kernel/oppo/sdm660/include/uapi/linux/perf_event.h \
+  kernel/oppo/sdm660/include/uapi/linux/mic_ioctl.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_fddi.h \
+  kernel/oppo/sdm660/include/uapi/linux/cec.h \
+  kernel/oppo/sdm660/include/uapi/linux/mqueue.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_ipc.h \
+  kernel/oppo/sdm660/include/uapi/linux/ila.h \
+  kernel/oppo/sdm660/include/uapi/linux/flat.h \
+  kernel/oppo/sdm660/include/uapi/linux/cgroupstats.h \
+  kernel/oppo/sdm660/include/uapi/linux/mhi.h \
+  kernel/oppo/sdm660/include/uapi/linux/meye.h \
+  kernel/oppo/sdm660/include/uapi/linux/resource.h \
+  kernel/oppo/sdm660/include/uapi/linux/serial_reg.h \
+  kernel/oppo/sdm660/include/uapi/linux/sctp.h \
+  kernel/oppo/sdm660/include/uapi/linux/ppp_defs.h \
+  kernel/oppo/sdm660/include/uapi/linux/cciss_defs.h \
+  kernel/oppo/sdm660/include/uapi/linux/i2c-dev.h \
+  kernel/oppo/sdm660/include/uapi/linux/igmp.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_alg.h \
+  kernel/oppo/sdm660/include/uapi/linux/aio_abi.h \
+  kernel/oppo/sdm660/include/uapi/linux/string.h \
+  kernel/oppo/sdm660/include/uapi/linux/pg.h \
+  kernel/oppo/sdm660/include/uapi/linux/ndctl.h \
+  kernel/oppo/sdm660/include/uapi/linux/taskstats.h \
+  kernel/oppo/sdm660/include/uapi/linux/romfs_fs.h \
+  kernel/oppo/sdm660/include/uapi/linux/ipv6_route.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_ipa.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_infiniband.h \
+  kernel/oppo/sdm660/include/uapi/linux/nfc.h \
+  kernel/oppo/sdm660/include/uapi/linux/in6.h \
+  kernel/oppo/sdm660/include/uapi/linux/adfs_fs.h \
+  kernel/oppo/sdm660/include/uapi/linux/nfs3.h \
+  kernel/oppo/sdm660/include/uapi/linux/atm_idt77105.h \
+  kernel/oppo/sdm660/include/uapi/linux/capability.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_fc.h \
+  kernel/oppo/sdm660/include/uapi/linux/in_route.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_kgsl.h \
+  kernel/oppo/sdm660/include/uapi/linux/falloc.h \
+  kernel/oppo/sdm660/include/uapi/linux/nfs4_mount.h \
+  kernel/oppo/sdm660/include/uapi/linux/atmapi.h \
+  kernel/oppo/sdm660/include/uapi/linux/const.h \
+  kernel/oppo/sdm660/include/uapi/linux/lp.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_rotator.h \
+  kernel/oppo/sdm660/include/uapi/linux/usbip.h \
+  kernel/oppo/sdm660/include/uapi/linux/ultrasound.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio_calibration.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_addr.h \
+  kernel/oppo/sdm660/include/uapi/linux/ixjuser.h \
+  kernel/oppo/sdm660/include/uapi/linux/phonet.h \
+  kernel/oppo/sdm660/include/uapi/linux/route.h \
+  kernel/oppo/sdm660/include/uapi/linux/zorro_ids.h \
+  kernel/oppo/sdm660/include/uapi/linux/nubus.h \
+  kernel/oppo/sdm660/include/uapi/linux/unix_diag.h \
+  kernel/oppo/sdm660/include/uapi/linux/isdn/capicmd.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_addrlabel.h \
+  kernel/oppo/sdm660/include/uapi/linux/mic_common.h \
+  kernel/oppo/sdm660/include/uapi/linux/mdss_rotator.h \
+  kernel/oppo/sdm660/include/uapi/linux/elf-em.h \
+  kernel/oppo/sdm660/include/uapi/linux/magic.h \
+  kernel/oppo/sdm660/include/uapi/linux/msg.h \
+  kernel/oppo/sdm660/include/uapi/linux/atmppp.h \
+  kernel/oppo/sdm660/include/uapi/linux/dlm_netlink.h \
+  kernel/oppo/sdm660/include/uapi/linux/mroute6.h \
+  kernel/oppo/sdm660/include/uapi/linux/tcp_metrics.h \
+  kernel/oppo/sdm660/include/uapi/linux/bfs_fs.h \
+  kernel/oppo/sdm660/include/uapi/linux/fanotify.h \
+  kernel/oppo/sdm660/include/uapi/linux/capi.h \
+  kernel/oppo/sdm660/include/uapi/linux/nvme_ioctl.h \
+  kernel/oppo/sdm660/include/uapi/linux/atm.h \
+  kernel/oppo/sdm660/include/uapi/linux/dm-ioctl.h \
+  kernel/oppo/sdm660/include/uapi/linux/apm_bios.h \
+  kernel/oppo/sdm660/include/uapi/linux/errqueue.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_802_3.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_nflog.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_among.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_vlan.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_nat.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_stp.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_arp.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_mark_t.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_arpreply.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_ip6.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_ip.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_limit.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_log.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_redirect.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_mark_m.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebtables.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_pkttype.h \
+  kernel/oppo/sdm660/include/uapi/linux/v4l2-common.h \
+  kernel/oppo/sdm660/include/uapi/linux/nfs_idmap.h \
+  kernel/oppo/sdm660/include/uapi/linux/cciss_ioctl.h \
+  kernel/oppo/sdm660/include/uapi/linux/sockios.h \
+  kernel/oppo/sdm660/include/uapi/linux/atalk.h \
+  kernel/oppo/sdm660/include/uapi/linux/mempolicy.h \
+  kernel/oppo/sdm660/include/uapi/linux/ipc.h \
+  kernel/oppo/sdm660/include/uapi/linux/iso_fs.h \
+  kernel/oppo/sdm660/include/uapi/linux/nfs4.h \
+  kernel/oppo/sdm660/include/uapi/linux/pkt_cls.h \
+  kernel/oppo/sdm660/include/uapi/linux/net_map.h \
+  kernel/oppo/sdm660/include/uapi/linux/lwtunnel.h \
+  kernel/oppo/sdm660/include/uapi/linux/nfsd/cld.h \
+  kernel/oppo/sdm660/include/uapi/linux/nfsd/export.h \
+  kernel/oppo/sdm660/include/uapi/linux/nfsd/nfsfh.h \
+  kernel/oppo/sdm660/include/uapi/linux/nfsd/debug.h \
+  kernel/oppo/sdm660/include/uapi/linux/nfsd/stats.h \
+  kernel/oppo/sdm660/include/uapi/linux/sonypi.h \
+  kernel/oppo/sdm660/include/uapi/linux/quota.h \
+  kernel/oppo/sdm660/include/uapi/linux/ioctl.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_adsp.h \
+  kernel/oppo/sdm660/include/uapi/linux/efs_fs_sb.h \
+  kernel/oppo/sdm660/include/uapi/linux/edd.h \
+  kernel/oppo/sdm660/include/uapi/linux/mroute.h \
+  kernel/oppo/sdm660/include/uapi/linux/uinput.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_team.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_dsps.h \
+  kernel/oppo/sdm660/include/uapi/linux/atm_nicstar.h \
+  kernel/oppo/sdm660/include/uapi/linux/serio.h \
+  kernel/oppo/sdm660/include/uapi/linux/userfaultfd.h \
+  kernel/oppo/sdm660/include/uapi/linux/sound.h \
+  kernel/oppo/sdm660/include/uapi/linux/raid/md_u.h \
+  kernel/oppo/sdm660/include/uapi/linux/raid/md_p.h \
+  kernel/oppo/sdm660/include/uapi/linux/fib_rules.h \
+  kernel/oppo/sdm660/include/uapi/linux/oom.h \
+  kernel/oppo/sdm660/include/uapi/linux/am437x-vpfe.h \
+  kernel/oppo/sdm660/include/uapi/linux/bcm933xx_hcs.h \
+  kernel/oppo/sdm660/include/uapi/linux/sched.h \
+  kernel/oppo/sdm660/include/uapi/linux/byteorder/little_endian.h \
+  kernel/oppo/sdm660/include/uapi/linux/byteorder/big_endian.h \
+  kernel/oppo/sdm660/include/uapi/linux/v4l2-subdev.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6.h \
+  kernel/oppo/sdm660/include/uapi/linux/blkpg.h \
+  kernel/oppo/sdm660/include/uapi/linux/pkt_sched.h \
+  kernel/oppo/sdm660/include/uapi/linux/sonet.h \
+  kernel/oppo/sdm660/include/uapi/linux/socket.h \
+  kernel/oppo/sdm660/include/uapi/linux/sysctl.h \
+  kernel/oppo/sdm660/include/uapi/linux/ipv6.h \
+  kernel/oppo/sdm660/include/uapi/linux/swab.h \
+  kernel/oppo/sdm660/include/uapi/linux/seemp_param_id.h \
+  kernel/oppo/sdm660/include/uapi/linux/rmnet.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_arp.h \
+  kernel/oppo/sdm660/include/uapi/linux/random.h \
+  kernel/oppo/sdm660/include/uapi/linux/un.h \
+  kernel/oppo/sdm660/include/uapi/linux/major.h \
+  kernel/oppo/sdm660/include/uapi/linux/wireless.h \
+  kernel/oppo/sdm660/include/uapi/linux/atmbr2684.h \
+  kernel/oppo/sdm660/include/uapi/linux/netlink_diag.h \
+  kernel/oppo/sdm660/include/uapi/linux/ax25.h \
+  kernel/oppo/sdm660/include/uapi/linux/module.h \
+  kernel/oppo/sdm660/include/uapi/linux/gigaset_dev.h \
+  kernel/oppo/sdm660/include/uapi/linux/smiapp.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_eql.h \
+  kernel/oppo/sdm660/include/uapi/linux/media.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm-core-interface.h \
+  kernel/oppo/sdm660/include/uapi/linux/auxvec.h \
+  kernel/oppo/sdm660/include/uapi/linux/filter.h \
+  kernel/oppo/sdm660/include/uapi/linux/bsg.h \
+  kernel/oppo/sdm660/include/uapi/linux/atmarp.h \
+  kernel/oppo/sdm660/include/uapi/linux/rtc.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge.h \
+  kernel/oppo/sdm660/include/uapi/linux/bpqether.h \
+  kernel/oppo/sdm660/include/uapi/linux/tipc.h \
+  kernel/oppo/sdm660/include/uapi/linux/nfs2.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio_g711_dec.h \
+  kernel/oppo/sdm660/include/uapi/linux/netrom.h \
+  kernel/oppo/sdm660/include/uapi/linux/atmlec.h \
+  kernel/oppo/sdm660/include/uapi/linux/qnx4_fs.h \
+  kernel/oppo/sdm660/include/uapi/linux/virtio_gpu.h \
+  kernel/oppo/sdm660/include/uapi/linux/tty_flags.h \
+  kernel/oppo/sdm660/include/uapi/linux/spi/spidev.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_pft.h \
+  kernel/oppo/sdm660/include/uapi/linux/radeonfb.h \
+  kernel/oppo/sdm660/include/uapi/linux/netconf.h \
+  kernel/oppo/sdm660/include/uapi/linux/pci.h \
+  kernel/oppo/sdm660/include/uapi/linux/ipa_qmi_service_v01.h \
+  kernel/oppo/sdm660/include/uapi/linux/net.h \
+  kernel/oppo/sdm660/include/uapi/linux/virtio_rng.h \
+  kernel/oppo/sdm660/include/uapi/linux/wil6210_uapi.h \
+  kernel/oppo/sdm660/include/uapi/linux/cryptouser.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_packet.h \
+  kernel/oppo/sdm660/include/uapi/linux/wimax.h \
+  kernel/oppo/sdm660/include/uapi/linux/cdrom.h \
+  kernel/oppo/sdm660/include/uapi/linux/scif_ioctl.h \
+  kernel/oppo/sdm660/include/uapi/linux/mtio.h \
+  kernel/oppo/sdm660/include/uapi/linux/watchdog.h \
+  kernel/oppo/sdm660/include/uapi/linux/uhid.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4.h \
+  kernel/oppo/sdm660/include/uapi/linux/kd.h \
+  kernel/oppo/sdm660/include/uapi/linux/hiddev.h \
+  kernel/oppo/sdm660/include/uapi/linux/sunrpc/debug.h \
+  kernel/oppo/sdm660/include/uapi/linux/cuda.h \
+  kernel/oppo/sdm660/include/uapi/linux/termios.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_pppox.h \
+  kernel/oppo/sdm660/include/uapi/linux/virtio_types.h \
+  kernel/oppo/sdm660/include/uapi/linux/tty.h \
+  kernel/oppo/sdm660/include/uapi/linux/net_tstamp.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_pppolac.h \
+  kernel/oppo/sdm660/include/uapi/linux/ncp_no.h \
+  kernel/oppo/sdm660/include/uapi/linux/epm_adc.h \
+  kernel/oppo/sdm660/include/uapi/linux/v4l2-mediabus.h \
+  kernel/oppo/sdm660/include/uapi/linux/matroxfb.h \
+  kernel/oppo/sdm660/include/uapi/linux/isdnif.h \
+  kernel/oppo/sdm660/include/uapi/linux/virtio_input.h \
+  kernel/oppo/sdm660/include/uapi/linux/ncp_fs.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_ether.h \
+  kernel/oppo/sdm660/include/uapi/linux/gsmmux.h \
+  kernel/oppo/sdm660/include/uapi/linux/atm_tcp.h \
+  kernel/oppo/sdm660/include/uapi/linux/keychord.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio_voicememo.h \
+  kernel/oppo/sdm660/include/uapi/linux/ethtool.h \
+  kernel/oppo/sdm660/include/uapi/linux/suspend_ioctls.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_tunnel.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/nf_tables_compat.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/nfnetlink_compat.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_l2tp.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_devgroup.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_CONNMARK.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_tcpudp.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_ipvs.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_MARK.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_connbytes.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_TCPOPTSTRIP.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/nfnetlink_cthelper.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_dccp.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_bpf.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_rateest.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_cpu.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_time.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_u32.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/nf_tables.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_TPROXY.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_SYNPROXY.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/nf_conntrack_tuple_common.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_mac.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_comment.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_socket.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/ipset/ip_set_hash.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/ipset/ip_set_list.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/ipset/ip_set.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/ipset/ip_set_bitmap.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_state.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_tcpmss.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/nf_conntrack_ftp.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_NFQUEUE.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_physdev.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/x_tables.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_CLASSIFY.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_multiport.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_connmark.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_iprange.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_ipcomp.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_connlimit.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_limit.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_RATEEST.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_quota.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_connlabel.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_LED.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_sctp.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_IDLETIMER.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_conntrack.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_hashlimit.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_osf.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_cgroup.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/nf_conntrack_sctp.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_mark.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_NFLOG.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_SECMARK.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/nfnetlink_conntrack.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_realm.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/nfnetlink.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_addrtype.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_dscp.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_esp.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_HMARK.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/nfnetlink_cttimeout.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_TEE.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_LOG.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/nfnetlink_queue.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/nf_conntrack_tcp.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_CT.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_nfacct.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_AUDIT.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_string.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_recent.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/nfnetlink_acct.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/nf_conntrack_common.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/nfnetlink_log.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/nf_nat.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_HARDIDLETIMER.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_owner.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_DSCP.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_rpfilter.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_TCPMSS.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_ecn.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_helper.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_pkttype.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_policy.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_length.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_cluster.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_statistic.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_CHECKSUM.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_set.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_CONNSECMARK.h \
+  kernel/oppo/sdm660/include/uapi/linux/signalfd.h \
+  kernel/oppo/sdm660/include/uapi/linux/virtio_pci.h \
+  kernel/oppo/sdm660/include/uapi/linux/elf-fdpic.h \
+  kernel/oppo/sdm660/include/uapi/linux/i2o-dev.h \
+  kernel/oppo/sdm660/include/uapi/linux/snmp.h \
+  kernel/oppo/sdm660/include/uapi/linux/hsr_netlink.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ipt_ttl.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ipt_REJECT.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ipt_ECN.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ipt_ah.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ipt_LOG.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ipt_TTL.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ipt_CLUSTERIP.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ip_tables.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ipt_ecn.h \
+  kernel/oppo/sdm660/include/uapi/linux/atmclip.h \
+  kernel/oppo/sdm660/include/uapi/linux/shm.h \
+  kernel/oppo/sdm660/include/uapi/linux/pr.h \
+  kernel/oppo/sdm660/include/uapi/linux/dlmconstants.h \
+  kernel/oppo/sdm660/include/uapi/linux/minix_fs.h \
+  kernel/oppo/sdm660/include/uapi/linux/tipc_netlink.h \
+  kernel/oppo/sdm660/include/uapi/linux/bpf.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_bonding.h \
+  kernel/oppo/sdm660/include/uapi/linux/v4l2-dv-timings.h \
+  kernel/oppo/sdm660/include/uapi/linux/mmtimer.h \
+  kernel/oppo/sdm660/include/uapi/linux/avtimer.h \
+  kernel/oppo/sdm660/include/uapi/linux/telephony.h \
+  kernel/oppo/sdm660/include/uapi/linux/cyclades.h \
+  kernel/oppo/sdm660/include/uapi/linux/tc_ematch/tc_em_cmp.h \
+  kernel/oppo/sdm660/include/uapi/linux/tc_ematch/tc_em_nbyte.h \
+  kernel/oppo/sdm660/include/uapi/linux/tc_ematch/tc_em_meta.h \
+  kernel/oppo/sdm660/include/uapi/linux/tc_ematch/tc_em_text.h \
+  kernel/oppo/sdm660/include/uapi/linux/hbtp_input.h \
+  kernel/oppo/sdm660/include/uapi/linux/batterydata-interface.h \
+  kernel/oppo/sdm660/include/uapi/linux/pktcdvd.h \
+  kernel/oppo/sdm660/include/uapi/linux/vt.h \
+  kernel/oppo/sdm660/include/uapi/linux/rfkill.h \
+  kernel/oppo/sdm660/include/uapi/linux/rmnet_data.h \
+  kernel/oppo/sdm660/include/uapi/linux/stat.h \
+  kernel/oppo/sdm660/include/uapi/linux/nl80211.h \
+  kernel/oppo/sdm660/include/uapi/linux/mpls_iptunnel.h \
+  kernel/oppo/sdm660/include/uapi/linux/hdlc.h \
+  kernel/oppo/sdm660/include/uapi/linux/caif/caif_socket.h \
+  kernel/oppo/sdm660/include/uapi/linux/caif/if_caif.h \
+  kernel/oppo/sdm660/include/uapi/linux/lightnvm.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_link.h \
+  kernel/oppo/sdm660/include/uapi/linux/binfmts.h \
+  kernel/oppo/sdm660/include/uapi/linux/hw_breakpoint.h \
+  kernel/oppo/sdm660/include/uapi/linux/utsname.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio_wmapro.h \
+  kernel/oppo/sdm660/include/uapi/linux/xilinx-v4l2-controls.h \
+  kernel/oppo/sdm660/include/uapi/linux/pfkeyv2.h \
+  kernel/oppo/sdm660/include/uapi/linux/a.out.h \
+  kernel/oppo/sdm660/include/uapi/linux/ip_vs.h \
+  kernel/oppo/sdm660/include/uapi/linux/hpet.h \
+  kernel/oppo/sdm660/include/uapi/linux/fb.h \
+  kernel/oppo/sdm660/include/uapi/linux/fuse.h \
+  kernel/oppo/sdm660/include/uapi/linux/input.h \
+  kernel/oppo/sdm660/include/uapi/linux/sem.h \
+  kernel/oppo/sdm660/include/uapi/linux/x25.h \
+  kernel/oppo/sdm660/include/uapi/linux/agpgart.h \
+  kernel/oppo/sdm660/include/uapi/linux/reboot.h \
+  kernel/oppo/sdm660/include/uapi/linux/udp.h \
+  kernel/oppo/sdm660/include/uapi/linux/irda.h \
+  kernel/oppo/sdm660/include/uapi/linux/input-event-codes.h \
+  kernel/oppo/sdm660/include/uapi/linux/screen_info.h \
+  kernel/oppo/sdm660/include/uapi/linux/udf_fs_i.h \
+  kernel/oppo/sdm660/include/uapi/linux/kernel.h \
+  kernel/oppo/sdm660/include/uapi/linux/fadvise.h \
+  kernel/oppo/sdm660/include/uapi/linux/dcbnl.h \
+  kernel/oppo/sdm660/include/uapi/linux/nfs_fs.h \
+  kernel/oppo/sdm660/include/uapi/linux/inet_diag.h \
+  kernel/oppo/sdm660/include/uapi/linux/vm_sockets.h \
+  kernel/oppo/sdm660/include/uapi/linux/if.h \
+  kernel/oppo/sdm660/include/uapi/linux/isdn_divertif.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_vidc_dec.h \
+  kernel/oppo/sdm660/include/uapi/linux/hidraw.h \
+  kernel/oppo/sdm660/include/uapi/linux/veth.h \
+  kernel/oppo/sdm660/include/uapi/linux/coff.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_frad.h \
+  kernel/oppo/sdm660/include/uapi/linux/packet_diag.h \
+  kernel/oppo/sdm660/include/uapi/linux/hsi/cs-protocol.h \
+  kernel/oppo/sdm660/include/uapi/linux/hsi/hsi_char.h \
+  kernel/oppo/sdm660/include/uapi/linux/ipx.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio.h \
+  kernel/oppo/sdm660/include/uapi/linux/omap3isp.h \
+  kernel/oppo/sdm660/include/uapi/linux/affs_hardblocks.h \
+  kernel/oppo/sdm660/include/uapi/linux/ptp_clock.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_mdp.h \
+  kernel/oppo/sdm660/include/uapi/linux/ivtvfb.h \
+  kernel/oppo/sdm660/include/uapi/linux/qseecom.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio_wma.h \
+  kernel/oppo/sdm660/include/uapi/linux/dccp.h \
+  kernel/oppo/sdm660/include/uapi/linux/bcache.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio_g711.h \
+  kernel/oppo/sdm660/include/uapi/linux/map_to_7segment.h \
+  kernel/oppo/sdm660/include/uapi/linux/dlm.h \
+  kernel/oppo/sdm660/include/uapi/linux/keyctl.h \
+  kernel/oppo/sdm660/include/uapi/linux/netdevice.h \
+  kernel/oppo/sdm660/include/uapi/linux/fs.h \
+  kernel/oppo/sdm660/include/uapi/linux/hyperv.h \
+  kernel/oppo/sdm660/include/uapi/linux/cn_proc.h \
+  kernel/oppo/sdm660/include/uapi/linux/bpf_common.h \
+  kernel/oppo/sdm660/include/uapi/linux/coda_psdev.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio_amrwb.h \
+  kernel/oppo/sdm660/include/uapi/linux/hbtp_vm.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_pppopns.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_arp/arp_tables.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_arp/arpt_mangle.h \
+  kernel/oppo/sdm660/include/uapi/linux/gameport.h \
+  kernel/oppo/sdm660/include/uapi/linux/ppp-comp.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio_ape.h \
+  kernel/oppo/sdm660/include/uapi/linux/virtio_config.h \
+  kernel/oppo/sdm660/include/uapi/linux/atmsap.h \
+  kernel/oppo/sdm660/include/uapi/linux/sockev.h \
+  kernel/oppo/sdm660/include/uapi/linux/can/error.h \
+  kernel/oppo/sdm660/include/uapi/linux/can/gw.h \
+  kernel/oppo/sdm660/include/uapi/linux/can/raw.h \
+  kernel/oppo/sdm660/include/uapi/linux/can/bcm.h \
+  kernel/oppo/sdm660/include/uapi/linux/can/netlink.h \
+  kernel/oppo/sdm660/include/uapi/linux/atmdev.h \
+  kernel/oppo/sdm660/include/uapi/linux/stddef.h \
+  kernel/oppo/sdm660/include/uapi/linux/phantom.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_cablemodem.h \
+  kernel/oppo/sdm660/include/uapi/linux/rmnet_ipa_fd_ioctl.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_thermal_ioctl.h \
+  kernel/oppo/sdm660/include/uapi/linux/virtio_console.h \
+  kernel/oppo/sdm660/include/uapi/linux/i2c.h \
+  kernel/oppo/sdm660/include/uapi/linux/timex.h \
+  kernel/oppo/sdm660/include/uapi/linux/libc-compat.h \
+  kernel/oppo/sdm660/include/uapi/linux/usbdevice_fs.h \
+  kernel/oppo/sdm660/include/uapi/linux/nfs_mount.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_vidc_enc.h \
+  kernel/oppo/sdm660/include/uapi/linux/atm_he.h \
+  kernel/oppo/sdm660/include/uapi/linux/mman.h \
+  kernel/oppo/sdm660/include/uapi/linux/cifs/cifs_mount.h \
+  kernel/oppo/sdm660/include/uapi/linux/mfd/wcd9xxx/wcd9320_registers.h \
+  kernel/oppo/sdm660/include/uapi/linux/mfd/wcd9xxx/wcd9xxx_registers.h \
+  kernel/oppo/sdm660/include/uapi/linux/mfd/msm-adie-codec.h \
+  kernel/oppo/sdm660/include/uapi/linux/netlink.h \
+  kernel/oppo/sdm660/include/uapi/linux/atm_zatm.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio_amrnb.h \
+  kernel/oppo/sdm660/include/uapi/linux/mmc/ioctl.h \
+  kernel/oppo/sdm660/include/uapi/linux/mmc/core.h \
+  kernel/oppo/sdm660/include/uapi/linux/mmc/mmc.h \
+  kernel/oppo/sdm660/include/uapi/linux/soundcard.h \
+  kernel/oppo/sdm660/include/uapi/linux/seemp_api.h \
+  kernel/oppo/sdm660/include/uapi/linux/signal.h \
+  kernel/oppo/sdm660/include/uapi/linux/auto_fs4.h \
+  kernel/oppo/sdm660/include/uapi/linux/dlm_device.h \
+  kernel/oppo/sdm660/include/uapi/linux/nfs.h \
+  kernel/oppo/sdm660/include/uapi/linux/net_namespace.h \
+  kernel/oppo/sdm660/include/uapi/linux/virtio_blk.h \
+  kernel/oppo/sdm660/include/uapi/linux/virtio_balloon.h \
+  kernel/oppo/sdm660/include/uapi/linux/sdla.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_hippi.h \
+  kernel/oppo/sdm660/include/uapi/linux/wanrouter.h \
+  kernel/oppo/sdm660/include/uapi/linux/reiserfs_xattr.h \
+  kernel/oppo/sdm660/include/uapi/linux/kvm_para.h \
+  kernel/oppo/sdm660/include/uapi/linux/ptrace.h \
+  kernel/oppo/sdm660/include/uapi/linux/chio.h \
+  kernel/oppo/sdm660/include/uapi/linux/dn.h \
+  kernel/oppo/sdm660/include/uapi/linux/tipc_config.h \
+  kernel/oppo/sdm660/include/uapi/linux/genwqe/genwqe_card.h \
+  kernel/oppo/sdm660/include/uapi/linux/uvcvideo.h \
+  kernel/oppo/sdm660/include/uapi/linux/hash_info.h \
+  kernel/oppo/sdm660/include/uapi/linux/jffs2.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_mdp_ext.h \
+  kernel/oppo/sdm660/include/uapi/linux/poll.h \
+  kernel/oppo/sdm660/include/uapi/linux/arcfb.h \
+  kernel/oppo/sdm660/include/uapi/linux/icmpv6.h \
+  kernel/oppo/sdm660/include/uapi/linux/ppp-ioctl.h \
+  kernel/oppo/sdm660/include/uapi/linux/android/binder.h \
+  kernel/oppo/sdm660/include/uapi/linux/kvm.h \
+  kernel/oppo/sdm660/include/uapi/linux/rtnetlink.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter.h \
+  kernel/oppo/sdm660/include/uapi/linux/kernelcapi.h \
+  kernel/oppo/sdm660/include/uapi/linux/virtio_9p.h \
+  kernel/oppo/sdm660/include/uapi/linux/nbd.h \
+  kernel/oppo/sdm660/include/uapi/linux/nvram.h \
+  kernel/oppo/sdm660/include/uapi/linux/genetlink.h \
+  kernel/oppo/sdm660/include/uapi/linux/can.h \
+  kernel/oppo/sdm660/include/uapi/linux/irqnr.h \
+  kernel/oppo/sdm660/include/uapi/linux/dm-log-userspace.h \
+  kernel/oppo/sdm660/include/uapi/linux/zorro.h \
+  kernel/oppo/sdm660/include/uapi/linux/utime.h \
+  kernel/oppo/sdm660/include/uapi/linux/qbt1000.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio_qcp.h \
+  kernel/oppo/sdm660/include/uapi/linux/param.h \
+  kernel/oppo/sdm660/include/uapi/linux/ip.h \
+  kernel/oppo/sdm660/include/uapi/linux/acct.h \
+  kernel/oppo/sdm660/include/uapi/linux/times.h \
+  kernel/oppo/sdm660/include/uapi/linux/android_pmem.h \
+  kernel/oppo/sdm660/include/uapi/linux/firewire-cdev.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio_ac3.h \
+  kernel/oppo/sdm660/include/uapi/linux/tcp.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_bridge.h \
+  kernel/oppo/sdm660/include/uapi/linux/limits.h \
+  kernel/oppo/sdm660/include/uapi/linux/pmu.h \
+  kernel/oppo/sdm660/include/uapi/linux/coresight-stm.h \
+  kernel/oppo/sdm660/include/uapi/linux/neighbour.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_tun.h \
+  kernel/oppo/sdm660/include/uapi/linux/baycom.h \
+  kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_vlan.h \
+  kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_bpf.h \
+  kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_csum.h \
+  kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_gact.h \
+  kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_pedit.h \
+  kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_mirred.h \
+  kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_ipt.h \
+  kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_nat.h \
+  kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_connmark.h \
+  kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_skbedit.h \
+  kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_defact.h \
+  kernel/oppo/sdm660/include/uapi/linux/kcmp.h \
+  kernel/oppo/sdm660/include/uapi/linux/loop.h \
+  kernel/oppo/sdm660/include/uapi/linux/scc.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio_alac.h \
+  kernel/oppo/sdm660/include/uapi/linux/icmp.h \
+  kernel/oppo/sdm660/include/uapi/linux/xattr.h \
+  kernel/oppo/sdm660/include/uapi/linux/media-bus-format.h \
+  kernel/oppo/sdm660/include/uapi/linux/qcota.h \
+  kernel/oppo/sdm660/include/uapi/linux/iio/types.h \
+  kernel/oppo/sdm660/include/uapi/linux/iio/events.h \
+  kernel/oppo/sdm660/include/uapi/linux/isdn_ppp.h \
+  kernel/oppo/sdm660/include/uapi/linux/serial_core.h \
+  kernel/oppo/sdm660/include/uapi/linux/selinux_netlink.h \
+  kernel/oppo/sdm660/include/uapi/linux/hid.h \
+  kernel/oppo/sdm660/include/uapi/linux/auto_fs.h \
+  kernel/oppo/sdm660/include/uapi/linux/virtio_net.h \
+  kernel/oppo/sdm660/include/uapi/linux/qnxtypes.h \
+  kernel/oppo/sdm660/include/uapi/linux/fou.h \
+  kernel/oppo/sdm660/include/uapi/linux/pci_regs.h \
+  kernel/oppo/sdm660/include/uapi/linux/cec-funcs.h \
+  kernel/oppo/sdm660/include/uapi/linux/virtio_ring.h \
+  kernel/oppo/sdm660/include/uapi/linux/hysdn_if.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio_mvs.h \
+  kernel/oppo/sdm660/include/uapi/linux/vhost.h \
+  kernel/oppo/sdm660/include/uapi/linux/v4l2-controls.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_slip.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_arcnet.h \
+  kernel/oppo/sdm660/include/uapi/linux/dvb/video.h \
+  kernel/oppo/sdm660/include/uapi/linux/dvb/dmx.h \
+  kernel/oppo/sdm660/include/uapi/linux/dvb/frontend.h \
+  kernel/oppo/sdm660/include/uapi/linux/dvb/ca.h \
+  kernel/oppo/sdm660/include/uapi/linux/dvb/osd.h \
+  kernel/oppo/sdm660/include/uapi/linux/dvb/audio.h \
+  kernel/oppo/sdm660/include/uapi/linux/dvb/net.h \
+  kernel/oppo/sdm660/include/uapi/linux/dvb/version.h \
+  kernel/oppo/sdm660/include/uapi/linux/fiemap.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_vlan.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_x25.h \
+  kernel/oppo/sdm660/include/uapi/linux/spcom.h \
+  kernel/oppo/sdm660/include/uapi/linux/mpls.h \
+  kernel/oppo/sdm660/include/uapi/linux/stm.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_arp.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_pppol2tp.h \
+  kernel/oppo/sdm660/include/uapi/linux/membarrier.h \
+  kernel/oppo/sdm660/include/uapi/linux/fd.h \
+  kernel/oppo/sdm660/include/uapi/linux/audit.h \
+  kernel/oppo/sdm660/include/uapi/linux/maxim_sti.h \
+  kernel/oppo/sdm660/include/uapi/linux/vfio.h \
+  kernel/oppo/sdm660/include/uapi/linux/ip6_tunnel.h \
+  kernel/oppo/sdm660/include/uapi/linux/elf.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio_aac.h \
+  kernel/oppo/sdm660/include/uapi/linux/personality.h \
+  kernel/oppo/sdm660/include/uapi/linux/pps.h \
+  kernel/oppo/sdm660/include/uapi/linux/parport.h \
+  kernel/oppo/sdm660/include/uapi/linux/dqblk_xfs.h \
+  kernel/oppo/sdm660/include/uapi/linux/atmmpc.h \
+  kernel/oppo/sdm660/include/uapi/linux/elfcore.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_ltalk.h \
+  kernel/oppo/sdm660/include/uapi/linux/ipmi.h \
+  kernel/oppo/sdm660/include/uapi/linux/gen_stats.h \
+  kernel/oppo/sdm660/include/uapi/linux/fdreg.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_ppp.h \
+  kernel/oppo/sdm660/include/uapi/linux/userio.h \
+  kernel/oppo/sdm660/include/uapi/linux/futex.h \
+  kernel/oppo/sdm660/include/uapi/linux/usb/video.h \
+  kernel/oppo/sdm660/include/uapi/linux/usb/midi.h \
+  kernel/oppo/sdm660/include/uapi/linux/usb/f_mtp.h \
+  kernel/oppo/sdm660/include/uapi/linux/usb/tmc.h \
+  kernel/oppo/sdm660/include/uapi/linux/usb/audio.h \
+  kernel/oppo/sdm660/include/uapi/linux/usb/usb_ctrl_qti.h \
+  kernel/oppo/sdm660/include/uapi/linux/usb/cdc.h \
+  kernel/oppo/sdm660/include/uapi/linux/usb/g_printer.h \
+  kernel/oppo/sdm660/include/uapi/linux/usb/cdc-wdm.h \
+  kernel/oppo/sdm660/include/uapi/linux/usb/ch11.h \
+  kernel/oppo/sdm660/include/uapi/linux/usb/ch9.h \
+  kernel/oppo/sdm660/include/uapi/linux/usb/functionfs.h \
+  kernel/oppo/sdm660/include/uapi/linux/usb/f_accessory.h \
+  kernel/oppo/sdm660/include/uapi/linux/usb/gadgetfs.h \
+  kernel/oppo/sdm660/include/uapi/linux/atmsvc.h \
+  kernel/oppo/sdm660/include/uapi/linux/vsp1.h \
+  kernel/oppo/sdm660/include/uapi/linux/inotify.h \
+  kernel/oppo/sdm660/include/uapi/linux/mei.h \
+  kernel/oppo/sdm660/include/uapi/linux/synclink.h \
+  kernel/oppo/sdm660/include/uapi/linux/prctl.h \
+  kernel/oppo/sdm660/include/uapi/linux/eventpoll.h \
+  kernel/oppo/sdm660/include/uapi/linux/ipmi_msgdefs.h \
+  kernel/oppo/sdm660/include/uapi/linux/sysinfo.h \
+  kernel/oppo/sdm660/include/uapi/linux/cycx_cfm.h \
+  kernel/oppo/sdm660/include/uapi/linux/openvswitch.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_audio_amrwbplus.h \
+  kernel/oppo/sdm660/include/uapi/linux/ipsec.h \
+  kernel/oppo/sdm660/include/uapi/linux/serial.h \
+  kernel/oppo/sdm660/include/uapi/linux/hdlc/ioctl.h \
+  kernel/oppo/sdm660/include/uapi/linux/firewire-constants.h \
+  kernel/oppo/sdm660/include/uapi/linux/nfsacl.h \
+  kernel/oppo/sdm660/include/uapi/linux/l2tp.h \
+  kernel/oppo/sdm660/include/uapi/linux/rose.h \
+  kernel/oppo/sdm660/include/uapi/linux/securebits.h \
+  kernel/oppo/sdm660/include/uapi/linux/fsl_hypervisor.h \
+  kernel/oppo/sdm660/include/uapi/linux/atm_eni.h \
+  kernel/oppo/sdm660/include/uapi/linux/sock_diag.h \
+  kernel/oppo/sdm660/include/uapi/linux/adb.h \
+  kernel/oppo/sdm660/include/uapi/linux/qcedev.h \
+  kernel/oppo/sdm660/include/uapi/linux/seccomp.h \
+  kernel/oppo/sdm660/include/uapi/linux/ncp.h \
+  kernel/oppo/sdm660/include/uapi/linux/xfrm.h \
+  kernel/oppo/sdm660/include/uapi/linux/netfilter_decnet.h \
+  kernel/oppo/sdm660/include/uapi/linux/wimax/i2400m.h \
+  kernel/oppo/sdm660/include/uapi/linux/in.h \
+  kernel/oppo/sdm660/include/uapi/linux/msm_rmnet.h \
+  kernel/oppo/sdm660/include/uapi/linux/if_phonet.h \
+  kernel/oppo/sdm660/include/uapi/xen/evtchn.h \
+  kernel/oppo/sdm660/include/uapi/xen/gntalloc.h \
+  kernel/oppo/sdm660/include/uapi/xen/privcmd.h \
+  kernel/oppo/sdm660/include/uapi/xen/gntdev.h \
+  kernel/oppo/sdm660/include/uapi/drm/amdgpu_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/exynos_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/msm_drm_pp.h \
+  kernel/oppo/sdm660/include/uapi/drm/drm_fourcc.h \
+  kernel/oppo/sdm660/include/uapi/drm/r128_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/tegra_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/msm_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/sde_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/i915_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/nouveau_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/omap_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/mga_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/radeon_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/sis_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/vmwgfx_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/savage_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/i810_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/armada_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/via_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/qxl_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/virtgpu_drm.h \
+  kernel/oppo/sdm660/include/uapi/drm/drm_mode.h \
+  kernel/oppo/sdm660/include/uapi/drm/drm_sarea.h \
+  kernel/oppo/sdm660/include/uapi/scsi/scsi_bsg_fc.h \
+  kernel/oppo/sdm660/include/uapi/scsi/sg.h \
+  kernel/oppo/sdm660/include/uapi/scsi/scsi_ioctl.h \
+  kernel/oppo/sdm660/include/uapi/scsi/cxlflash_ioctl.h \
+  kernel/oppo/sdm660/include/uapi/scsi/scsi_netlink_fc.h \
+  kernel/oppo/sdm660/include/uapi/scsi/ufs/ioctl.h \
+  kernel/oppo/sdm660/include/uapi/scsi/ufs/ufs.h \
+  kernel/oppo/sdm660/include/uapi/scsi/scsi_netlink.h \
+  kernel/oppo/sdm660/include/uapi/scsi/fc/fc_fs.h \
+  kernel/oppo/sdm660/include/uapi/scsi/fc/fc_gs.h \
+  kernel/oppo/sdm660/include/uapi/scsi/fc/fc_ns.h \
+  kernel/oppo/sdm660/include/uapi/scsi/fc/fc_els.h \
+  kernel/oppo/sdm660/include/uapi/sound/devdep_params.h \
+  kernel/oppo/sdm660/include/uapi/sound/tlv.h \
+  kernel/oppo/sdm660/include/uapi/sound/hdspm.h \
+  kernel/oppo/sdm660/include/uapi/sound/wcd-dsp-glink.h \
+  kernel/oppo/sdm660/include/uapi/sound/asound.h \
+  kernel/oppo/sdm660/include/uapi/sound/firewire.h \
+  kernel/oppo/sdm660/include/uapi/sound/asound_fm.h \
+  kernel/oppo/sdm660/include/uapi/sound/msmcal-hwdep.h \
+  kernel/oppo/sdm660/include/uapi/sound/compress_offload.h \
+  kernel/oppo/sdm660/include/uapi/sound/hdsp.h \
+  kernel/oppo/sdm660/include/uapi/sound/sfnt_info.h \
+  kernel/oppo/sdm660/include/uapi/sound/emu10k1.h \
+  kernel/oppo/sdm660/include/uapi/sound/audio_effects.h \
+  kernel/oppo/sdm660/include/uapi/sound/compress_params.h \
+  kernel/oppo/sdm660/include/uapi/sound/sb16_csp.h \
+  kernel/oppo/sdm660/include/uapi/sound/lsm_params.h \
+  kernel/oppo/sdm660/include/uapi/sound/asequencer.h \
+  kernel/oppo/sdm660/include/uapi/sound/asoc.h \
+  kernel/oppo/sdm660/include/uapi/sound/usb_stream.h \
+  kernel/oppo/sdm660/include/uapi/misc/cxl.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/errno-base.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/posix_types.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/types.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/errno.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/unistd.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/fcntl.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/resource.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/sockios.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/ioctl.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/ioctls.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/socket.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/swab.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/auxvec.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/shmbuf.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/signal-defs.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/mman-common.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/termios.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/bitsperlong.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/int-ll64.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/stat.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/siginfo.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/termbits.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/msgbuf.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/mman.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/signal.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/kvm_para.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/poll.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/sembuf.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/param.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/setup.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/statfs.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/ucontext.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/int-l64.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/shmparam.h \
+  kernel/oppo/sdm660/include/uapi/asm-generic/ipcbuf.h \
+  kernel/oppo/sdm660/include/uapi/video/uvesafb.h \
+  kernel/oppo/sdm660/include/uapi/video/msm_hdmi_modes.h \
+  kernel/oppo/sdm660/include/uapi/video/edid.h \
+  kernel/oppo/sdm660/include/uapi/video/sisfb.h \
+  kernel/oppo/sdm660/include/uapi/video/adf.h \
+  kernel/oppo/sdm660/include/uapi/video/msm_hdmi_hdcp_mgr.h \
+  kernel/oppo/sdm660/include/uapi/mtd/mtd-user.h \
+  kernel/oppo/sdm660/include/uapi/mtd/mtd-abi.h \
+  kernel/oppo/sdm660/include/uapi/mtd/nftl-user.h \
+  kernel/oppo/sdm660/include/uapi/mtd/ubi-user.h \
+  kernel/oppo/sdm660/include/uapi/mtd/inftl-user.h \
+
+kernel/oppo/sdm660/Makefile:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/posix_types.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/hwcap.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/unistd.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/fcntl.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/perf_regs.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/sigcontext.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/auxvec.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/bitsperlong.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/stat.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/siginfo.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/signal.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/byteorder.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/ptrace.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/kvm.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/param.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/setup.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/statfs.h:
+
+kernel/oppo/sdm660/arch/arm64/include/uapi/asm/ucontext.h:
+
+kernel/oppo/sdm660/include/uapi/media/radio-iris.h:
+
+kernel/oppo/sdm660/include/uapi/media/msmb_isp.h:
+
+kernel/oppo/sdm660/include/uapi/media/msm_camera.h:
+
+kernel/oppo/sdm660/include/uapi/media/msm_camsensor_sdk.h:
+
+kernel/oppo/sdm660/include/uapi/media/msm_gestures.h:
+
+kernel/oppo/sdm660/include/uapi/media/msm_sde_rotator.h:
+
+kernel/oppo/sdm660/include/uapi/media/msm_jpeg_dma.h:
+
+kernel/oppo/sdm660/include/uapi/media/msm_vpu.h:
+
+kernel/oppo/sdm660/include/uapi/media/msm_isp.h:
+
+kernel/oppo/sdm660/include/uapi/media/msmb_pproc.h:
+
+kernel/oppo/sdm660/include/uapi/media/msm_vidc.h:
+
+kernel/oppo/sdm660/include/uapi/media/radio-iris-commands.h:
+
+kernel/oppo/sdm660/include/uapi/media/msmb_generic_buf_mgr.h:
+
+kernel/oppo/sdm660/include/uapi/media/msm_fd.h:
+
+kernel/oppo/sdm660/include/uapi/media/msm_cam_sensor.h:
+
+kernel/oppo/sdm660/include/uapi/media/msm_gemini.h:
+
+kernel/oppo/sdm660/include/uapi/media/msmb_ispif.h:
+
+kernel/oppo/sdm660/include/uapi/media/msm_media_info.h:
+
+kernel/oppo/sdm660/include/uapi/media/ais/msm_ais.h:
+
+kernel/oppo/sdm660/include/uapi/media/ais/msm_ais_isp.h:
+
+kernel/oppo/sdm660/include/uapi/media/ais/msm_ais_sensor_sdk.h:
+
+kernel/oppo/sdm660/include/uapi/media/ais/msm_ais_sensor.h:
+
+kernel/oppo/sdm660/include/uapi/media/ais/msm_ais_buf_mgr.h:
+
+kernel/oppo/sdm660/include/uapi/media/ais/msm_ais_ispif.h:
+
+kernel/oppo/sdm660/include/uapi/media/msm_jpeg.h:
+
+kernel/oppo/sdm660/include/uapi/media/msmb_camera.h:
+
+kernel/oppo/sdm660/include/uapi/media/msm_mercury.h:
+
+kernel/oppo/sdm660/include/uapi/rdma/rdma_user_cm.h:
+
+kernel/oppo/sdm660/include/uapi/rdma/ib_user_sa.h:
+
+kernel/oppo/sdm660/include/uapi/rdma/rdma_netlink.h:
+
+kernel/oppo/sdm660/include/uapi/rdma/ib_user_cm.h:
+
+kernel/oppo/sdm660/include/uapi/rdma/ib_user_verbs.h:
+
+kernel/oppo/sdm660/include/uapi/rdma/hfi/hfi1_user.h:
+
+kernel/oppo/sdm660/include/uapi/rdma/ib_user_mad.h:
+
+kernel/oppo/sdm660/include/uapi/linux/patchkey.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ppdev.h:
+
+kernel/oppo/sdm660/include/uapi/linux/gfs2_ondisk.h:
+
+kernel/oppo/sdm660/include/uapi/linux/videodev2.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ivtv.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_ah.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_rt.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_frag.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_NPT.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_opts.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_LOG.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_ipv6header.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6_tables.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_mh.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_hl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_REJECT.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6/ip6t_HL.h:
+
+kernel/oppo/sdm660/include/uapi/linux/btrfs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/omapfb.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio_sbc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/posix_types.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hdreg.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tiocl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/i8k.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_plip.h:
+
+kernel/oppo/sdm660/include/uapi/linux/b1lli.h:
+
+kernel/oppo/sdm660/include/uapi/linux/keyboard.h:
+
+kernel/oppo/sdm660/include/uapi/linux/types.h:
+
+kernel/oppo/sdm660/include/uapi/linux/rds.h:
+
+kernel/oppo/sdm660/include/uapi/linux/kexec.h:
+
+kernel/oppo/sdm660/include/uapi/linux/esoc_ctrl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/wait.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hdlcdrv.h:
+
+kernel/oppo/sdm660/include/uapi/linux/coda.h:
+
+kernel/oppo/sdm660/include/uapi/linux/smcinvoke.h:
+
+kernel/oppo/sdm660/include/uapi/linux/net_dropmon.h:
+
+kernel/oppo/sdm660/include/uapi/linux/time.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atmioc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/joystick.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ncp_mount.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nfc/nfcinfo.h:
+
+kernel/oppo/sdm660/include/uapi/linux/errno.h:
+
+kernel/oppo/sdm660/include/uapi/linux/cm4000_cs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/kfd_ioctl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/reiserfs_fs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mii.h:
+
+kernel/oppo/sdm660/include/uapi/linux/unistd.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msdos_fs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/psci.h:
+
+kernel/oppo/sdm660/include/uapi/linux/qrng.h:
+
+kernel/oppo/sdm660/include/uapi/linux/blktrace_api.h:
+
+kernel/oppo/sdm660/include/uapi/linux/llc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/fips_status.h:
+
+kernel/oppo/sdm660/include/uapi/linux/toshiba.h:
+
+kernel/oppo/sdm660/include/uapi/linux/isdn.h:
+
+kernel/oppo/sdm660/include/uapi/linux/thermal.h:
+
+kernel/oppo/sdm660/include/uapi/linux/target_core_user.h:
+
+kernel/oppo/sdm660/include/uapi/linux/kernel-page-flags.h:
+
+kernel/oppo/sdm660/include/uapi/linux/kdev_t.h:
+
+kernel/oppo/sdm660/include/uapi/linux/n_r3964.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dlm_plock.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mdio.h:
+
+kernel/oppo/sdm660/include/uapi/linux/uio.h:
+
+kernel/oppo/sdm660/include/uapi/linux/fcntl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/uuid.h:
+
+kernel/oppo/sdm660/include/uapi/linux/cramfs_fs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/virtio_scsi.h:
+
+kernel/oppo/sdm660/include/uapi/linux/memfd.h:
+
+kernel/oppo/sdm660/include/uapi/linux/connector.h:
+
+kernel/oppo/sdm660/include/uapi/linux/raw.h:
+
+kernel/oppo/sdm660/include/uapi/linux/virtio_ids.h:
+
+kernel/oppo/sdm660/include/uapi/linux/perf_event.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mic_ioctl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_fddi.h:
+
+kernel/oppo/sdm660/include/uapi/linux/cec.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mqueue.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_ipc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ila.h:
+
+kernel/oppo/sdm660/include/uapi/linux/flat.h:
+
+kernel/oppo/sdm660/include/uapi/linux/cgroupstats.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mhi.h:
+
+kernel/oppo/sdm660/include/uapi/linux/meye.h:
+
+kernel/oppo/sdm660/include/uapi/linux/resource.h:
+
+kernel/oppo/sdm660/include/uapi/linux/serial_reg.h:
+
+kernel/oppo/sdm660/include/uapi/linux/sctp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ppp_defs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/cciss_defs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/i2c-dev.h:
+
+kernel/oppo/sdm660/include/uapi/linux/igmp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_alg.h:
+
+kernel/oppo/sdm660/include/uapi/linux/aio_abi.h:
+
+kernel/oppo/sdm660/include/uapi/linux/string.h:
+
+kernel/oppo/sdm660/include/uapi/linux/pg.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ndctl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/taskstats.h:
+
+kernel/oppo/sdm660/include/uapi/linux/romfs_fs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ipv6_route.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_ipa.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_infiniband.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nfc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/in6.h:
+
+kernel/oppo/sdm660/include/uapi/linux/adfs_fs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nfs3.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atm_idt77105.h:
+
+kernel/oppo/sdm660/include/uapi/linux/capability.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_fc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/in_route.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_kgsl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/falloc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nfs4_mount.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atmapi.h:
+
+kernel/oppo/sdm660/include/uapi/linux/const.h:
+
+kernel/oppo/sdm660/include/uapi/linux/lp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_rotator.h:
+
+kernel/oppo/sdm660/include/uapi/linux/usbip.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ultrasound.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio_calibration.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_addr.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ixjuser.h:
+
+kernel/oppo/sdm660/include/uapi/linux/phonet.h:
+
+kernel/oppo/sdm660/include/uapi/linux/route.h:
+
+kernel/oppo/sdm660/include/uapi/linux/zorro_ids.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nubus.h:
+
+kernel/oppo/sdm660/include/uapi/linux/unix_diag.h:
+
+kernel/oppo/sdm660/include/uapi/linux/isdn/capicmd.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_addrlabel.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mic_common.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mdss_rotator.h:
+
+kernel/oppo/sdm660/include/uapi/linux/elf-em.h:
+
+kernel/oppo/sdm660/include/uapi/linux/magic.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msg.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atmppp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dlm_netlink.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mroute6.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tcp_metrics.h:
+
+kernel/oppo/sdm660/include/uapi/linux/bfs_fs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/fanotify.h:
+
+kernel/oppo/sdm660/include/uapi/linux/capi.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nvme_ioctl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atm.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dm-ioctl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/apm_bios.h:
+
+kernel/oppo/sdm660/include/uapi/linux/errqueue.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_802_3.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_nflog.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_among.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_vlan.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_nat.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_stp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_arp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_mark_t.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_arpreply.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_ip6.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_ip.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_limit.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_log.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_redirect.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_mark_m.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebtables.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge/ebt_pkttype.h:
+
+kernel/oppo/sdm660/include/uapi/linux/v4l2-common.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nfs_idmap.h:
+
+kernel/oppo/sdm660/include/uapi/linux/cciss_ioctl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/sockios.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atalk.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mempolicy.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ipc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/iso_fs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nfs4.h:
+
+kernel/oppo/sdm660/include/uapi/linux/pkt_cls.h:
+
+kernel/oppo/sdm660/include/uapi/linux/net_map.h:
+
+kernel/oppo/sdm660/include/uapi/linux/lwtunnel.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nfsd/cld.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nfsd/export.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nfsd/nfsfh.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nfsd/debug.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nfsd/stats.h:
+
+kernel/oppo/sdm660/include/uapi/linux/sonypi.h:
+
+kernel/oppo/sdm660/include/uapi/linux/quota.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ioctl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_adsp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/efs_fs_sb.h:
+
+kernel/oppo/sdm660/include/uapi/linux/edd.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mroute.h:
+
+kernel/oppo/sdm660/include/uapi/linux/uinput.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_team.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_dsps.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atm_nicstar.h:
+
+kernel/oppo/sdm660/include/uapi/linux/serio.h:
+
+kernel/oppo/sdm660/include/uapi/linux/userfaultfd.h:
+
+kernel/oppo/sdm660/include/uapi/linux/sound.h:
+
+kernel/oppo/sdm660/include/uapi/linux/raid/md_u.h:
+
+kernel/oppo/sdm660/include/uapi/linux/raid/md_p.h:
+
+kernel/oppo/sdm660/include/uapi/linux/fib_rules.h:
+
+kernel/oppo/sdm660/include/uapi/linux/oom.h:
+
+kernel/oppo/sdm660/include/uapi/linux/am437x-vpfe.h:
+
+kernel/oppo/sdm660/include/uapi/linux/bcm933xx_hcs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/sched.h:
+
+kernel/oppo/sdm660/include/uapi/linux/byteorder/little_endian.h:
+
+kernel/oppo/sdm660/include/uapi/linux/byteorder/big_endian.h:
+
+kernel/oppo/sdm660/include/uapi/linux/v4l2-subdev.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv6.h:
+
+kernel/oppo/sdm660/include/uapi/linux/blkpg.h:
+
+kernel/oppo/sdm660/include/uapi/linux/pkt_sched.h:
+
+kernel/oppo/sdm660/include/uapi/linux/sonet.h:
+
+kernel/oppo/sdm660/include/uapi/linux/socket.h:
+
+kernel/oppo/sdm660/include/uapi/linux/sysctl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ipv6.h:
+
+kernel/oppo/sdm660/include/uapi/linux/swab.h:
+
+kernel/oppo/sdm660/include/uapi/linux/seemp_param_id.h:
+
+kernel/oppo/sdm660/include/uapi/linux/rmnet.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_arp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/random.h:
+
+kernel/oppo/sdm660/include/uapi/linux/un.h:
+
+kernel/oppo/sdm660/include/uapi/linux/major.h:
+
+kernel/oppo/sdm660/include/uapi/linux/wireless.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atmbr2684.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netlink_diag.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ax25.h:
+
+kernel/oppo/sdm660/include/uapi/linux/module.h:
+
+kernel/oppo/sdm660/include/uapi/linux/gigaset_dev.h:
+
+kernel/oppo/sdm660/include/uapi/linux/smiapp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_eql.h:
+
+kernel/oppo/sdm660/include/uapi/linux/media.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm-core-interface.h:
+
+kernel/oppo/sdm660/include/uapi/linux/auxvec.h:
+
+kernel/oppo/sdm660/include/uapi/linux/filter.h:
+
+kernel/oppo/sdm660/include/uapi/linux/bsg.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atmarp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/rtc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_bridge.h:
+
+kernel/oppo/sdm660/include/uapi/linux/bpqether.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tipc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nfs2.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio_g711_dec.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netrom.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atmlec.h:
+
+kernel/oppo/sdm660/include/uapi/linux/qnx4_fs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/virtio_gpu.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tty_flags.h:
+
+kernel/oppo/sdm660/include/uapi/linux/spi/spidev.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_pft.h:
+
+kernel/oppo/sdm660/include/uapi/linux/radeonfb.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netconf.h:
+
+kernel/oppo/sdm660/include/uapi/linux/pci.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ipa_qmi_service_v01.h:
+
+kernel/oppo/sdm660/include/uapi/linux/net.h:
+
+kernel/oppo/sdm660/include/uapi/linux/virtio_rng.h:
+
+kernel/oppo/sdm660/include/uapi/linux/wil6210_uapi.h:
+
+kernel/oppo/sdm660/include/uapi/linux/cryptouser.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_packet.h:
+
+kernel/oppo/sdm660/include/uapi/linux/wimax.h:
+
+kernel/oppo/sdm660/include/uapi/linux/cdrom.h:
+
+kernel/oppo/sdm660/include/uapi/linux/scif_ioctl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mtio.h:
+
+kernel/oppo/sdm660/include/uapi/linux/watchdog.h:
+
+kernel/oppo/sdm660/include/uapi/linux/uhid.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4.h:
+
+kernel/oppo/sdm660/include/uapi/linux/kd.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hiddev.h:
+
+kernel/oppo/sdm660/include/uapi/linux/sunrpc/debug.h:
+
+kernel/oppo/sdm660/include/uapi/linux/cuda.h:
+
+kernel/oppo/sdm660/include/uapi/linux/termios.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_pppox.h:
+
+kernel/oppo/sdm660/include/uapi/linux/virtio_types.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tty.h:
+
+kernel/oppo/sdm660/include/uapi/linux/net_tstamp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_pppolac.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ncp_no.h:
+
+kernel/oppo/sdm660/include/uapi/linux/epm_adc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/v4l2-mediabus.h:
+
+kernel/oppo/sdm660/include/uapi/linux/matroxfb.h:
+
+kernel/oppo/sdm660/include/uapi/linux/isdnif.h:
+
+kernel/oppo/sdm660/include/uapi/linux/virtio_input.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ncp_fs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_ether.h:
+
+kernel/oppo/sdm660/include/uapi/linux/gsmmux.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atm_tcp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/keychord.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio_voicememo.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ethtool.h:
+
+kernel/oppo/sdm660/include/uapi/linux/suspend_ioctls.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_tunnel.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/nf_tables_compat.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/nfnetlink_compat.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_l2tp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_devgroup.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_CONNMARK.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_tcpudp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_ipvs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_MARK.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_connbytes.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_TCPOPTSTRIP.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/nfnetlink_cthelper.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_dccp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_bpf.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_rateest.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_cpu.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_time.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_u32.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/nf_tables.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_TPROXY.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_SYNPROXY.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/nf_conntrack_tuple_common.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_mac.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_comment.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_socket.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/ipset/ip_set_hash.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/ipset/ip_set_list.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/ipset/ip_set.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/ipset/ip_set_bitmap.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_state.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_tcpmss.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/nf_conntrack_ftp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_NFQUEUE.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_physdev.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/x_tables.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_CLASSIFY.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_multiport.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_connmark.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_iprange.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_ipcomp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_connlimit.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_limit.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_RATEEST.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_quota.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_connlabel.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_LED.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_sctp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_IDLETIMER.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_conntrack.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_hashlimit.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_osf.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_cgroup.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/nf_conntrack_sctp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_mark.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_NFLOG.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_SECMARK.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/nfnetlink_conntrack.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_realm.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/nfnetlink.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_addrtype.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_dscp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_esp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_HMARK.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/nfnetlink_cttimeout.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_TEE.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_LOG.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/nfnetlink_queue.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/nf_conntrack_tcp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_CT.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_nfacct.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_AUDIT.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_string.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_recent.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/nfnetlink_acct.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/nf_conntrack_common.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/nfnetlink_log.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/nf_nat.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_HARDIDLETIMER.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_owner.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_DSCP.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_rpfilter.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_TCPMSS.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_ecn.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_helper.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_pkttype.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_policy.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_length.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_cluster.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_statistic.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_CHECKSUM.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_set.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter/xt_CONNSECMARK.h:
+
+kernel/oppo/sdm660/include/uapi/linux/signalfd.h:
+
+kernel/oppo/sdm660/include/uapi/linux/virtio_pci.h:
+
+kernel/oppo/sdm660/include/uapi/linux/elf-fdpic.h:
+
+kernel/oppo/sdm660/include/uapi/linux/i2o-dev.h:
+
+kernel/oppo/sdm660/include/uapi/linux/snmp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hsr_netlink.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ipt_ttl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ipt_REJECT.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ipt_ECN.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ipt_ah.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ipt_LOG.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ipt_TTL.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ipt_CLUSTERIP.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ip_tables.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_ipv4/ipt_ecn.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atmclip.h:
+
+kernel/oppo/sdm660/include/uapi/linux/shm.h:
+
+kernel/oppo/sdm660/include/uapi/linux/pr.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dlmconstants.h:
+
+kernel/oppo/sdm660/include/uapi/linux/minix_fs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tipc_netlink.h:
+
+kernel/oppo/sdm660/include/uapi/linux/bpf.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_bonding.h:
+
+kernel/oppo/sdm660/include/uapi/linux/v4l2-dv-timings.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mmtimer.h:
+
+kernel/oppo/sdm660/include/uapi/linux/avtimer.h:
+
+kernel/oppo/sdm660/include/uapi/linux/telephony.h:
+
+kernel/oppo/sdm660/include/uapi/linux/cyclades.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tc_ematch/tc_em_cmp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tc_ematch/tc_em_nbyte.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tc_ematch/tc_em_meta.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tc_ematch/tc_em_text.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hbtp_input.h:
+
+kernel/oppo/sdm660/include/uapi/linux/batterydata-interface.h:
+
+kernel/oppo/sdm660/include/uapi/linux/pktcdvd.h:
+
+kernel/oppo/sdm660/include/uapi/linux/vt.h:
+
+kernel/oppo/sdm660/include/uapi/linux/rfkill.h:
+
+kernel/oppo/sdm660/include/uapi/linux/rmnet_data.h:
+
+kernel/oppo/sdm660/include/uapi/linux/stat.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nl80211.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mpls_iptunnel.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hdlc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/caif/caif_socket.h:
+
+kernel/oppo/sdm660/include/uapi/linux/caif/if_caif.h:
+
+kernel/oppo/sdm660/include/uapi/linux/lightnvm.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_link.h:
+
+kernel/oppo/sdm660/include/uapi/linux/binfmts.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hw_breakpoint.h:
+
+kernel/oppo/sdm660/include/uapi/linux/utsname.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio_wmapro.h:
+
+kernel/oppo/sdm660/include/uapi/linux/xilinx-v4l2-controls.h:
+
+kernel/oppo/sdm660/include/uapi/linux/pfkeyv2.h:
+
+kernel/oppo/sdm660/include/uapi/linux/a.out.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ip_vs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hpet.h:
+
+kernel/oppo/sdm660/include/uapi/linux/fb.h:
+
+kernel/oppo/sdm660/include/uapi/linux/fuse.h:
+
+kernel/oppo/sdm660/include/uapi/linux/input.h:
+
+kernel/oppo/sdm660/include/uapi/linux/sem.h:
+
+kernel/oppo/sdm660/include/uapi/linux/x25.h:
+
+kernel/oppo/sdm660/include/uapi/linux/agpgart.h:
+
+kernel/oppo/sdm660/include/uapi/linux/reboot.h:
+
+kernel/oppo/sdm660/include/uapi/linux/udp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/irda.h:
+
+kernel/oppo/sdm660/include/uapi/linux/input-event-codes.h:
+
+kernel/oppo/sdm660/include/uapi/linux/screen_info.h:
+
+kernel/oppo/sdm660/include/uapi/linux/udf_fs_i.h:
+
+kernel/oppo/sdm660/include/uapi/linux/kernel.h:
+
+kernel/oppo/sdm660/include/uapi/linux/fadvise.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dcbnl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nfs_fs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/inet_diag.h:
+
+kernel/oppo/sdm660/include/uapi/linux/vm_sockets.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if.h:
+
+kernel/oppo/sdm660/include/uapi/linux/isdn_divertif.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_vidc_dec.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hidraw.h:
+
+kernel/oppo/sdm660/include/uapi/linux/veth.h:
+
+kernel/oppo/sdm660/include/uapi/linux/coff.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_frad.h:
+
+kernel/oppo/sdm660/include/uapi/linux/packet_diag.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hsi/cs-protocol.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hsi/hsi_char.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ipx.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio.h:
+
+kernel/oppo/sdm660/include/uapi/linux/omap3isp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/affs_hardblocks.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ptp_clock.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_mdp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ivtvfb.h:
+
+kernel/oppo/sdm660/include/uapi/linux/qseecom.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio_wma.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dccp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/bcache.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio_g711.h:
+
+kernel/oppo/sdm660/include/uapi/linux/map_to_7segment.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dlm.h:
+
+kernel/oppo/sdm660/include/uapi/linux/keyctl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netdevice.h:
+
+kernel/oppo/sdm660/include/uapi/linux/fs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hyperv.h:
+
+kernel/oppo/sdm660/include/uapi/linux/cn_proc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/bpf_common.h:
+
+kernel/oppo/sdm660/include/uapi/linux/coda_psdev.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio_amrwb.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hbtp_vm.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_pppopns.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_arp/arp_tables.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_arp/arpt_mangle.h:
+
+kernel/oppo/sdm660/include/uapi/linux/gameport.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ppp-comp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio_ape.h:
+
+kernel/oppo/sdm660/include/uapi/linux/virtio_config.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atmsap.h:
+
+kernel/oppo/sdm660/include/uapi/linux/sockev.h:
+
+kernel/oppo/sdm660/include/uapi/linux/can/error.h:
+
+kernel/oppo/sdm660/include/uapi/linux/can/gw.h:
+
+kernel/oppo/sdm660/include/uapi/linux/can/raw.h:
+
+kernel/oppo/sdm660/include/uapi/linux/can/bcm.h:
+
+kernel/oppo/sdm660/include/uapi/linux/can/netlink.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atmdev.h:
+
+kernel/oppo/sdm660/include/uapi/linux/stddef.h:
+
+kernel/oppo/sdm660/include/uapi/linux/phantom.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_cablemodem.h:
+
+kernel/oppo/sdm660/include/uapi/linux/rmnet_ipa_fd_ioctl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_thermal_ioctl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/virtio_console.h:
+
+kernel/oppo/sdm660/include/uapi/linux/i2c.h:
+
+kernel/oppo/sdm660/include/uapi/linux/timex.h:
+
+kernel/oppo/sdm660/include/uapi/linux/libc-compat.h:
+
+kernel/oppo/sdm660/include/uapi/linux/usbdevice_fs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nfs_mount.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_vidc_enc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atm_he.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mman.h:
+
+kernel/oppo/sdm660/include/uapi/linux/cifs/cifs_mount.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mfd/wcd9xxx/wcd9320_registers.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mfd/wcd9xxx/wcd9xxx_registers.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mfd/msm-adie-codec.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netlink.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atm_zatm.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio_amrnb.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mmc/ioctl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mmc/core.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mmc/mmc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/soundcard.h:
+
+kernel/oppo/sdm660/include/uapi/linux/seemp_api.h:
+
+kernel/oppo/sdm660/include/uapi/linux/signal.h:
+
+kernel/oppo/sdm660/include/uapi/linux/auto_fs4.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dlm_device.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nfs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/net_namespace.h:
+
+kernel/oppo/sdm660/include/uapi/linux/virtio_blk.h:
+
+kernel/oppo/sdm660/include/uapi/linux/virtio_balloon.h:
+
+kernel/oppo/sdm660/include/uapi/linux/sdla.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_hippi.h:
+
+kernel/oppo/sdm660/include/uapi/linux/wanrouter.h:
+
+kernel/oppo/sdm660/include/uapi/linux/reiserfs_xattr.h:
+
+kernel/oppo/sdm660/include/uapi/linux/kvm_para.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ptrace.h:
+
+kernel/oppo/sdm660/include/uapi/linux/chio.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dn.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tipc_config.h:
+
+kernel/oppo/sdm660/include/uapi/linux/genwqe/genwqe_card.h:
+
+kernel/oppo/sdm660/include/uapi/linux/uvcvideo.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hash_info.h:
+
+kernel/oppo/sdm660/include/uapi/linux/jffs2.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_mdp_ext.h:
+
+kernel/oppo/sdm660/include/uapi/linux/poll.h:
+
+kernel/oppo/sdm660/include/uapi/linux/arcfb.h:
+
+kernel/oppo/sdm660/include/uapi/linux/icmpv6.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ppp-ioctl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/android/binder.h:
+
+kernel/oppo/sdm660/include/uapi/linux/kvm.h:
+
+kernel/oppo/sdm660/include/uapi/linux/rtnetlink.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter.h:
+
+kernel/oppo/sdm660/include/uapi/linux/kernelcapi.h:
+
+kernel/oppo/sdm660/include/uapi/linux/virtio_9p.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nbd.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nvram.h:
+
+kernel/oppo/sdm660/include/uapi/linux/genetlink.h:
+
+kernel/oppo/sdm660/include/uapi/linux/can.h:
+
+kernel/oppo/sdm660/include/uapi/linux/irqnr.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dm-log-userspace.h:
+
+kernel/oppo/sdm660/include/uapi/linux/zorro.h:
+
+kernel/oppo/sdm660/include/uapi/linux/utime.h:
+
+kernel/oppo/sdm660/include/uapi/linux/qbt1000.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio_qcp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/param.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ip.h:
+
+kernel/oppo/sdm660/include/uapi/linux/acct.h:
+
+kernel/oppo/sdm660/include/uapi/linux/times.h:
+
+kernel/oppo/sdm660/include/uapi/linux/android_pmem.h:
+
+kernel/oppo/sdm660/include/uapi/linux/firewire-cdev.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio_ac3.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tcp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_bridge.h:
+
+kernel/oppo/sdm660/include/uapi/linux/limits.h:
+
+kernel/oppo/sdm660/include/uapi/linux/pmu.h:
+
+kernel/oppo/sdm660/include/uapi/linux/coresight-stm.h:
+
+kernel/oppo/sdm660/include/uapi/linux/neighbour.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_tun.h:
+
+kernel/oppo/sdm660/include/uapi/linux/baycom.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_vlan.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_bpf.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_csum.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_gact.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_pedit.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_mirred.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_ipt.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_nat.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_connmark.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_skbedit.h:
+
+kernel/oppo/sdm660/include/uapi/linux/tc_act/tc_defact.h:
+
+kernel/oppo/sdm660/include/uapi/linux/kcmp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/loop.h:
+
+kernel/oppo/sdm660/include/uapi/linux/scc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio_alac.h:
+
+kernel/oppo/sdm660/include/uapi/linux/icmp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/xattr.h:
+
+kernel/oppo/sdm660/include/uapi/linux/media-bus-format.h:
+
+kernel/oppo/sdm660/include/uapi/linux/qcota.h:
+
+kernel/oppo/sdm660/include/uapi/linux/iio/types.h:
+
+kernel/oppo/sdm660/include/uapi/linux/iio/events.h:
+
+kernel/oppo/sdm660/include/uapi/linux/isdn_ppp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/serial_core.h:
+
+kernel/oppo/sdm660/include/uapi/linux/selinux_netlink.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hid.h:
+
+kernel/oppo/sdm660/include/uapi/linux/auto_fs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/virtio_net.h:
+
+kernel/oppo/sdm660/include/uapi/linux/qnxtypes.h:
+
+kernel/oppo/sdm660/include/uapi/linux/fou.h:
+
+kernel/oppo/sdm660/include/uapi/linux/pci_regs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/cec-funcs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/virtio_ring.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hysdn_if.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio_mvs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/vhost.h:
+
+kernel/oppo/sdm660/include/uapi/linux/v4l2-controls.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_slip.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_arcnet.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dvb/video.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dvb/dmx.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dvb/frontend.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dvb/ca.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dvb/osd.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dvb/audio.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dvb/net.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dvb/version.h:
+
+kernel/oppo/sdm660/include/uapi/linux/fiemap.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_vlan.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_x25.h:
+
+kernel/oppo/sdm660/include/uapi/linux/spcom.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mpls.h:
+
+kernel/oppo/sdm660/include/uapi/linux/stm.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_arp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_pppol2tp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/membarrier.h:
+
+kernel/oppo/sdm660/include/uapi/linux/fd.h:
+
+kernel/oppo/sdm660/include/uapi/linux/audit.h:
+
+kernel/oppo/sdm660/include/uapi/linux/maxim_sti.h:
+
+kernel/oppo/sdm660/include/uapi/linux/vfio.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ip6_tunnel.h:
+
+kernel/oppo/sdm660/include/uapi/linux/elf.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio_aac.h:
+
+kernel/oppo/sdm660/include/uapi/linux/personality.h:
+
+kernel/oppo/sdm660/include/uapi/linux/pps.h:
+
+kernel/oppo/sdm660/include/uapi/linux/parport.h:
+
+kernel/oppo/sdm660/include/uapi/linux/dqblk_xfs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atmmpc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/elfcore.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_ltalk.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ipmi.h:
+
+kernel/oppo/sdm660/include/uapi/linux/gen_stats.h:
+
+kernel/oppo/sdm660/include/uapi/linux/fdreg.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_ppp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/userio.h:
+
+kernel/oppo/sdm660/include/uapi/linux/futex.h:
+
+kernel/oppo/sdm660/include/uapi/linux/usb/video.h:
+
+kernel/oppo/sdm660/include/uapi/linux/usb/midi.h:
+
+kernel/oppo/sdm660/include/uapi/linux/usb/f_mtp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/usb/tmc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/usb/audio.h:
+
+kernel/oppo/sdm660/include/uapi/linux/usb/usb_ctrl_qti.h:
+
+kernel/oppo/sdm660/include/uapi/linux/usb/cdc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/usb/g_printer.h:
+
+kernel/oppo/sdm660/include/uapi/linux/usb/cdc-wdm.h:
+
+kernel/oppo/sdm660/include/uapi/linux/usb/ch11.h:
+
+kernel/oppo/sdm660/include/uapi/linux/usb/ch9.h:
+
+kernel/oppo/sdm660/include/uapi/linux/usb/functionfs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/usb/f_accessory.h:
+
+kernel/oppo/sdm660/include/uapi/linux/usb/gadgetfs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atmsvc.h:
+
+kernel/oppo/sdm660/include/uapi/linux/vsp1.h:
+
+kernel/oppo/sdm660/include/uapi/linux/inotify.h:
+
+kernel/oppo/sdm660/include/uapi/linux/mei.h:
+
+kernel/oppo/sdm660/include/uapi/linux/synclink.h:
+
+kernel/oppo/sdm660/include/uapi/linux/prctl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/eventpoll.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ipmi_msgdefs.h:
+
+kernel/oppo/sdm660/include/uapi/linux/sysinfo.h:
+
+kernel/oppo/sdm660/include/uapi/linux/cycx_cfm.h:
+
+kernel/oppo/sdm660/include/uapi/linux/openvswitch.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_audio_amrwbplus.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ipsec.h:
+
+kernel/oppo/sdm660/include/uapi/linux/serial.h:
+
+kernel/oppo/sdm660/include/uapi/linux/hdlc/ioctl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/firewire-constants.h:
+
+kernel/oppo/sdm660/include/uapi/linux/nfsacl.h:
+
+kernel/oppo/sdm660/include/uapi/linux/l2tp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/rose.h:
+
+kernel/oppo/sdm660/include/uapi/linux/securebits.h:
+
+kernel/oppo/sdm660/include/uapi/linux/fsl_hypervisor.h:
+
+kernel/oppo/sdm660/include/uapi/linux/atm_eni.h:
+
+kernel/oppo/sdm660/include/uapi/linux/sock_diag.h:
+
+kernel/oppo/sdm660/include/uapi/linux/adb.h:
+
+kernel/oppo/sdm660/include/uapi/linux/qcedev.h:
+
+kernel/oppo/sdm660/include/uapi/linux/seccomp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/ncp.h:
+
+kernel/oppo/sdm660/include/uapi/linux/xfrm.h:
+
+kernel/oppo/sdm660/include/uapi/linux/netfilter_decnet.h:
+
+kernel/oppo/sdm660/include/uapi/linux/wimax/i2400m.h:
+
+kernel/oppo/sdm660/include/uapi/linux/in.h:
+
+kernel/oppo/sdm660/include/uapi/linux/msm_rmnet.h:
+
+kernel/oppo/sdm660/include/uapi/linux/if_phonet.h:
+
+kernel/oppo/sdm660/include/uapi/xen/evtchn.h:
+
+kernel/oppo/sdm660/include/uapi/xen/gntalloc.h:
+
+kernel/oppo/sdm660/include/uapi/xen/privcmd.h:
+
+kernel/oppo/sdm660/include/uapi/xen/gntdev.h:
+
+kernel/oppo/sdm660/include/uapi/drm/amdgpu_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/exynos_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/msm_drm_pp.h:
+
+kernel/oppo/sdm660/include/uapi/drm/drm_fourcc.h:
+
+kernel/oppo/sdm660/include/uapi/drm/r128_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/tegra_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/msm_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/sde_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/i915_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/nouveau_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/omap_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/mga_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/radeon_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/sis_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/vmwgfx_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/savage_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/i810_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/armada_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/via_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/qxl_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/virtgpu_drm.h:
+
+kernel/oppo/sdm660/include/uapi/drm/drm_mode.h:
+
+kernel/oppo/sdm660/include/uapi/drm/drm_sarea.h:
+
+kernel/oppo/sdm660/include/uapi/scsi/scsi_bsg_fc.h:
+
+kernel/oppo/sdm660/include/uapi/scsi/sg.h:
+
+kernel/oppo/sdm660/include/uapi/scsi/scsi_ioctl.h:
+
+kernel/oppo/sdm660/include/uapi/scsi/cxlflash_ioctl.h:
+
+kernel/oppo/sdm660/include/uapi/scsi/scsi_netlink_fc.h:
+
+kernel/oppo/sdm660/include/uapi/scsi/ufs/ioctl.h:
+
+kernel/oppo/sdm660/include/uapi/scsi/ufs/ufs.h:
+
+kernel/oppo/sdm660/include/uapi/scsi/scsi_netlink.h:
+
+kernel/oppo/sdm660/include/uapi/scsi/fc/fc_fs.h:
+
+kernel/oppo/sdm660/include/uapi/scsi/fc/fc_gs.h:
+
+kernel/oppo/sdm660/include/uapi/scsi/fc/fc_ns.h:
+
+kernel/oppo/sdm660/include/uapi/scsi/fc/fc_els.h:
+
+kernel/oppo/sdm660/include/uapi/sound/devdep_params.h:
+
+kernel/oppo/sdm660/include/uapi/sound/tlv.h:
+
+kernel/oppo/sdm660/include/uapi/sound/hdspm.h:
+
+kernel/oppo/sdm660/include/uapi/sound/wcd-dsp-glink.h:
+
+kernel/oppo/sdm660/include/uapi/sound/asound.h:
+
+kernel/oppo/sdm660/include/uapi/sound/firewire.h:
+
+kernel/oppo/sdm660/include/uapi/sound/asound_fm.h:
+
+kernel/oppo/sdm660/include/uapi/sound/msmcal-hwdep.h:
+
+kernel/oppo/sdm660/include/uapi/sound/compress_offload.h:
+
+kernel/oppo/sdm660/include/uapi/sound/hdsp.h:
+
+kernel/oppo/sdm660/include/uapi/sound/sfnt_info.h:
+
+kernel/oppo/sdm660/include/uapi/sound/emu10k1.h:
+
+kernel/oppo/sdm660/include/uapi/sound/audio_effects.h:
+
+kernel/oppo/sdm660/include/uapi/sound/compress_params.h:
+
+kernel/oppo/sdm660/include/uapi/sound/sb16_csp.h:
+
+kernel/oppo/sdm660/include/uapi/sound/lsm_params.h:
+
+kernel/oppo/sdm660/include/uapi/sound/asequencer.h:
+
+kernel/oppo/sdm660/include/uapi/sound/asoc.h:
+
+kernel/oppo/sdm660/include/uapi/sound/usb_stream.h:
+
+kernel/oppo/sdm660/include/uapi/misc/cxl.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/errno-base.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/posix_types.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/types.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/errno.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/unistd.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/fcntl.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/resource.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/sockios.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/ioctl.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/ioctls.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/socket.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/swab.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/auxvec.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/shmbuf.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/signal-defs.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/mman-common.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/termios.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/bitsperlong.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/int-ll64.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/stat.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/siginfo.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/termbits.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/msgbuf.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/mman.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/signal.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/kvm_para.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/poll.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/sembuf.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/param.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/setup.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/statfs.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/ucontext.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/int-l64.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/shmparam.h:
+
+kernel/oppo/sdm660/include/uapi/asm-generic/ipcbuf.h:
+
+kernel/oppo/sdm660/include/uapi/video/uvesafb.h:
+
+kernel/oppo/sdm660/include/uapi/video/msm_hdmi_modes.h:
+
+kernel/oppo/sdm660/include/uapi/video/edid.h:
+
+kernel/oppo/sdm660/include/uapi/video/sisfb.h:
+
+kernel/oppo/sdm660/include/uapi/video/adf.h:
+
+kernel/oppo/sdm660/include/uapi/video/msm_hdmi_hdcp_mgr.h:
+
+kernel/oppo/sdm660/include/uapi/mtd/mtd-user.h:
+
+kernel/oppo/sdm660/include/uapi/mtd/mtd-abi.h:
+
+kernel/oppo/sdm660/include/uapi/mtd/nftl-user.h:
+
+kernel/oppo/sdm660/include/uapi/mtd/ubi-user.h:
+
+kernel/oppo/sdm660/include/uapi/mtd/inftl-user.h:
+

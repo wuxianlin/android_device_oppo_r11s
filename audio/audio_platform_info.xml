@@ -66,12 +66,8 @@
     <config_params>
         <!-- In the below value string, the value indicates default mono -->
         <!-- speaker. It can be set to either left or right              -->
-	<!--#ifdef VENDOR_EDIT-->
-	<!--#xiang.fei@MultiMedia.AudioDriver.HAL, 2017/03/05, Delete for call-->
-	<!--
-        <param key="mono_speaker" value="right"/>
-	-->
-	<!--#endif /* VENDOR_EDIT */-->
+        <!--#Jianfeng.Qiu@PSW.MM.AudioDriver.HAL, 2017/09/22,, Modify right to left-->
+        <param key="mono_speaker" value="left"/>
         <param key="spkr_1_tz_name" value="wsatz.11"/>
         <param key="spkr_2_tz_name" value="wsatz.12"/>
         <param key="true_32_bit" value="true"/>
@@ -81,15 +77,31 @@
     </config_params>
     <acdb_ids>
         <device name="SND_DEVICE_OUT_SPEAKER" acdb_id="15"/>
-        <device name="SND_DEVICE_OUT_SPEAKER_PROTECTED" acdb_id="136"/>
-        <device name="SND_DEVICE_OUT_VOICE_SPEAKER_PROTECTED" acdb_id="136"/>
-        <device name="SND_DEVICE_OUT_SPEAKER_PROTECTED_VBAT" acdb_id="136"/>
-        <device name="SND_DEVICE_OUT_VOICE_SPEAKER_PROTECTED_VBAT" acdb_id="136"/>
-        <device name="SND_DEVICE_IN_CAPTURE_VI_FEEDBACK" acdb_id="137"/>
+        <device name="SND_DEVICE_OUT_SPEAKER_PROTECTED" acdb_id="124"/>
+        <device name="SND_DEVICE_OUT_VOICE_SPEAKER_PROTECTED" acdb_id="101"/>
+        <device name="SND_DEVICE_OUT_SPEAKER_PROTECTED_VBAT" acdb_id="124"/>
+        <device name="SND_DEVICE_OUT_VOICE_SPEAKER_PROTECTED_VBAT" acdb_id="101"/>
+        <device name="SND_DEVICE_IN_CAPTURE_VI_FEEDBACK" acdb_id="102"/>
         <device name="SND_DEVICE_OUT_VOICE_SPEAKER_2_PROTECTED" acdb_id="150"/>
         <device name="SND_DEVICE_OUT_VOICE_SPEAKER_2_PROTECTED_VBAT" acdb_id="150"/>
         <device name="SND_DEVICE_IN_CAPTURE_VI_FEEDBACK_MONO_1" acdb_id="151"/>
         <device name="SND_DEVICE_IN_CAPTURE_VI_FEEDBACK_MONO_2" acdb_id="152"/>
+        <!--#Jianfeng.Qiu@PSW.MM.AudioDriver.HAL, 2017/09/22, Add for acdb id config-->
+        <device name="SND_DEVICE_OUT_VOICE_HEADPHONES" acdb_id="9"/>
+        <device name="SND_DEVICE_IN_HEADSET_MIC" acdb_id="23"/>
+        <device name="SND_DEVICE_IN_VOICE_REC_DMIC_FLUENCE" acdb_id="35"/>
+        <device name="SND_DEVICE_IN_HANDSET_MIC_LOWLATENCY" acdb_id="81"/>
+        <device name="SND_DEVICE_IN_SPEAKER_MIC_LOWLATENCY" acdb_id="82"/>
+        <device name="SND_DEVICE_IN_HEADSET_MIC_LOWLATENCY" acdb_id="83"/>
+        <device name="SND_DEVICE_IN_HEADSET_MIC_AUDIO_REC" acdb_id="84"/>
+        <device name="SND_DEVICE_IN_HEADSET_MIC_KTV" acdb_id="98"/>
+        <device name="SND_DEVICE_OUT_SPEAKER_PLAYBACK" acdb_id="15"/>
+        <device name="SND_DEVICE_OUT_RECEIVER_PLAYBACK" acdb_id="30"/>
+        <device name="SND_DEVICE_OUT_ENGINNER_RECIVER_TEST" acdb_id="30"/>
+        <device name="SND_DEVICE_IN_MAIN_MIC_RECORD" acdb_id="104"/>
+        <device name="SND_DEVICE_IN_SEC_MIC_RECORD" acdb_id="104"/>
+        <device name="SND_DEVICE_IN_ANC_MIC_RECORD" acdb_id="104"/>
+        <!--#Jianfeng.Qiu@PSW.MM.AudioDriver.HAL, 2017/09/22, Add for acdb id config end-->
     </acdb_ids>
     <backend_names>
         <device name="SND_DEVICE_OUT_HEADPHONES" backend="headphones" interface="PRI_MI2S_RX"/>
@@ -121,20 +133,25 @@
         <device name="SND_DEVICE_OUT_VOICE_SPEAKER_2_VBAT" interface="INT4_MI2S_RX"/>
         <device name="SND_DEVICE_OUT_SPEAKER_AND_HDMI" interface="INT4_MI2S_RX-and-HDMI"/>
         <device name="SND_DEVICE_OUT_SPEAKER_AND_DISPLAY_PORT" interface="INT4_MI2S_RX-and-DISPLAY_PORT"/>
+        <device name="SND_DEVICE_OUT_SPEAKER_AND_BT_SCO" backend="speaker-and-bt-sco" interface="SEC_MI2S_RX-and-SLIMBUS_7_RX"/>
+        <device name="SND_DEVICE_OUT_SPEAKER_AND_BT_SCO_WB" backend="speaker-and-bt-sco-wb" interface="SEC_MI2S_RX-and-SLIMBUS_7_RX"/>
         <device name="SND_DEVICE_OUT_SPEAKER_AND_BT_A2DP" interface="INT4_MI2S_RX-and-SLIMBUS_7_RX"/>
         <device name="SND_DEVICE_OUT_VOICE_TTY_HCO_HANDSET" interface="INT4_MI2S_RX"/>
         <device name="SND_DEVICE_OUT_ANC_FB_HEADSET" interface="INT0_MI2S_RX"/>
         <device name="SND_DEVICE_OUT_VOICE_ANC_FB_HEADSET" interface="INT0_MI2S_RX"/>
         <device name="SND_DEVICE_OUT_ANC_HANDSET" interface="INT4_MI2S_RX"/>
-        <device name="SND_DEVICE_OUT_SPEAKER_PROTECTED" interface="INT5_MI2S_TX"/>
-        <device name="SND_DEVICE_OUT_VOICE_SPEAKER_PROTECTED" interface="INT5_MI2S_TX"/>
-        <device name="SND_DEVICE_OUT_VOICE_SPEAKER_2_PROTECTED" interface="INT5_MI2S_TX"/>
-        <device name="SND_DEVICE_OUT_SPEAKER_PROTECTED_VBAT" interface="INT5_MI2S_TX"/>
-        <device name="SND_DEVICE_OUT_VOICE_SPEAKER_PROTECTED_VBAT" interface="INT5_MI2S_TX"/>
-        <device name="SND_DEVICE_OUT_VOICE_SPEAKER_2_PROTECTED_VBAT" interface="INT5_MI2S_TX"/>
+        <device name="SND_DEVICE_OUT_SPEAKER_PROTECTED" interface="INT4_MI2S_RX"/>
+        <device name="SND_DEVICE_OUT_VOICE_SPEAKER_PROTECTED" interface="INT4_MI2S_RX"/>
+        <device name="SND_DEVICE_OUT_VOICE_SPEAKER_2_PROTECTED" interface="INT4_MI2S_RX"/>
+        <device name="SND_DEVICE_OUT_SPEAKER_PROTECTED_VBAT" interface="INT4_MI2S_RX"/>
+        <device name="SND_DEVICE_OUT_VOICE_SPEAKER_PROTECTED_VBAT" interface="INT4_MI2S_RX"/>
+        <device name="SND_DEVICE_OUT_VOICE_SPEAKER_2_PROTECTED_VBAT" interface="INT4_MI2S_RX"/>
         <device name="SND_DEVICE_OUT_SPEAKER_WSA" interface="INT4_MI2S_RX"/>
         <device name="SND_DEVICE_OUT_VOICE_SPEAKER_WSA" interface="INT4_MI2S_RX"/>
         <device name="SND_DEVICE_OUT_VOICE_SPEAKER_2_WSA" interface="INT4_MI2S_RX"/>
+        <device name="SND_DEVICE_OUT_SPEAKER_PLAYBACK" backend="sec-mi2s" interface="SEC_MI2S_RX"/>
+        <device name="SND_DEVICE_OUT_RECEIVER_PLAYBACK" interface="INT0_MI2S_RX"/>
+        <device name="SND_DEVICE_OUT_ENGINNER_RECIVER_TEST" interface="INT0_MI2S_RX"/>
         <device name="SND_DEVICE_IN_HANDSET_MIC" interface="INT3_MI2S_TX"/>
         <device name="SND_DEVICE_IN_HANDSET_MIC_EXTERNAL" interface="INT3_MI2S_TX"/>
         <device name="SND_DEVICE_IN_HANDSET_MIC_AEC" interface="INT3_MI2S_TX"/>
@@ -197,11 +214,17 @@
         <device name="SND_DEVICE_IN_UNPROCESSED_THREE_MIC" interface="INT3_MI2S_TX"/>
         <device name="SND_DEVICE_IN_UNPROCESSED_QUAD_MIC" interface="INT3_MI2S_TX"/>
         <device name="SND_DEVICE_IN_UNPROCESSED_HEADSET_MIC" interface="INT3_MI2S_TX"/>
+        <device name="SND_DEVICE_OUT_VOICE_SPEAKER_AND_VOICE_HEADPHONES" backend="speaker-and-headphones" interface="SEC_MI2S_RX-and-PRI_MI2S_RX"/>
+        <device name="SND_DEVICE_OUT_VOICE_SPEAKER_AND_VOICE_ANC_HEADSET" backend="speaker-and-headphones" interface="SEC_MI2S_RX-and-PRI_MI2S_RX"/>
         <device name="SND_DEVICE_IN_HEADSET_MIC_KTV" interface="INT3_MI2S_TX"/>
         <device name="SND_DEVICE_IN_HANDSET_MIC_LOWLATENCY" interface="INT3_MI2S_TX"/>
         <device name="SND_DEVICE_IN_SPEAKER_MIC_LOWLATENCY" interface="INT3_MI2S_TX"/>
         <device name="SND_DEVICE_IN_HEADSET_MIC_LOWLATENCY" interface="INT3_MI2S_TX"/>
         <device name="SND_DEVICE_IN_HEADSET_MIC_AUDIO_REC" interface="INT3_MI2S_TX"/>
+        <device name="SND_DEVICE_IN_HANDSET_MIC_WEIXIN" interface="INT3_MI2S_TX"/>
+        <device name="SND_DEVICE_IN_MAIN_MIC_RECORD" interface="INT3_MI2S_TX"/>
+        <device name="SND_DEVICE_IN_SEC_MIC_RECORD" interface="INT3_MI2S_TX"/>
+        <device name="SND_DEVICE_IN_ANC_MIC_RECORD" interface="INT3_MI2S_TX"/>
         </backend_names>
 </audio_platform_info>
 

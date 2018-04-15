@@ -9,9 +9,29 @@
 ### ------------------------------------------------------------------------------
 ### jiangyg@PM                     2013-10-21                Create this file
 ##################################################################################
+
+#Runsheng.Pei@PSW.AD.Storage.ReservePartition.1207580, 2017/12/29, Add for new reserve partition
+import init.oppo.reserve.rc
+
+#ifdef VENDOR_EDIT
+#JianRong.Zheng@PSW.AD.EngineeringMode.0, 2016/10/01, Add for init engineermode rc
+import init.oppo.engineermode.rc
+#endif
+
+#ifdef VENDOR_EDIT
+#Hongdao.yu@BSP.Fingerprint.Basic, 2017/11/27, Add for face face recognition rc
+import /vendor/etc/init/hw/init.oppo.face.rc
+#endif
+
 #ifdef VENDOR_EDIT
 #Haitao.Zhou@Prd.BaseDrv, 2017/02/16 Add for fingerprint compatibility
-import init.oppo.fingerprints.rc
+import /vendor/etc/init/hw/init.oppo.fingerprints.rc
+#endif
+
+#ifdef VENDOR_EDIT
+#Haoran.Zhang@PSW.AD.BuildConfig.BaseConfig.0, 2016/09/22, Add for protect xkit
+on init
+   export XKIT /system/xbin/xkit_10
 #endif
 
 #ifdef VENDOR_EDIT
@@ -23,7 +43,7 @@ on boot
 	mkdir /data/opponvitems  0771 radio radio
 	mkdir /persist/camera 0777 system system
 	write /proc/sys/fs/suid_dumpable 1
-	setprop persist.radio.force_on_dc true
+	setprop persist.vendor.radio.force_on_dc true
 #endif
 
 #ifdef VENDOR_EDIT
@@ -88,6 +108,7 @@ on boot
 	chmod 0666 /dev/stune/top-app/cgroup.procs
 #endif
 
+
 #ifdef VENDOR_EDIT
 #Jianfeng.Qiu@MultiMedia.AudioDriver.SmartPA, 2017/03/11, Add for smartpa calibrate
 on boot
@@ -95,15 +116,80 @@ on boot
 #endif
 
 #ifdef VENDOR_EDIT
-#Wei.Wang@Swdp.Android.Storage, 2016/06/30, add for support /storage/sdcard0
+#Wenhua.Leng@PSW.MM.Display.Service.Feature.1129618,2017/10/13,add for display
+on boot
+    chown system system /sys/devices/virtual/graphics/fb0/cabc
+    chown system system /sys/devices/virtual/graphics/fb0/lcdoff
+    chmod 0660 /sys/devices/virtual/graphics/fb0/hbm
+    chown system system /sys/devices/virtual/graphics/fb0/hbm
+    chown system system /sys/devices/virtual/graphics/fb0/acl
+    chown system system /sys/devices/virtual/graphics/fb0/closebl
+    chmod 0660 /sys/devices/virtual/graphics/fb0/ffl_set
+    chown system system /sys/devices/virtual/graphics/fb0/ffl_set
+    chown system system /sys/devices/virtual/graphics/fb0/lbr
+    chown system system /sys/devices/virtual/graphics/fb0/seed
+    chmod 666 /sys/devices/virtual/graphics/fb0/debug
+    chown system system /sys/devices/virtual/graphics/fb0/debug
+    chmod 0660 /sys/devices/virtual/graphics/fb0/lcm_id_info
+    chown system system /sys/devices/virtual/graphics/fb0/lcm_id_info
+#endif
+
+
+#ifdef VENDOR_EDIT
+#Jianrong.Zheng@PSW.AD.Power.Breathing.1055235, 2015/12/14, Add for oppo breath light
+on boot
+    chown system system /sys/class/leds/white/brightness
+    chown system system /sys/class/leds/white/device/grpfreq
+    chown system system /sys/class/leds/white/device/grppwm
+    chown system system /sys/class/leds/white/device/blink
+    chown system system /sys/class/leds/white/blink
+#endif /* VENDOR_EDIT */
+
+
+#ifdef VENDOR_EDIT
+#Wei.Wang@PSW.AD.Storage.0, 2016/06/30, Add for support /storage/sdcard0
 on post-fs-data
   symlink /storage/self/primary /storage/sdcard0
 #endif
+#ifdef VENDOR_EDIT
+#wangmingyuan@oppo.com 2017/01/24, add for hypnus and oiface RUS feature
+    mkdir /data/oiface 0700 system system
+    mkdir /data/hypnus 0700 system system
+#endif
 
 #ifdef VENDOR_EDIT
-#Jiemin.Zhu@PSW.Android.Performance.Memory, 2017/07/25, Add for separate direct reclaim from kswapd
+#Jianhua.Sun@BuildConfig.0, 2017/07/03, Add for Rom Update.[From: Deliang.Peng@PSW.MM.Performance.Display]
+    chmod 0644 /data/oppo/multimedia/oppo_display_perf_list.xml
+#endif /* VENDOR_EDIT */
+
+#ifdef VENDOR_EDIT
+#Jiemin.Zhu@PSW.AD.Performance.Memory.0, 2017/07/25, Add for separate direct reclaim from kswapd
   write /proc/sys/vm/vfs_direct_cache_pressure 10
 #endif /* VENDOR_EDIT */
+
+#ifdef VENDOR_EDIT
+##Jianhua.Sun@BuildConfig.0, 2017/07/03, Add for audioserver and mediaserver visit /data/system/Multimedia_Daemon_List.xml.[From:YaJun.Li@PSW.MM.AudioServer.FrameWork]
+    chmod 0644 /data/system/Multimedia_Daemon_List.xml
+#endif /* VENDOR_EDIT */
+
+    # ifndef VENDOR_EDIT
+    # GuoBin.Luo@PSW.AD.Package.GoogleResource.0, 2016/09/06, Add for inner google resources
+    mkdir /data/gr 0771 system system
+    chown system system /data/gr/138e8af41c2a62b4c06adf65577772419.gr
+    chown system system /data/gr/290aa18407779e8f44cb57733d3b5ea23.gr
+    chown system system /data/gr/3b64e23f2e4cdf5b109c52f30b37cdcb5.gr
+    chown system system /data/gr/4f20989b475c563b80c11b18a5c02b457.gr
+    chown system system /data/gr/5010a28878517c105a60f155f0c6f5c56.gr
+    chown system system /data/gr/6f8acd492101e6b11f5eadcc188566ae1.gr
+    chown system system /data/gr/77963b7a931377ad4ab5ad6a9cd718aar.gr
+    chown system system /data/gr/O_MR1
+    #endif
+
+#ifdef COLOROS_EDIT
+#wangzhenhua@Plf.Framework, 2017/10/09, Add for record to file of receiving kevent action
+on post-fs-data
+    mkdir /data/oppo/kevent 0775 system system
+#endif /* COLOROS_EDIT */
 
 #ifdef VENDOR_EDIT
 #yh@bsp 2017/04/19, add for large file copy speed optimization
@@ -111,7 +197,32 @@ on post-fs-data
 #endif
 
 #ifdef VENDOR_EDIT
-#fangpan@Swdp.shanghai, 2015/12/20, enable the procmod.ko when boot up
+#wangmengmeng@swdp2 2017/12/13, add for oiface RUS feature
+    mkdir /data/oiface 0700 system system
+#endif
+
+##Jianhua.Sun@BuildConfig.0, 2014/08/05, Modify for oppo startup & shutdown animation [From:Wei.He@PSW.AD.Boot.Bootanimation]
+service bootanim /system/bin/bootanimation
+    class core
+    user root
+    group media graphics audio
+    disabled
+    oneshot
+service rbootanim /system/bin/bootanimation -r
+    class core
+    user root
+    group graphics audio media
+    disabled
+    oneshot
+#endif /* VENDOR_EDIT */
+
+# ifdef VENDOR_EDIT
+#WeiHong.Li@Mobile.Network, 2015/09/11, disalbe suid_dumpable if release_type=true to pass cts test
+on property:ro.build.release_type=true
+    write /proc/sys/fs/suid_dumpable 0
+
+# ifdef VENDOR_EDIT
+#fangpan@swdp.shanghai, 2015/12/20, enable the procmod.ko when boot up
 on property:persist.sys.procmon_enable=1
     insmod /system/lib/modules/procmon.ko -f
     chown root system /sys/module/procmon/parameters/cpuload_thresh
@@ -122,5 +233,121 @@ on property:persist.sys.procmon_enable=1
     chown root system /sys/module/procmon/parameters/enable
 # endif /* VENDOR_EDIT */
 
+#ifdef VENDOR_EDIT
+#Jianping.Zheng@PSW.AD.Stability.Crash.0, 2015/11/06, Add for open print_system_murder feature in non release version
+on property:ro.secure=0
+    write /proc/sys/kernel/print_fatal_murder 1
+#endif
+
+#ifdef VENDOR_EDIT yixue.ge add for bsp criticallog
+service bspCriticalLog /system/bin/bspCriticalLog
+    user system
+    group system
+    class main
+#endif
+
+#ifdef VENDOR_EDIT ye.zhang@BSP add for new pcba mechanism and device pcba rewrite
 on boot
+    chmod 0777 /system/bin/pcba_diag
+    chown root system /system/bin/pcba_diag
+
+service pcba_diag /system/bin/pcba_diag
+    class main
+    user root
+    oneshot
+#endif
+#ifdef VENDOR_EDIT
+#jie.cheng@swdp.shanghai 2015/10/26, Add for run the init.oppo.hypnus.sh on property
+service hypnus_context /system/bin/sh /system/etc/init.oppo.hypnus.sh
+    user root
+    disabled
+    oneshot
+    seclabel u:r:hypnus_context:s0
+
+on property:persist.sys.enable.hypnus=*
+    start hypnus_context
+
+#yan.chen@swdp.shanghai 2016/07/25, Add property control for hypnus logging
+service hypnus_logging /system/bin/sh /system/etc/init.oppo.hypnus_logging.sh
+    user root
+    disabled
+    oneshot
+
+on property:persist.sys.oppo.junklog=*
+    start hypnus_logging
+#endif
+
+#ifdef VENDOR_EDIT
+#Jianhua.Sun@PSW.AD.BuildConfig.BaseConfig.0, 2016/07/11, Add for support root on optrtest
+# Restart adbd so it can run as root
+on property:service.adb.root=1
+    write /sys/class/android_usb/android0/enable 0
+    restart adbd
+    write /sys/class/android_usb/android0/enable 1
+
+#ifdef VENDOR_EDIT
+#PengNan@Mobile.BSP.CHG 2016/07/25 add for otg_switch
+on property:persist.sys.oppo.otg_support=true
 	write /sys/class/power_supply/usb/otg_switch 1
+	
+on property:persist.sys.oppo.otg_support=false
+	write /sys/class/power_supply/usb/otg_switch 0
+    setprop sys.engineermode.debug.otg false
+#endif
+
+#ifdef VENDOR_EDIT
+##Jianhua.Sun@BuildConfig.0, 2017/02/07, Add for delete some version facebook app deps file after OTA. [Qiang.Shao@Prd6.System.Package]
+on property:oppo.facebook.del_deps=com.facebook.katana
+    rm /data/data/com.facebook.katana/dex/deps
+
+on property:oppo.facebook.del_deps=com.facebook.orca
+    rm /data/data/com.facebook.orca/dex/deps
+
+on property:oppo.facebook.del_deps=com.facebook.pages.app
+    rm /data/data/com.facebook.pages.app/dex/deps
+
+on property:oppo.facebook.del_deps=com.facebook.moments
+    rm /data/data/com.facebook.moments/dex/deps
+
+on property:oppo.facebook.del_deps=com.facebook.workchat
+    rm /data/data/com.facebook.workchat/dex/deps
+
+on property:oppo.facebook.del_deps=com.facebook.work
+    rm /data/data/com.facebook.work/dex/deps
+
+on property:oppo.facebook.del_deps=com.facebook.groups
+    rm /data/data/com.facebook.groups/dex/deps
+#endif
+
+#ifdef VENDOR_EDIT
+##Jianhua.Sun@BuildConfig.0,2017/04/30, Add for wifi rf testing. [From: Min.Yi@EXP.CN.WiFi.Hardware]
+service wifirfmodetest /system/bin/wifirftest
+    class main
+    socket wifirf stream 0660 system system
+    user root
+    oneshot
+    disabled
+
+on property:oppo.wifirftest.enable=1
+    start wifirfmodetest
+
+on property:oppo.wifirftest.enable=0
+    stop wifirfmodetest
+#endif
+
+#ifdef VENDOR_EDIT
+# Shengjun.Gou@PSW.MM.Display.Feature,2017/11/01, Add for oppo display service
+service oppodisplay /system/bin/oppodisplay
+    class core
+    user system
+    group graphics drmrpc readproc
+#endif
+
+# ifdef COLOROS_EDIT
+#wangzhenhua@Plf.Framework, 2017/10/09, Add for record to file of receiving kevent action
+service oppo_kevents /system/bin/oppo_kevent
+    class main
+    user system
+    group system
+# endif /* COLOROS_EDIT */
+

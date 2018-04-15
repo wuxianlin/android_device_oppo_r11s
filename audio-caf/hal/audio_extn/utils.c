@@ -20,6 +20,7 @@
 #define LOG_TAG "audio_hw_utils"
 /* #define LOG_NDEBUG 0 */
 
+#include <inttypes.h>
 #include <errno.h>
 #include <cutils/properties.h>
 #include <cutils/config_utils.h>
@@ -29,12 +30,21 @@
 #include <cutils/log.h>
 #include <cutils/misc.h>
 
+
 #include "audio_hw.h"
 #include "platform.h"
 #include "platform_api.h"
 #include "audio_extn.h"
 #include "voice.h"
-#include "sound/compress_params.h"
+#include <sound/compress_params.h>
+#include <sound/compress_offload.h>
+#include <tinycompress/tinycompress.h>
+
+#ifdef DYNAMIC_LOG_ENABLED
+#include <log_xml_parser.h>
+#define LOG_MASK HAL_MOD_FILE_UTILS
+#include <log_utils.h>
+#endif
 
 #ifdef AUDIO_EXTERNAL_HDMI_ENABLED
 #ifdef HDMI_PASSTHROUGH_ENABLED
@@ -67,6 +77,12 @@
 #define BASE_TABLE_SIZE 64
 #define MAX_BASEINDEX_LEN 256
 
+#ifndef SND_AUDIOCODEC_TRUEHD
+#define SND_AUDIOCODEC_TRUEHD 0x00000023
+#endif
+
+#define APP_TYPE_VOIP_AUDIO 0x1113A
+
 #ifdef AUDIO_EXTERNAL_HDMI_ENABLED
 #define PROFESSIONAL        (1<<0)      /* 0 = consumer, 1 = professional */
 #define NON_LPCM            (1<<1)      /* 0 = audio, 1 = non-audio */
@@ -82,6 +98,14 @@
 #define SR_192000           (14<<0)     /* 192kHz */
 
 #endif
+
+/* ToDo: Check and update a proper value in msec */
+#define COMPRESS_OFFLOAD_PLAYBACK_LATENCY 50
+
+#ifndef MAX_CHANNELS_SUPPORTED
+#define MAX_CHANNELS_SUPPORTED 8
+#endif
+
 struct string_to_enum {
     const char *name;
     uint32_t value;
@@ -89,7 +113,6 @@ struct string_to_enum {
 
 const struct string_to_enum s_flag_name_to_enum_table[] = {
     STRING_TO_ENUM(AUDIO_OUTPUT_FLAG_DIRECT),
-    STRING_TO_ENUM(AUDIO_OUTPUT_FLAG_DIRECT_PCM),
     STRING_TO_ENUM(AUDIO_OUTPUT_FLAG_PRIMARY),
     STRING_TO_ENUM(AUDIO_OUTPUT_FLAG_FAST),
     STRING_TO_ENUM(AUDIO_OUTPUT_FLAG_RAW),
@@ -101,6 +124,9 @@ const struct string_to_enum s_flag_name_to_enum_table[] = {
     STRING_TO_ENUM(AUDIO_OUTPUT_FLAG_INCALL_MUSIC),
 #endif
     STRING_TO_ENUM(AUDIO_OUTPUT_FLAG_COMPRESS_PASSTHROUGH),
+    STRING_TO_ENUM(AUDIO_OUTPUT_FLAG_TIMESTAMP),
+    STRING_TO_ENUM(AUDIO_OUTPUT_FLAG_VOIP_RX),
+    STRING_TO_ENUM(AUDIO_OUTPUT_FLAG_INTERACTIVE),
     STRING_TO_ENUM(AUDIO_INPUT_FLAG_NONE),
     STRING_TO_ENUM(AUDIO_INPUT_FLAG_FAST),
     STRING_TO_ENUM(AUDIO_INPUT_FLAG_HW_HOTWORD),
@@ -124,6 +150,8 @@ const struct string_to_enum s_format_name_to_enum_table[] = {
     STRING_TO_ENUM(AUDIO_FORMAT_E_AC3),
     STRING_TO_ENUM(AUDIO_FORMAT_DTS),
     STRING_TO_ENUM(AUDIO_FORMAT_DTS_HD),
+    STRING_TO_ENUM(AUDIO_FORMAT_DOLBY_TRUEHD),
+    STRING_TO_ENUM(AUDIO_FORMAT_IEC61937),
 #ifdef AUDIO_EXTN_FORMATS_ENABLED
     STRING_TO_ENUM(AUDIO_FORMAT_E_AC3_JOC),
     STRING_TO_ENUM(AUDIO_FORMAT_WMA),
@@ -154,6 +182,17 @@ const struct string_to_enum s_format_name_to_enum_table[] = {
     STRING_TO_ENUM(AUDIO_FORMAT_AAC_LATM_HE_V2),
     STRING_TO_ENUM(AUDIO_FORMAT_APTX),
 #endif
+};
+
+/* payload structure avt_device drift query */
+struct audio_avt_device_drift_stats {
+    uint32_t       minor_version;
+    /* Indicates the device interface direction as either
+     * source (Tx) or sink (Rx).
+    */
+    uint16_t        device_direction;
+    /*params exposed to client */
+    struct audio_avt_device_drift_param drift_param;
 };
 
 static char bTable[BASE_TABLE_SIZE] = {
@@ -458,6 +497,7 @@ void audio_extn_utils_update_streams_cfg_lists(void *platform,
                               streams_output_cfg_list,
                               streams_input_cfg_list);
             ALOGE("%s: could not load io policy config!", __func__);
+            free(root);
             return;
         }
     }
@@ -470,6 +510,7 @@ void audio_extn_utils_update_streams_cfg_lists(void *platform,
                                        streams_input_cfg_list);
 
     config_free(root);
+    free(root);
     free(data);
 }
 
@@ -645,7 +686,7 @@ void audio_extn_utils_update_stream_output_app_type_cfg(void *platform,
         ALOGI("%s Allowing 24-bit playback on speaker ONLY at default sampling rate", __func__);
     }
 
-    property_get("audio.playback.mch.downsample",value,"");
+    property_get("vendor.audio.playback.mch.downsample",value,"");
     if (!strncmp("true", value, sizeof("true"))) {
         if ((popcount(channel_mask) > 2) &&
                 (sample_rate > CODEC_BACKEND_DEFAULT_SAMPLE_RATE) &&
@@ -670,6 +711,12 @@ void audio_extn_utils_update_stream_output_app_type_cfg(void *platform,
             sample_rate = OUTPUT_SAMPLING_RATE_DSD128;
     }
 
+    if(devices & AUDIO_DEVICE_OUT_ALL_A2DP) {
+        //TODO: Handle fractional sampling rate configuration for LL
+        audio_extn_a2dp_get_apptype_params(&sample_rate, &bit_width);
+        ALOGI("%s using %d sampling rate %d bit width for A2DP CoPP",
+              __func__, sample_rate, bit_width);
+    }
 
     ALOGV("%s: flags: %x, format: %x sample_rate %d, profile %s, app_type %d",
            __func__, flags, format, sample_rate, profile, app_type_cfg->app_type);
@@ -747,7 +794,10 @@ void audio_extn_utils_update_stream_app_type_cfg_for_usecase(
         ALOGV("%s Selected apptype: %d", __func__, usecase->stream.out->app_type_cfg.app_type);
         break;
     case PCM_CAPTURE:
-        audio_extn_utils_update_stream_input_app_type_cfg(adev->platform,
+        if (usecase->id == USECASE_AUDIO_RECORD_VOIP)
+            usecase->stream.in->app_type_cfg.app_type = APP_TYPE_VOIP_AUDIO;
+        else
+            audio_extn_utils_update_stream_input_app_type_cfg(adev->platform,
                                                 &adev->streams_input_cfg_list,
                                                 usecase->stream.in->device,
                                                 usecase->stream.in->flags,
@@ -776,6 +826,9 @@ static int send_app_type_cfg_for_device(struct audio_device *adev,
     int snd_device = split_snd_device, snd_device_be_idx = -1;
     int32_t sample_rate = DEFAULT_OUTPUT_SAMPLING_RATE;
     char value[PROPERTY_VALUE_MAX] = {0};
+    struct streams_io_cfg *s_info = NULL;
+    struct listnode *node = NULL;
+    int direct_app_type = 0;
 
     ALOGV("%s: usecase->out_snd_device %s, usecase->in_snd_device %s, split_snd_device %s",
           __func__, platform_get_snd_device_name(usecase->out_snd_device),
@@ -791,6 +844,8 @@ static int send_app_type_cfg_for_device(struct audio_device *adev,
         (usecase->id != USECASE_AUDIO_PLAYBACK_LOW_LATENCY) &&
         (usecase->id != USECASE_AUDIO_PLAYBACK_MULTI_CH) &&
         (usecase->id != USECASE_AUDIO_PLAYBACK_ULL) &&
+        (usecase->id != USECASE_AUDIO_PLAYBACK_VOIP) &&
+        (!is_interactive_usecase(usecase->id)) &&
         (!is_offload_usecase(usecase->id)) &&
         (usecase->type != PCM_CAPTURE)) {
         ALOGV("%s: a rx/tx/loopback path where app type cfg is not required %d", __func__, usecase->id);
@@ -840,7 +895,7 @@ static int send_app_type_cfg_for_device(struct audio_device *adev,
 
     if ((usecase->type == PCM_PLAYBACK) && (usecase->stream.out != NULL)) {
 
-        property_get("audio.playback.mch.downsample",value,"");
+        property_get("vendor.audio.playback.mch.downsample",value,"");
         if (!strncmp("true", value, sizeof("true"))) {
             if ((popcount(usecase->stream.out->channel_mask) > 2) &&
                    (usecase->stream.out->app_type_cfg.sample_rate > CODEC_BACKEND_DEFAULT_SAMPLE_RATE) &&
@@ -868,27 +923,34 @@ static int send_app_type_cfg_for_device(struct audio_device *adev,
             (usecase->stream.out->sample_rate < OUTPUT_SAMPLING_RATE_44100)) {
             /* Reset to default if no native stream is active*/
             usecase->stream.out->app_type_cfg.sample_rate = DEFAULT_OUTPUT_SAMPLING_RATE;
-        } else if (usecase->stream.out->devices & AUDIO_DEVICE_OUT_ALL_A2DP) {
-                 /*
-                  * For a2dp playback get encoder sampling rate and set copp sampling rate,
-                  * for bit width use the stream param only.
-                  */
-                   audio_extn_a2dp_get_sample_rate(&usecase->stream.out->app_type_cfg.sample_rate);
-                   ALOGI("%s using %d sample rate rate for A2DP CoPP",
-                        __func__, usecase->stream.out->app_type_cfg.sample_rate);
         }
         sample_rate = usecase->stream.out->app_type_cfg.sample_rate;
 
-        app_type = usecase->stream.out->app_type_cfg.app_type;
+        /* Interactive streams are supported with only direct app type id.
+         * Get Direct profile app type and use it for interactive streams
+         */
+        list_for_each(node, &adev->streams_output_cfg_list) {
+            s_info = node_to_item(node, struct streams_io_cfg, list);
+            if (s_info->flags.out_flags == AUDIO_OUTPUT_FLAG_DIRECT)
+                direct_app_type = s_info->app_type_cfg.app_type;
+        }
+        if (usecase->stream.out->flags == (audio_output_flags_t) AUDIO_OUTPUT_FLAG_INTERACTIVE)
+            app_type = direct_app_type;
+        else
+            app_type = usecase->stream.out->app_type_cfg.app_type;
         app_type_cfg[len++] = app_type;
         app_type_cfg[len++] = acdb_dev_id;
         if (((usecase->stream.out->format == AUDIO_FORMAT_E_AC3) ||
-            (usecase->stream.out->format == AUDIO_FORMAT_E_AC3_JOC))
+            (usecase->stream.out->format == AUDIO_FORMAT_E_AC3_JOC) ||
+            (usecase->stream.out->format == AUDIO_FORMAT_DOLBY_TRUEHD))
             && audio_extn_passthru_is_passthrough_stream(usecase->stream.out)) {
-            app_type_cfg[len++] = sample_rate * 4;
-        } else {
-            app_type_cfg[len++] = sample_rate;
+
+            sample_rate = sample_rate * 4;
+            if (sample_rate > HDMI_PASSTHROUGH_MAX_SAMPLE_RATE)
+                sample_rate = HDMI_PASSTHROUGH_MAX_SAMPLE_RATE;
         }
+        app_type_cfg[len++] = sample_rate;
+
         if (snd_device_be_idx > 0)
             app_type_cfg[len++] = snd_device_be_idx;
 
@@ -1194,7 +1256,6 @@ int get_snd_codec_id(audio_format_t format)
     case AUDIO_FORMAT_AAC_LATM:
         id = SND_AUDIOCODEC_AAC;
         break;
-    case AUDIO_FORMAT_PCM_OFFLOAD:
     case AUDIO_FORMAT_PCM:
         id = SND_AUDIOCODEC_PCM;
         break;
@@ -1229,6 +1290,12 @@ int get_snd_codec_id(audio_format_t format)
     case AUDIO_FORMAT_DTS:
     case AUDIO_FORMAT_DTS_HD:
         id = SND_AUDIOCODEC_DTS;
+        break;
+    case AUDIO_FORMAT_DOLBY_TRUEHD:
+        id = SND_AUDIOCODEC_TRUEHD;
+        break;
+    case AUDIO_FORMAT_IEC61937:
+        id = SND_AUDIOCODEC_IEC61937;
         break;
     case AUDIO_FORMAT_DSD:
         id = SND_AUDIOCODEC_DSD;
@@ -1569,3 +1636,649 @@ void audio_utils_set_hdmi_channel_status(struct stream_out *out, char * buffer, 
 
 }
 #endif
+
+int audio_extn_utils_get_avt_device_drift(
+                struct audio_usecase *usecase,
+                struct audio_avt_device_drift_param *drift_param)
+{
+    int ret = 0, count = 0;
+    char avt_device_drift_mixer_ctl_name[MIXER_PATH_MAX_LENGTH] = {0};
+    const char *backend = NULL;
+    struct mixer_ctl *ctl = NULL;
+    struct audio_avt_device_drift_stats drift_stats;
+    struct audio_device *adev = NULL;
+
+    if (usecase != NULL && usecase->type == PCM_PLAYBACK) {
+        backend = platform_get_snd_device_backend_interface(usecase->out_snd_device);
+        if (!backend) {
+            ALOGE("%s: Unsupported device %d", __func__,
+                   usecase->stream.out->devices);
+            ret = -EINVAL;
+            goto done;
+        }
+        strlcpy(avt_device_drift_mixer_ctl_name,
+                backend,
+                MIXER_PATH_MAX_LENGTH);
+
+        count = strlen(backend);
+        if (MIXER_PATH_MAX_LENGTH - count > 0) {
+            strlcat(&avt_device_drift_mixer_ctl_name[count],
+                    " DRIFT",
+                    MIXER_PATH_MAX_LENGTH - count);
+        } else {
+            ret = -EINVAL;
+            goto done;
+        }
+    } else {
+        ALOGE("%s: Invalid usecase",__func__);
+        ret = -EINVAL;
+        goto done;
+    }
+
+    adev = usecase->stream.out->dev;
+    ctl = mixer_get_ctl_by_name(adev->mixer, avt_device_drift_mixer_ctl_name);
+    if (!ctl) {
+        ALOGE("%s: Could not get ctl for mixer cmd - %s",
+                __func__, avt_device_drift_mixer_ctl_name);
+
+        ret = -EINVAL;
+        goto done;
+    }
+
+    ALOGV("%s: Getting AV Timer vs Device Drift mixer ctrl name %s", __func__,
+            avt_device_drift_mixer_ctl_name);
+
+    mixer_ctl_update(ctl);
+    count = mixer_ctl_get_num_values(ctl);
+    if (count != sizeof(struct audio_avt_device_drift_stats)) {
+        ALOGE("%s: mixer_ctl_get_num_values() invalid drift_stats data size",
+                __func__);
+
+        ret = -EINVAL;
+        goto done;
+    }
+
+    ret = mixer_ctl_get_array(ctl, (void *)&drift_stats, count);
+    if (ret != 0) {
+        ALOGE("%s: mixer_ctl_get_array() failed to get drift_stats Params",
+                __func__);
+
+        ret = -EINVAL;
+        goto done;
+    }
+    memcpy(drift_param, &drift_stats.drift_param,
+            sizeof(struct audio_avt_device_drift_param));
+done:
+    return ret;
+}
+
+#ifdef SNDRV_COMPRESS_PATH_DELAY
+int audio_extn_utils_compress_get_dsp_latency(struct stream_out *out)
+{
+    int ret = -EINVAL;
+    struct snd_compr_metadata metadata;
+    int delay_ms = COMPRESS_OFFLOAD_PLAYBACK_LATENCY;
+
+    if (property_get_bool("vendor.audio.playback.dsp.pathdelay", false)) {
+        ALOGD("%s:: Quering DSP delay %d",__func__, __LINE__);
+        if (!(is_offload_usecase(out->usecase))) {
+            ALOGE("%s:: not supported for non offload session", __func__);
+            goto exit;
+        }
+
+        if (!out->compr) {
+            ALOGD("%s:: Invalid compress handle,returning default dsp latency",
+                    __func__);
+            goto exit;
+        }
+
+        metadata.key = SNDRV_COMPRESS_PATH_DELAY;
+        ret = compress_get_metadata(out->compr, &metadata);
+        if(ret) {
+            ALOGE("%s::error %s", __func__, compress_get_error(out->compr));
+            goto exit;
+        }
+        delay_ms = metadata.value[0] / 1000; /*convert to ms*/
+    } else {
+        ALOGD("%s:: Using Fix DSP delay",__func__);
+    }
+
+exit:
+    ALOGD("%s:: delay in ms is %d",__func__, delay_ms);
+    return delay_ms;
+}
+#else
+int audio_extn_utils_compress_get_dsp_latency(struct stream_out *out __unused)
+{
+    return COMPRESS_OFFLOAD_PLAYBACK_LATENCY;
+}
+#endif
+
+#ifdef SNDRV_COMPRESS_RENDER_MODE
+int audio_extn_utils_compress_set_render_mode(struct stream_out *out)
+{
+    struct snd_compr_metadata metadata;
+    int ret = -EINVAL;
+
+    if (!(is_offload_usecase(out->usecase))) {
+        ALOGE("%s:: not supported for non offload session", __func__);
+        goto exit;
+    }
+
+    if (!out->compr) {
+        ALOGD("%s:: Invalid compress handle",
+                __func__);
+        goto exit;
+    }
+
+    ALOGD("%s:: render mode %d", __func__, out->render_mode);
+
+    metadata.key = SNDRV_COMPRESS_RENDER_MODE;
+    if (out->render_mode == RENDER_MODE_AUDIO_MASTER) {
+        metadata.value[0] = SNDRV_COMPRESS_RENDER_MODE_AUDIO_MASTER;
+    } else if (out->render_mode == RENDER_MODE_AUDIO_STC_MASTER) {
+        metadata.value[0] = SNDRV_COMPRESS_RENDER_MODE_STC_MASTER;
+    } else {
+        ret = 0;
+        goto exit;
+    }
+    ret = compress_set_metadata(out->compr, &metadata);
+    if(ret) {
+        ALOGE("%s::error %s", __func__, compress_get_error(out->compr));
+    }
+exit:
+    return ret;
+}
+#else
+int audio_extn_utils_compress_set_render_mode(struct stream_out *out __unused)
+{
+    ALOGD("%s:: configuring render mode not supported", __func__);
+    return 0;
+}
+#endif
+
+#ifdef SNDRV_COMPRESS_CLK_REC_MODE
+int audio_extn_utils_compress_set_clk_rec_mode(
+            struct audio_usecase *usecase)
+{
+    struct snd_compr_metadata metadata;
+    struct stream_out *out = NULL;
+    int ret = -EINVAL;
+
+    if (usecase == NULL || usecase->type != PCM_PLAYBACK) {
+        ALOGE("%s:: Invalid use case", __func__);
+        goto exit;
+    }
+
+    out = usecase->stream.out;
+    if (!out) {
+        ALOGE("%s:: invalid stream", __func__);
+        goto exit;
+    }
+
+    if (!is_offload_usecase(out->usecase)) {
+        ALOGE("%s:: not supported for non offload session", __func__);
+        goto exit;
+    }
+
+    if (out->render_mode != RENDER_MODE_AUDIO_STC_MASTER) {
+        ALOGD("%s:: clk recovery is only supported in STC render mode",
+                __func__);
+        ret = 0;
+        goto exit;
+    }
+
+    if (!out->compr) {
+        ALOGD("%s:: Invalid compress handle",
+                __func__);
+        goto exit;
+    }
+    metadata.key = SNDRV_COMPRESS_CLK_REC_MODE;
+    switch(usecase->out_snd_device) {
+        case SND_DEVICE_OUT_HDMI:
+        case SND_DEVICE_OUT_SPEAKER_AND_HDMI:
+        case SND_DEVICE_OUT_DISPLAY_PORT:
+        case SND_DEVICE_OUT_SPEAKER_AND_DISPLAY_PORT:
+            metadata.value[0] = SNDRV_COMPRESS_CLK_REC_MODE_NONE;
+            break;
+        default:
+            metadata.value[0] = SNDRV_COMPRESS_CLK_REC_MODE_AUTO;
+            break;
+    }
+
+    ALOGD("%s:: clk recovery mode %d",__func__, metadata.value[0]);
+
+    ret = compress_set_metadata(out->compr, &metadata);
+    if(ret) {
+        ALOGE("%s::error %s", __func__, compress_get_error(out->compr));
+    }
+
+exit:
+    return ret;
+}
+#else
+int audio_extn_utils_compress_set_clk_rec_mode(
+            struct audio_usecase *usecase __unused)
+{
+    ALOGD("%s:: configuring render mode not supported", __func__);
+    return 0;
+}
+#endif
+
+#ifdef SNDRV_COMPRESS_RENDER_WINDOW
+int audio_extn_utils_compress_set_render_window(
+            struct stream_out *out,
+            struct audio_out_render_window_param *render_window)
+{
+    struct snd_compr_metadata metadata;
+    int ret = -EINVAL;
+
+    if(render_window == NULL) {
+        ALOGE("%s:: Invalid render_window", __func__);
+        goto exit;
+    }
+
+    ALOGD("%s:: render window start 0x%"PRIx64" end 0x%"PRIx64"",
+          __func__,render_window->render_ws, render_window->render_we);
+
+    if (!is_offload_usecase(out->usecase)) {
+        ALOGE("%s:: not supported for non offload session", __func__);
+        goto exit;
+    }
+
+    if ((out->render_mode != RENDER_MODE_AUDIO_MASTER) &&
+        (out->render_mode != RENDER_MODE_AUDIO_STC_MASTER)) {
+        ALOGD("%s:: only supported in timestamp mode, current "
+              "render mode mode %d", __func__, out->render_mode);
+        goto exit;
+    }
+
+    if (!out->compr) {
+        ALOGW("%s:: offload session not yet opened,"
+               "render window will be configure later", __func__);
+        /* store render window to reconfigure in start_output_stream() */
+       goto exit;
+    }
+
+    metadata.key = SNDRV_COMPRESS_RENDER_WINDOW;
+    /*render window start value */
+    metadata.value[0] = 0xFFFFFFFF & render_window->render_ws; /* lsb */
+    metadata.value[1] = \
+            (0xFFFFFFFF00000000 & render_window->render_ws) >> 32; /* msb*/
+    /*render window end value */
+    metadata.value[2] = 0xFFFFFFFF & render_window->render_we; /* lsb */
+    metadata.value[3] = \
+            (0xFFFFFFFF00000000 & render_window->render_we) >> 32; /* msb*/
+
+    ret = compress_set_metadata(out->compr, &metadata);
+    if(ret) {
+        ALOGE("%s::error %s", __func__, compress_get_error(out->compr));
+    }
+
+exit:
+    return ret;
+}
+#else
+int audio_extn_utils_compress_set_render_window(
+            struct stream_out *out __unused,
+            struct audio_out_render_window_param *render_window __unused)
+{
+    ALOGD("%s:: configuring render window not supported", __func__);
+    return 0;
+}
+#endif
+
+#ifdef SNDRV_COMPRESS_START_DELAY
+int audio_extn_utils_compress_set_start_delay(
+            struct stream_out *out,
+            struct audio_out_start_delay_param *delay_param)
+{
+    struct snd_compr_metadata metadata;
+    int ret = -EINVAL;
+
+    if(delay_param == NULL) {
+        ALOGE("%s:: Invalid delay_param", __func__);
+        goto exit;
+    }
+
+    ALOGD("%s:: render start delay 0x%"PRIx64" ", __func__,
+          delay_param->start_delay);
+
+    if (!is_offload_usecase(out->usecase)) {
+        ALOGE("%s:: not supported for non offload session", __func__);
+        goto exit;
+    }
+
+   if ((out->render_mode != RENDER_MODE_AUDIO_MASTER) &&
+       (out->render_mode != RENDER_MODE_AUDIO_STC_MASTER)) {
+        ALOGD("%s:: only supported in timestamp mode, current "
+              "render mode mode %d", __func__, out->render_mode);
+        goto exit;
+    }
+
+    if (!out->compr) {
+        ALOGW("%s:: offload session not yet opened,"
+               "start delay will be configure later", __func__);
+       goto exit;
+    }
+
+    metadata.key = SNDRV_COMPRESS_START_DELAY;
+    metadata.value[0] = 0xFFFFFFFF & delay_param->start_delay; /* lsb */
+    metadata.value[1] = \
+            (0xFFFFFFFF00000000 & delay_param->start_delay) >> 32; /* msb*/
+
+    ret = compress_set_metadata(out->compr, &metadata);
+    if(ret) {
+        ALOGE("%s::error %s", __func__, compress_get_error(out->compr));
+    }
+
+exit:
+    return ret;
+}
+#else
+int audio_extn_utils_compress_set_start_delay(
+            struct stream_out *out __unused,
+            struct audio_out_start_delay_param *delay_param __unused)
+{
+    ALOGD("%s:: configuring render window not supported", __func__);
+    return 0;
+}
+#endif
+
+#define MAX_SND_CARD 8
+#define RETRY_US 500000
+#define RETRY_NUMBER 10
+
+int audio_extn_utils_get_snd_card_num()
+{
+
+    void *hw_info = NULL;
+    struct mixer *mixer = NULL;
+    int retry_num = 0;
+    int snd_card_num = 0;
+    char* snd_card_name = NULL;
+
+    while (snd_card_num < MAX_SND_CARD) {
+        mixer = mixer_open(snd_card_num);
+
+        while (!mixer && retry_num < RETRY_NUMBER) {
+            usleep(RETRY_US);
+            mixer = mixer_open(snd_card_num);
+            retry_num++;
+        }
+
+        if (!mixer) {
+            ALOGE("%s: Unable to open the mixer card: %d", __func__,
+                   snd_card_num);
+            retry_num = 0;
+            snd_card_num++;
+            continue;
+        }
+
+        snd_card_name = strdup(mixer_get_name(mixer));
+        if (!snd_card_name) {
+            ALOGE("failed to allocate memory for snd_card_name\n");
+            mixer_close(mixer);
+            return -1;
+        }
+        ALOGD("%s: snd_card_name: %s", __func__, snd_card_name);
+
+        hw_info = hw_info_init(snd_card_name);
+        if (hw_info) {
+            ALOGD("%s: Opened sound card:%d", __func__, snd_card_num);
+            break;
+        }
+        ALOGE("%s: Failed to init hardware info", __func__);
+        retry_num = 0;
+        snd_card_num++;
+
+        free(snd_card_name);
+        snd_card_name = NULL;
+
+        mixer_close(mixer);
+        mixer = NULL;
+    }
+    if (snd_card_name)
+        free(snd_card_name);
+    if (mixer)
+        mixer_close(mixer);
+    if (hw_info)
+        hw_info_deinit(hw_info);
+
+    if (snd_card_num >= MAX_SND_CARD) {
+        ALOGE("%s: Unable to find correct sound card, aborting.", __func__);
+        return -1;
+    }
+
+    return snd_card_num;
+}
+
+#ifdef SNDRV_COMPRESS_ENABLE_ADJUST_SESSION_CLOCK
+int audio_extn_utils_compress_enable_drift_correction(
+        struct stream_out *out,
+        struct audio_out_enable_drift_correction *drift)
+{
+    struct snd_compr_metadata metadata;
+    int ret = -EINVAL;
+
+    if(drift == NULL) {
+        ALOGE("%s:: Invalid param", __func__);
+        goto exit;
+    }
+
+    ALOGD("%s:: drift enable %d", __func__,drift->enable);
+
+    if (!is_offload_usecase(out->usecase)) {
+        ALOGE("%s:: not supported for non offload session", __func__);
+        goto exit;
+    }
+
+    if (!out->compr) {
+        ALOGW("%s:: offload session not yet opened,"
+                "start delay will be configure later", __func__);
+        goto exit;
+    }
+
+    metadata.key = SNDRV_COMPRESS_ENABLE_ADJUST_SESSION_CLOCK;
+    metadata.value[0] = drift->enable;
+    out->drift_correction_enabled = drift->enable;
+
+    ret = compress_set_metadata(out->compr, &metadata);
+    if(ret) {
+        ALOGE("%s::error %s", __func__, compress_get_error(out->compr));
+        out->drift_correction_enabled = false;
+    }
+
+exit:
+    return ret;
+}
+#else
+int audio_extn_utils_compress_enable_drift_correction(
+        struct stream_out *out __unused,
+        struct audio_out_enable_drift_correction *drift __unused)
+{
+    ALOGD("%s:: configuring drift enablement not supported", __func__);
+    return 0;
+}
+#endif
+
+#ifdef SNDRV_COMPRESS_ADJUST_SESSION_CLOCK
+int audio_extn_utils_compress_correct_drift(
+        struct stream_out *out,
+        struct audio_out_correct_drift *drift_param)
+{
+    struct snd_compr_metadata metadata;
+    int ret = -EINVAL;
+
+    if (drift_param == NULL) {
+        ALOGE("%s:: Invalid drift_param", __func__);
+        goto exit;
+    }
+
+    ALOGD("%s:: adjust time 0x%"PRIx64" ", __func__,
+            drift_param->adjust_time);
+
+    if (!is_offload_usecase(out->usecase)) {
+        ALOGE("%s:: not supported for non offload session", __func__);
+        goto exit;
+    }
+
+    if (!out->compr) {
+        ALOGW("%s:: offload session not yet opened", __func__);
+        goto exit;
+    }
+
+    if (!out->drift_correction_enabled) {
+        ALOGE("%s:: drift correction not enabled", __func__);
+        goto exit;
+    }
+
+    metadata.key = SNDRV_COMPRESS_ADJUST_SESSION_CLOCK;
+    metadata.value[0] = 0xFFFFFFFF & drift_param->adjust_time; /* lsb */
+    metadata.value[1] = \
+             (0xFFFFFFFF00000000 & drift_param->adjust_time) >> 32; /* msb*/
+
+    ret = compress_set_metadata(out->compr, &metadata);
+    if(ret)
+        ALOGE("%s::error %s", __func__, compress_get_error(out->compr));
+exit:
+    return ret;
+}
+#else
+int audio_extn_utils_compress_correct_drift(
+        struct stream_out *out __unused,
+        struct audio_out_correct_drift *drift_param __unused)
+{
+    ALOGD("%s:: setting adjust clock not supported", __func__);
+    return 0;
+}
+#endif
+
+int audio_extn_utils_set_channel_map(
+            struct stream_out *out,
+            struct audio_out_channel_map_param *channel_map_param)
+{
+    int ret = -EINVAL, i = 0;
+    int channels = audio_channel_count_from_out_mask(out->channel_mask);
+
+    if (channel_map_param == NULL) {
+        ALOGE("%s:: Invalid channel_map", __func__);
+        goto exit;
+    }
+
+    if (channel_map_param->channels != channels) {
+        ALOGE("%s:: Channels(%d) does not match stream channels(%d)",
+                                __func__, channel_map_param->channels, channels);
+        goto exit;
+    }
+
+    for ( i = 0; i < channels; i++) {
+        ALOGV("%s:: channel_map[%d]- %d", __func__, i, channel_map_param->channel_map[i]);
+        out->channel_map_param.channel_map[i] = channel_map_param->channel_map[i];
+    }
+    ret = 0;
+exit:
+    return ret;
+}
+
+int audio_extn_utils_set_pan_scale_params(
+            struct stream_out *out,
+            struct mix_matrix_params *mm_params)
+{
+    int ret = -EINVAL, i = 0, j = 0;
+
+    if (mm_params == NULL || out == NULL) {
+        ALOGE("%s:: Invalid mix matrix or out param", __func__);
+        goto exit;
+    }
+
+    if (mm_params->num_output_channels > MAX_CHANNELS_SUPPORTED ||
+        mm_params->num_output_channels <= 0 ||
+        mm_params->num_input_channels > MAX_CHANNELS_SUPPORTED ||
+        mm_params->num_input_channels <= 0)
+        goto exit;
+
+    out->pan_scale_params.num_output_channels = mm_params->num_output_channels;
+    out->pan_scale_params.num_input_channels = mm_params->num_input_channels;
+    out->pan_scale_params.has_output_channel_map =
+                                        mm_params->has_output_channel_map;
+    for (i = 0; i < mm_params->num_output_channels; i++)
+        out->pan_scale_params.output_channel_map[i] =
+                                         mm_params->output_channel_map[i];
+
+    out->pan_scale_params.has_input_channel_map =
+                                         mm_params->has_input_channel_map;
+    for (i = 0; i < mm_params->num_input_channels; i++)
+        out->pan_scale_params.input_channel_map[i] =
+                                         mm_params->input_channel_map[i];
+
+    out->pan_scale_params.has_mixer_coeffs = mm_params->has_mixer_coeffs;
+    for (i = 0; i < mm_params->num_output_channels; i++)
+        for (j = 0; j < mm_params->num_input_channels; j++) {
+            //Convert the channel coefficient gains in Q14 format
+            out->pan_scale_params.mixer_coeffs[i][j] =
+                               mm_params->mixer_coeffs[i][j] * (2 << 13);
+        }
+
+    ret = platform_set_stream_pan_scale_params(out->dev->platform,
+                                               out->pcm_device_id,
+                                               out->pan_scale_params);
+
+exit:
+    return ret;
+}
+
+int audio_extn_utils_set_downmix_params(
+            struct stream_out *out,
+            struct mix_matrix_params *mm_params)
+{
+    int ret = -EINVAL, i = 0, j = 0;
+    struct audio_usecase *usecase = NULL;
+
+    if (mm_params == NULL || out == NULL) {
+        ALOGE("%s:: Invalid mix matrix or out param", __func__);
+        goto exit;
+    }
+
+    if (mm_params->num_output_channels > MAX_CHANNELS_SUPPORTED ||
+        mm_params->num_output_channels <= 0 ||
+        mm_params->num_input_channels > MAX_CHANNELS_SUPPORTED ||
+        mm_params->num_input_channels <= 0)
+        goto exit;
+
+    usecase = get_usecase_from_list(out->dev, out->usecase);
+    if (!usecase) {
+        ALOGE("%s: Get usecase list failed!", __func__);
+        goto exit;
+    }
+
+    out->downmix_params.num_output_channels = mm_params->num_output_channels;
+    out->downmix_params.num_input_channels = mm_params->num_input_channels;
+
+    out->downmix_params.has_output_channel_map =
+                                        mm_params->has_output_channel_map;
+    for (i = 0; i < mm_params->num_output_channels; i++) {
+        out->downmix_params.output_channel_map[i] =
+                                          mm_params->output_channel_map[i];
+    }
+
+    out->downmix_params.has_input_channel_map =
+                                        mm_params->has_input_channel_map;
+    for (i = 0; i < mm_params->num_input_channels; i++)
+        out->downmix_params.input_channel_map[i] =
+                                          mm_params->input_channel_map[i];
+
+    out->downmix_params.has_mixer_coeffs = mm_params->has_mixer_coeffs;
+    for (i = 0; i < mm_params->num_output_channels; i++)
+        for (j = 0; j < mm_params->num_input_channels; j++)
+            out->downmix_params.mixer_coeffs[i][j] =
+                               mm_params->mixer_coeffs[i][j];
+
+    ret = platform_set_stream_downmix_params(out->dev->platform,
+                                             out->pcm_device_id,
+                                             usecase->out_snd_device,
+                                             out->downmix_params);
+
+exit:
+    return ret;
+}

@@ -4,19 +4,13 @@ on boot
 #for goodix_fp.
     chown system system /dev/goodix_fp
 
-service alipayservice /system/bin/alipayservice
-    class late_start
-    user system
-    group system
-
-service gx_fpd /system/bin/gx_fpd
-    class late_start
-    user root
-    group root system
-    disabled
-on property:oppo.goodix.fp=1
-    start gx_fpd
-service fpc1020_sh /system/bin/sh /init.oppo.fingerprints.sh
+service oppo_fingerprints_sh /vendor/bin/sh /vendor/bin/init.oppo.fingerprints.sh
     class main
     user root
     oneshot
+    seclabel u:r:oppo_fingerprints_init_shell:s0
+
+on post-fs-data
+    mkdir /data/gf_data 0700 system system
+    mkdir /data/system/gf_data 0700 system system
+    mkdir /data/images 0700 system system

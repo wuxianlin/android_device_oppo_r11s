@@ -49,8 +49,8 @@ DisplayError CompManager::Init(const HWResourceInfo &hw_res_info,
   DisplayError error = kErrorNone;
 
   if (extension_intf) {
-    error = extension_intf->CreateResourceExtn(hw_res_info, &resource_intf_, buffer_allocator,
-                                               buffer_sync_handler);
+    error = extension_intf->CreateResourceExtn(hw_res_info, buffer_allocator, buffer_sync_handler,
+                                               &resource_intf_);
     extension_intf->CreateDppsControlExtn(&dpps_ctrl_intf_, socket_handler);
   } else {
     error = ResourceDefault::CreateResourceDefault(hw_res_info, &resource_intf_);
@@ -127,6 +127,7 @@ DisplayError CompManager::RegisterDisplay(DisplayType type,
   registered_displays_[type] = 1;
   display_comp_ctx->is_primary_panel = hw_panel_info.is_primary_panel;
   display_comp_ctx->display_type = type;
+  display_comp_ctx->fb_config = fb_config;
   *display_ctx = display_comp_ctx;
   // New non-primary display device has been added, so move the composition mode to safe mode until
   // resources for the added display is configured properly.
@@ -215,6 +216,8 @@ DisplayError CompManager::ReconfigureDisplay(Handle comp_handle,
   }
 
   display_comp_ctx->scaled_composition = NeedsScaledComposition(fb_config, mixer_attributes);
+  // Update new resolution.
+  display_comp_ctx->fb_config = fb_config;
 
   return error;
 }
@@ -223,6 +226,8 @@ void CompManager::PrepareStrategyConstraints(Handle comp_handle, HWLayers *hw_la
   DisplayCompositionContext *display_comp_ctx =
                              reinterpret_cast<DisplayCompositionContext *>(comp_handle);
   StrategyConstraints *constraints = &display_comp_ctx->constraints;
+  bool low_end_hw = ((hw_res_info_.num_vig_pipe + hw_res_info_.num_rgb_pipe +
+                    hw_res_info_.num_dma_pipe) <= kSafeModeThreshold);
 
   constraints->safe_mode = safe_mode_;
   constraints->use_cursor = false;
@@ -231,10 +236,25 @@ void CompManager::PrepareStrategyConstraints(Handle comp_handle, HWLayers *hw_la
   // Limit 2 layer SDE Comp if its not a Primary Display.
   // Safe mode is the policy for External display on a low end device.
   if (!display_comp_ctx->is_primary_panel) {
-    bool low_end_hw = ((hw_res_info_.num_vig_pipe + hw_res_info_.num_rgb_pipe +
-                        hw_res_info_.num_dma_pipe) <= kSafeModeThreshold);
     constraints->max_layers = max_sde_ext_layers_;
     constraints->safe_mode = (low_end_hw && !hw_res_info_.separate_rotator) ? true : safe_mode_;
+    if(hw_layers->info.stack->flags.secure_present)
+        secure_external_layer_ = true;
+    else
+        secure_external_layer_ = false;
+  }
+
+  // When Secure layer is present on external, GPU composition should be policy
+  // for Primary on low end devices
+  if(display_comp_ctx->is_primary_panel && (registered_displays_.count() > 1)
+          && low_end_hw && secure_external_layer_) {
+    DLOGV_IF(kTagCompManager,"Secure layer present for LET. Fallingback to GPU");
+    hw_layers->info.stack->flags.skip_present = 1;
+    for(auto &layer : hw_layers->info.stack->layers) {
+      if(layer->composition != kCompositionGPUTarget) {
+        layer->flags.skip = 1;
+      }
+    }
   }
 
   // If a strategy fails after successfully allocating resources, then set safe mode
@@ -304,10 +324,12 @@ DisplayError CompManager::Prepare(Handle display_ctx, HWLayers *hw_layers) {
   }
 
   if (error != kErrorNone) {
+    resource_intf_->Stop(display_resource_ctx, hw_layers);
     DLOGE("Composition strategies exhausted for display = %d", display_comp_ctx->display_type);
+    return error;
   }
 
-  resource_intf_->Stop(display_resource_ctx);
+  error = resource_intf_->Stop(display_resource_ctx, hw_layers);
 
   return error;
 }
@@ -353,7 +375,7 @@ DisplayError CompManager::ReConfigure(Handle display_ctx, HWLayers *hw_layers) {
     DLOGE("Reconfigure failed for display = %d", display_comp_ctx->display_type);
   }
 
-  resource_intf_->Stop(display_resource_ctx);
+  resource_intf_->Stop(display_resource_ctx, hw_layers);
   if (error != kErrorNone) {
       error = resource_intf_->PostPrepare(display_resource_ctx, hw_layers);
   }
@@ -477,13 +499,13 @@ DisplayError CompManager::ValidateScaling(const LayerRect &crop, const LayerRect
   return resource_intf_->ValidateScaling(crop, dst, rotate90, layout, true);
 }
 
-DisplayError CompManager::ValidateCursorPosition(Handle display_ctx, HWLayers *hw_layers,
+DisplayError CompManager::ValidateAndSetCursorPosition(Handle display_ctx, HWLayers *hw_layers,
                                                  int x, int y) {
   DisplayCompositionContext *display_comp_ctx =
                              reinterpret_cast<DisplayCompositionContext *>(display_ctx);
   Handle &display_resource_ctx = display_comp_ctx->display_resource_ctx;
-
-  return resource_intf_->ValidateCursorPosition(display_resource_ctx, hw_layers, x, y);
+  return resource_intf_->ValidateAndSetCursorPosition(display_resource_ctx, hw_layers, x, y,
+                                                      &display_comp_ctx->fb_config);
 }
 
 bool CompManager::SupportLayerAsCursor(Handle comp_handle, HWLayers *hw_layers) {

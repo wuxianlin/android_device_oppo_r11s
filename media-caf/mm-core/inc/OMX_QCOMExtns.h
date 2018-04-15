@@ -45,6 +45,7 @@ extern "C" {
 ///////////////////////////////////////////////////////////////////////////////
 #include "OMX_Core.h"
 #include "OMX_Video.h"
+#include "string.h"
 
 #define OMX_VIDEO_MAX_HP_LAYERS 6
 
@@ -344,6 +345,7 @@ enum OMX_QCOM_VIDEO_CODINGTYPE
     QOMX_VIDEO_CodingHevc = OMX_VIDEO_CodingHEVC, /**< keeping old enum for backwards compatibility*/
     QOMX_VIDEO_CodingMVC = 0x7FA30C07,
     QOMX_VIDEO_CodingVp9 = OMX_VIDEO_CodingVP9,   /**< keeping old enum for backwards compatibility*/
+    QOMX_VIDEO_CodingTME = 0x7FA30C09,
 };
 
 enum OMX_QCOM_EXTN_INDEXTYPE
@@ -466,7 +468,7 @@ enum OMX_QCOM_EXTN_INDEXTYPE
     /* OMX.google.android.index.prependSPSPPSToIDRFrames */
     OMX_QcomIndexParamSequenceHeaderWithIDR = 0x7F00002A,
 
-    OMX_QcomIndexParamH264AUDelimiter = 0x7F00002B,
+    OMX_QcomIndexParamAUDelimiter = 0x7F00002B,
 
     OMX_QcomIndexParamVideoDownScalar = 0x7F00002C,
 
@@ -638,6 +640,36 @@ enum OMX_QCOM_EXTN_INDEXTYPE
 
     /* Suggest how big Iframe sizes should be */
     OMX_QTIIndexParamIframeSizeType = 0x7F000070,
+
+    /* use av-timer ticks as timestamp (used by VT-client) */
+    OMX_QTIIndexParamEnableAVTimerTimestamps = 0x7F000071,
+
+    /* OMX.QTI.index.config.video.getdsmode */
+    OMX_QTIIndexConfigGetDSMode = 0x7F000072,
+
+    /* Controlled Input queue mode for frame accurate configuration */
+    OMX_QcomIndexParamVencControlInputQueue = 0x7F000073,
+
+    /**
+    *  Configure Slice Header Spacing
+    *  This index will be used to configure both byte based
+    *  and MB based slice header spacing. This is the preferred
+    *  alternative to OMX_IndexParamVideoAvc (for MB based)
+    *  and OMX_IndexParamVideoErrorCorrection (for byte based)
+    */
+    OMX_QcomIndexParamVideoSliceSpacing = 0x7F000074,
+
+    /* Capabilities */
+    OMX_QTIIndexParamCapabilitiesVTDriverVersion = 0x7F100000,
+
+    OMX_QTIIndexParamCapabilitiesMaxTemporalLayers = 0x7F100001,
+
+    OMX_QTIIndexParamCapabilitiesMaxLTR = 0x7F100002,
+
+    OMX_QTIIndexParamCapabilitiesMaxDownScaleRatio= 0x7F100003,
+
+    OMX_QTIIndexParamCapabilitiesRotationSupport= 0x7F100004,
+
 };
 
 /**
@@ -1093,15 +1125,15 @@ typedef struct OMX_QCOM_VIDEO_CONFIG_QPRANGE
 
 /**
  * This structure describes the parameters for the
- * OMX_QcomIndexParamH264AUDelimiter extension.  It enables/disables
- * the AU delimiters in the H264 stream, which is used by WFD.
+ * OMX_QcomIndexParamAUDelimiter extension.  It enables/disables
+ * the AU delimiters in the stream.
  */
-typedef struct OMX_QCOM_VIDEO_CONFIG_H264_AUD
+typedef struct OMX_QCOM_VIDEO_CONFIG_AUD
 {
    OMX_U32 nSize;           /** Size of the structure in bytes */
    OMX_VERSIONTYPE nVersion;/** OMX specification version information */
    OMX_BOOL bEnable;        /** Enable/disable the setting */
-} OMX_QCOM_VIDEO_CONFIG_H264_AUD;
+} OMX_QCOM_VIDEO_CONFIG_AUD;
 
 typedef enum QOMX_VIDEO_PERF_LEVEL
 {
@@ -1445,7 +1477,36 @@ typedef enum OMX_QCOM_EXTRADATATYPE
     OMX_ExtraDataDisplayColourSEI =        0x7F000011,
     OMX_ExtraDataLightLevelSEI =           0x7F000012,
     OMX_ExtraDataEncoderOverrideQPInfo =   0x7F000013,
+    OMX_ExtraDataOutputCropInfo =          0x7F000014,
 } OMX_QCOM_EXTRADATATYPE;
+
+struct ExtraDataMap {
+        const char *type;
+        OMX_QCOM_EXTRADATATYPE index;
+};
+static const struct ExtraDataMap kExtradataMap[] = {
+        { "ltrinfo", OMX_ExtraDataVideoLTRInfo },
+        { "mbinfo", OMX_ExtraDataVideoEncoderMBInfo },
+};
+
+static inline OMX_S32 getIndexForExtradataType(char * type) {
+    if(type == NULL) return -1;
+    for(int i = 0; i< (int)(sizeof(kExtradataMap)/ sizeof(struct ExtraDataMap)); i++){
+        if(!strcmp(kExtradataMap[i].type,type)){
+            return kExtradataMap[i].index;
+        }
+    }
+    return -1;
+}
+
+static inline const char * getStringForExtradataType(int64_t index) {
+    for(int i = 0; i< (int)(sizeof(kExtradataMap)/sizeof(struct ExtraDataMap)); i++){
+        if(kExtradataMap[i].index == index){
+            return kExtradataMap[i].type;
+        }
+    }
+    return NULL;
+}
 
 typedef struct  OMX_STREAMINTERLACEFORMATTYPE {
     OMX_U32 nSize;
@@ -1763,6 +1824,7 @@ typedef struct QOMX_VIDEO_CUSTOM_BUFFERSIZE {
 #define OMX_QTI_INDEX_CONFIG_VIDEO_BLURINFO "OMX.QTI.index.config.BlurInfo"
 #define OMX_QTI_INDEX_PARAM_VIDEO_CLIENT_EXTRADATA "OMX.QTI.index.param.client.extradata"
 #define OMX_QTI_INDEX_CONFIG_COLOR_ASPECTS "OMX.google.android.index.describeColorAspects"
+#define OMX_QTI_INDEX_CONFIG_VIDEO_GETDSMODE "OMX.QTI.index.config.video.getdsmode"
 
 typedef enum {
     QOMX_VIDEO_FRAME_PACKING_CHECKERBOARD = 0,
@@ -2038,6 +2100,13 @@ typedef struct QOMX_VPP_ENABLE {
     OMX_BOOL enable_vpp;
 } QOMX_VPP_ENABLE;
 
+typedef struct QOMX_EXTRADATA_ENABLE {
+    OMX_U32 nSize;
+    OMX_VERSIONTYPE nVersion;
+    OMX_U32 nPortIndex;
+    OMX_BOOL bEnable;
+} QOMX_EXTRADATA_ENABLE;
+
 typedef enum OMX_QOMX_VIDEO_MBISTATISTICSTYPE {
     QOMX_MBI_STATISTICS_MODE_DEFAULT = 0,
     QOMX_MBI_STATISTICS_MODE_1 = 0x01,
@@ -2144,6 +2213,20 @@ typedef struct QOMX_VIDEO_DITHER_CONTROL {
     OMX_U32 nPortIndex;
     QOMX_VIDEO_DITHERTYPE eDitherType;
 } QOMX_VIDEO_DITHER_CONTROL;
+
+typedef enum QOMX_VIDEO_SLICEMODETYPE {
+    QOMX_SLICEMODE_DISABLE = 0,
+    QOMX_SLICEMODE_MB_COUNT = 0x01,
+    QOMX_SLICEMODE_BYTE_COUNT = 0x02,
+} QOMX_VIDEO_SLICEMODETYPE;
+
+typedef struct QOMX_VIDEO_PARAM_SLICE_SPACING_TYPE {
+    OMX_U32 nSize;
+    OMX_VERSIONTYPE nVersion;
+    OMX_U32 nPortIndex;
+    QOMX_VIDEO_SLICEMODETYPE eSliceMode;
+    OMX_U32 nSliceSize;
+} QOMX_VIDEO_PARAM_SLICE_SPACING_TYPE;
 
 #ifdef __cplusplus
 }

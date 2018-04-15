@@ -40,6 +40,7 @@
 
 #include <stdlib.h>
 #include <cutils/list.h>
+#include <hardware/audio_amplifier.h>
 #include <hardware/audio.h>
 #include <tinyalsa/asoundlib.h>
 #include <tinycompress/tinycompress.h>
@@ -54,9 +55,9 @@
 #define OFFLOAD_EFFECTS_BUNDLE_LIBRARY_PATH "/usr/lib/libqcompostprocbundle.so"
 #define ADM_LIBRARY_PATH "/usr/lib/libadm.so"
 #else
-#define VISUALIZER_LIBRARY_PATH "/system/lib/soundfx/libqcomvisualizer.so"
-#define OFFLOAD_EFFECTS_BUNDLE_LIBRARY_PATH "/system/lib/soundfx/libqcompostprocbundle.so"
-#define ADM_LIBRARY_PATH "/system/vendor/lib/libadm.so"
+#define VISUALIZER_LIBRARY_PATH "/vendor/lib/soundfx/libqcomvisualizer.so"
+#define OFFLOAD_EFFECTS_BUNDLE_LIBRARY_PATH "/vendor/lib/soundfx/libqcompostprocbundle.so"
+#define ADM_LIBRARY_PATH "/vendor/lib/libadm.so"
 #endif
 
 /* Flags used to initialize acdb_settings variable that goes to ACDB library */
@@ -84,9 +85,14 @@
 #define SND_CARD_STATE_OFFLINE 0
 #define SND_CARD_STATE_ONLINE 1
 
+#define STREAM_DIRECTION_IN 0
+#define STREAM_DIRECTION_OUT 1
+
 #define MAX_PERF_LOCK_OPTS 20
 
 #define MAX_STREAM_PROFILE_STR_LEN 32
+
+#define MAX_MIXER_PATH_LEN 64
 
 typedef enum card_status_t {
     CARD_STATUS_OFFLINE,
@@ -113,6 +119,8 @@ enum {
     USECASE_AUDIO_PLAYBACK_OFFLOAD8,
     USECASE_AUDIO_PLAYBACK_OFFLOAD9,
     USECASE_AUDIO_PLAYBACK_ULL,
+    USECASE_AUDIO_PLAYBACK_MMAP,
+    USECASE_AUDIO_PLAYBACK_HIFI,
 
     /* FM usecase */
     USECASE_AUDIO_PLAYBACK_FM,
@@ -129,9 +137,13 @@ enum {
     USECASE_AUDIO_RECORD_COMPRESS4,
     USECASE_AUDIO_RECORD_LOW_LATENCY,
     USECASE_AUDIO_RECORD_FM_VIRTUAL,
+    USECASE_AUDIO_RECORD_HIFI,
 
+    USECASE_AUDIO_PLAYBACK_VOIP,
+    USECASE_AUDIO_RECORD_VOIP,
     /* Voice usecase */
     USECASE_VOICE_CALL,
+    USECASE_AUDIO_RECORD_MMAP,
 
     /* Voice extension usecases */
     USECASE_VOICE2_CALL,
@@ -160,6 +172,20 @@ enum {
 
     USECASE_AUDIO_PLAYBACK_EXT_DISP_SILENCE,
 
+    USECASE_AUDIO_TRANSCODE_LOOPBACK,
+
+    USECASE_AUDIO_PLAYBACK_INTERACTIVE_STREAM1,
+    USECASE_AUDIO_PLAYBACK_INTERACTIVE_STREAM2,
+    USECASE_AUDIO_PLAYBACK_INTERACTIVE_STREAM3,
+    USECASE_AUDIO_PLAYBACK_INTERACTIVE_STREAM4,
+    USECASE_AUDIO_PLAYBACK_INTERACTIVE_STREAM5,
+    USECASE_AUDIO_PLAYBACK_INTERACTIVE_STREAM6,
+    USECASE_AUDIO_PLAYBACK_INTERACTIVE_STREAM7,
+    USECASE_AUDIO_PLAYBACK_INTERACTIVE_STREAM8,
+
+    USECASE_AUDIO_ULTRASOUND_RX,
+    USECASE_AUDIO_ULTRASOUND_TX,
+
     AUDIO_USECASE_MAX
 };
 
@@ -175,7 +201,6 @@ const char * const use_case_table[AUDIO_USECASE_MAX];
  * We should take care of returning proper size when AudioFlinger queries for
  * the buffer size of an input/output stream
  */
-
 enum {
     OFFLOAD_CMD_EXIT,               /* exit compress offload thread loop*/
     OFFLOAD_CMD_DRAIN,              /* send a full drain request to DSP */
@@ -196,16 +221,43 @@ struct offload_cmd {
     int data[];
 };
 
+typedef enum render_mode {
+    RENDER_MODE_AUDIO_NO_TIMESTAMP = 0,
+    RENDER_MODE_AUDIO_MASTER,
+    RENDER_MODE_AUDIO_STC_MASTER,
+} render_mode_t;
+
 struct stream_app_type_cfg {
     int sample_rate;
     uint32_t bit_width;
     int app_type;
 };
 
+struct stream_config {
+    unsigned int sample_rate;
+    audio_channel_mask_t channel_mask;
+    audio_format_t format;
+    audio_devices_t devices;
+    unsigned int bit_width;
+};
+struct stream_inout {
+    pthread_mutex_t lock; /* see note below on mutex acquisition order */
+    pthread_mutex_t pre_lock; /* acquire before lock to avoid DOS by playback thread */
+    pthread_cond_t  cond;
+    struct stream_config in_config;
+    struct stream_config out_config;
+    struct audio_device *dev;
+    void *adsp_hdlr_stream_handle;
+    void *ip_hdlr_handle;
+    stream_callback_t client_callback;
+    void *client_cookie;
+};
 struct stream_out {
     struct audio_stream_out stream;
     pthread_mutex_t lock; /* see note below on mutex acquisition order */
     pthread_mutex_t pre_lock; /* acquire before lock to avoid DOS by playback thread */
+    pthread_mutex_t compr_mute_lock; /* acquire before setting compress volume */
+    pthread_mutex_t position_query_lock; /* acquire before updating/getting position of track offload*/
     pthread_cond_t  cond;
     struct pcm_config config;
     struct compr_config compr_config;
@@ -236,9 +288,13 @@ struct stream_out {
     pthread_t offload_thread;
     struct listnode offload_cmd_list;
     bool offload_thread_blocked;
+    struct timespec writeAt;
 
-    stream_callback_t offload_callback;
-    void *offload_cookie;
+    void *adsp_hdlr_stream_handle;
+    void *ip_hdlr_handle;
+
+    stream_callback_t client_callback;
+    void *client_cookie;
     struct compr_gapless_mdata gapless_mdata;
     int send_new_metadata;
     bool send_next_track_params;
@@ -252,13 +308,30 @@ struct stream_out {
     bool realtime;
     int af_period_multiplier;
     struct audio_device *dev;
+    card_status_t card_status;
+
     void* qaf_stream_handle;
     pthread_cond_t qaf_offload_cond;
     pthread_t qaf_offload_thread;
     struct listnode qaf_offload_cmd_list;
     uint32_t platform_latency;
+    render_mode_t render_mode;
+    bool drift_correction_enabled;
+
+    struct audio_out_channel_map_param channel_map_param; /* input channel map */
     audio_offload_info_t info;
     int started;
+    qahwi_stream_out_t qahwi_out;
+
+    bool is_iec61937_info_available;
+    bool a2dp_compress_mute;
+    float volume_l;
+    float volume_r;
+
+    char pm_qos_mixer_path[MAX_MIXER_PATH_LEN];
+    int dynamic_pm_qos_enabled;
+    mix_matrix_params_t pan_scale_params;
+    mix_matrix_params_t downmix_params;
 };
 
 struct stream_in {
@@ -290,6 +363,13 @@ struct stream_in {
     qahwi_stream_in_t qahwi_in;
 
     struct audio_device *dev;
+    card_status_t card_status;
+    int capture_started;
+
+    /* Array of supported channel mask configurations. +1 so that the last entry is always 0 */
+    audio_channel_mask_t supported_channel_masks[MAX_SUPPORTED_CHANNEL_MASKS + 1];
+    audio_format_t supported_formats[MAX_SUPPORTED_FORMATS + 1];
+    uint32_t supported_sample_rates[MAX_SUPPORTED_SAMPLE_RATES + 1];
 };
 
 typedef enum {
@@ -297,12 +377,14 @@ typedef enum {
     PCM_CAPTURE,
     VOICE_CALL,
     VOIP_CALL,
-    PCM_HFP_CALL
+    PCM_HFP_CALL,
+    TRANSCODE_LOOPBACK
 } usecase_type_t;
 
 union stream_ptr {
     struct stream_in *in;
     struct stream_out *out;
+    struct stream_inout *inout;
 };
 
 struct audio_usecase {
@@ -315,11 +397,6 @@ struct audio_usecase {
     struct stream_app_type_cfg out_app_type_cfg;
     struct stream_app_type_cfg in_app_type_cfg;
     union stream_ptr stream;
-};
-
-struct sound_card_status {
-    pthread_mutex_t lock;
-    int state;
 };
 
 struct stream_format {
@@ -389,6 +466,7 @@ struct audio_device {
     bool allow_afe_proxy_usage;
 
     int snd_card;
+    card_status_t card_status;
     unsigned int cur_codec_backend_samplerate;
     unsigned int cur_codec_backend_bit_width;
     bool is_channel_status_set;
@@ -401,7 +479,6 @@ struct audio_device {
     int (*offload_effects_start_output)(audio_io_handle_t, int, struct mixer *);
     int (*offload_effects_stop_output)(audio_io_handle_t, int);
 
-    struct sound_card_status snd_card_status;
     int (*offload_effects_set_hpx_state)(bool);
 
     void *adm_data;
@@ -431,6 +508,9 @@ struct audio_device {
     qahwi_device_t qahwi_dev;
     bool vr_audio_mode_enabled;
     bool bt_sco_on;
+    struct audio_device_config_param *device_cfg_params;
+    unsigned int interactive_usecase_state;
+    amplifier_device_t *amp;
 };
 
 int select_devices(struct audio_device *adev,
@@ -458,9 +538,10 @@ bool audio_is_dsd_native_stream_active(struct audio_device *adev);
 
 int pcm_ioctl(struct pcm *pcm, int request, ...);
 
-int get_snd_card_state(struct audio_device *adev);
 audio_usecase_t get_usecase_id_from_usecase_type(const struct audio_device *adev,
                                                  usecase_type_t type);
+
+int check_a2dp_restore(struct audio_device *adev, struct stream_out *out, bool restore);
 
 int adev_open_output_stream(struct audio_hw_device *dev,
                             audio_io_handle_t handle,
@@ -471,6 +552,8 @@ int adev_open_output_stream(struct audio_hw_device *dev,
                             const char *address __unused);
 void adev_close_output_stream(struct audio_hw_device *dev __unused,
                               struct audio_stream_out *stream);
+
+bool is_interactive_usecase(audio_usecase_t uc_id);
 
 #define LITERAL_TO_STRING(x) #x
 #define CHECK(condition) LOG_ALWAYS_FATAL_IF(!(condition), "%s",\

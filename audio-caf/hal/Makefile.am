@@ -11,7 +11,8 @@ c_sources = audio_hw.c \
             platform_info.c \
             ${TARGET_PLATFORM}/platform.c \
             audio_extn/audio_extn.c \
-            audio_extn/utils.c
+            audio_extn/utils.c \
+            acdb.c
 
 if HDMI_EDID
 AM_CFLAGS += -DHDMI_EDID
@@ -133,6 +134,13 @@ AM_CFLAGS += -DHDMI_PASSTHROUGH_ENABLED
 c_sources += audio_extn/passthru.c
 endif
 
+if AUDIO_PARSER
+AM_CFLAGS += -I ${WORKSPACE}/audio/mm-audio/audio-parsers/inc/
+if DTSHD_PARSER
+AM_CFLAGS += -DDTSHD_PARSER_ENABLED
+endif
+endif
+
 if KEEP_ALIVE
 AM_CFLAGS += -DKEEP_ALIVE_ENABLED
 c_sources += audio_extn/keep_alive.c
@@ -156,6 +164,31 @@ if AFE_PROXY
 AM_CFLAGS += -DAFE_PROXY_ENABLED
 endif
 
+if ADSP_HDLR
+AM_CFLAGS += -DAUDIO_EXTN_ADSP_HDLR_ENABLED
+c_sources += audio_extn/adsp_hdlr.c
+endif
+
+if SPLIT_A2DP
+AM_CFLAGS += -DSPLIT_A2DP_ENABLED
+c_sources += audio_extn/a2dp.c
+endif
+
+if AUDIO_IP_HDLR
+AM_CFLAGS += -DAUDIO_EXTN_IP_HDLR_ENABLED
+c_sources += audio_extn/ip_hdlr_intf.c
+endif
+
+if QAF_SUPPORT
+AM_CFLAGS += -DQAF_EXTN_ENABLED
+c_sources += audio_extn/qaf.c
+endif
+
+if AUDIO_HW_LOOPBACK
+AM_CFLAGS += -DAUDIO_HW_LOOPBACK_ENABLED
+c_sources += audio_extn/hw_loopback.c
+endif
+
 h_sources = audio_extn/audio_defs.h \
             audio_extn/audio_extn.h \
             audio_hw.h \
@@ -164,10 +197,13 @@ h_sources = audio_extn/audio_defs.h \
 library_include_HEADERS = $(h_sources)
 library_includedir = $(includedir)
 
-lib_LTLIBRARIES = audio_primary_default.la
+lib_LTLIBRARIES = audio.primary.default.la
 audio_primary_default_la_SOURCES = $(c_sources)
 audio_primary_default_la_LIBADD = $(GLIB_LIBS) -llog -lcutils -ltinyalsa
 audio_primary_default_la_LIBADD += -ltinycompress -laudioroute -ldl -lexpat -laudioutils
+if AUDIO_PARSER
+audio_primary_default_la_LIBADD += -laudioparsers
+endif
 audio_primary_default_la_CFLAGS = $(AM_CFLAGS) $(GLIB_CFLAGS)
 audio_primary_default_la_CFLAGS += -Dstrlcat=g_strlcat
 audio_primary_default_la_CFLAGS += -DINT_MAX=0x7fffffff

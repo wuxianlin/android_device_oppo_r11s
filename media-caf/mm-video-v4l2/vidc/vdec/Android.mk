@@ -28,11 +28,11 @@ libmm-vdec-def += -DMAX_RES_1080P_EBI
 
 TARGETS_THAT_USE_HEVC_ADSP_HEAP := msm8226 msm8974
 TARGETS_THAT_HAVE_VENUS_HEVC := apq8084 msm8994 msm8996
-TARGETS_THAT_SUPPORT_UBWC := msm8996 msm8953 msm8998 sdm660
-TARGETS_THAT_NEED_SW_VDEC := msm8937
-TARGETS_THAT_SUPPORT_MAX_H264_LEVEL_4 := msm8937
+TARGETS_THAT_SUPPORT_UBWC := msm8996 msm8953 msm8998 sdm660 apq8098_latv
+TARGETS_THAT_NEED_SW_VDEC := msm8937 msm8909
+TARGETS_THAT_SUPPORT_MAX_H264_LEVEL_42 := msm8937
 TARGETS_THAT_SUPPORT_MAX_H264_LEVEL_51 := msm8953 sdm660
-TARGETS_THAT_SUPPORT_MAX_H264_LEVEL_52 := msm8996 msm8998
+TARGETS_THAT_SUPPORT_MAX_H264_LEVEL_52 := msm8996 msm8998 apq8098_latv
 
 ifeq ($(call is-board-platform-in-list, $(TARGETS_THAT_USE_HEVC_ADSP_HEAP)),true)
 libmm-vdec-def += -D_HEVC_USE_ADSP_HEAP_
@@ -63,8 +63,6 @@ ifeq ($(call is-board-platform-in-list, $(MASTER_SIDE_CP_TARGET_LIST)),true)
 libmm-vdec-def += -DMASTER_SIDE_CP
 endif
 
-libmm-vdec-def += -D_QUERY_DISP_RES_
-
 include $(CLEAR_VARS)
 
 # Common Includes
@@ -75,11 +73,14 @@ libmm-vdec-inc          += $(TARGET_OUT_HEADERS)/qcom/display
 libmm-vdec-inc          += $(TARGET_OUT_HEADERS)/adreno
 libmm-vdec-inc          += $(TOP)/frameworks/native/include/media/openmax
 libmm-vdec-inc          += $(TOP)/frameworks/native/include/media/hardware
-libmm-vdec-inc      	+= $(call project-path-for,qcom-media)/libc2dcolorconvert
-libmm-vdec-inc      	+= $(TOP)/frameworks/av/include/media/stagefright
-libmm-vdec-inc      	+= $(TARGET_OUT_HEADERS)/mm-video/SwVdec
-libmm-vdec-inc      	+= $(TARGET_OUT_HEADERS)/mm-video/swvdec
-libmm-vdec-inc      	+= $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+libmm-vdec-inc          += $(call project-path-for,qcom-media)/libc2dcolorconvert
+libmm-vdec-inc          += $(call project-path-for,qcom-media)/hypv-intercept
+libmm-vdec-inc          += frameworks/native/libs/nativewindow/include/
+libmm-vdec-inc          += frameworks/native/libs/arect/include/
+libmm-vdec-inc          += frameworks/native/libs/nativebase/include
+libmm-vdec-inc          += $(TARGET_OUT_HEADERS)/mm-video/SwVdec
+libmm-vdec-inc          += $(TARGET_OUT_HEADERS)/mm-video/swvdec
+libmm-vdec-inc          += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 
 ifeq ($(PLATFORM_SDK_VERSION), 18)  #JB_MR2
 libmm-vdec-def += -DANDROID_JELLYBEAN_MR2=1
@@ -103,14 +104,18 @@ ifeq ($(TARGET_USES_MEDIA_EXTENSIONS),true)
 libmm-vdec-def += -DALLOCATE_OUTPUT_NATIVEHANDLE
 endif
 
-ifeq ($(call is-board-platform-in-list, $(TARGETS_THAT_SUPPORT_MAX_H264_LEVEL_4)),true)
-libmm-vdec-def += -DMAX_H264_LEVEL_4
+ifeq ($(call is-board-platform-in-list, $(TARGETS_THAT_SUPPORT_MAX_H264_LEVEL_42)),true)
+libmm-vdec-def += -DMAX_H264_LEVEL_42
 else ifeq ($(call is-board-platform-in-list, $(TARGETS_THAT_SUPPORT_MAX_H264_LEVEL_51)),true)
 libmm-vdec-def += -DMAX_H264_LEVEL_51
 else ifeq ($(call is-board-platform-in-list, $(TARGETS_THAT_SUPPORT_MAX_H264_LEVEL_52)),true)
 libmm-vdec-def += -DMAX_H264_LEVEL_52
 endif
 
+# Hypervisor
+ifneq (,$(filter $(MACHINE), "8x96autogvmquin" "8x96autogvmred"))
+libmm-vdec-def += -D_HYPERVISOR_
+endif
 # ---------------------------------------------------------------------------------
 # 			Make the Shared library (libOmxVdec)
 # ---------------------------------------------------------------------------------
@@ -119,14 +124,15 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE                    := libOmxVdec
 LOCAL_MODULE_TAGS               := optional
+LOCAL_VENDOR_MODULE             := true
 LOCAL_CFLAGS                    := $(libmm-vdec-def) -Werror
 LOCAL_C_INCLUDES                += $(libmm-vdec-inc)
 LOCAL_ADDITIONAL_DEPENDENCIES   := $(libmm-vdec-add-dep)
 
 LOCAL_PRELINK_MODULE    := false
-LOCAL_SHARED_LIBRARIES  := liblog libutils libbinder libcutils libdl libqdutils
+LOCAL_SHARED_LIBRARIES  := liblog libcutils libdl
 
-LOCAL_SHARED_LIBRARIES  += libqdMetaData
+LOCAL_SHARED_LIBRARIES  += libqdMetaData libhypv_intercept
 
 LOCAL_SRC_FILES         := src/frameparser.cpp
 LOCAL_SRC_FILES         += src/h264_utils.cpp
@@ -150,6 +156,7 @@ ifeq ($(call is-board-platform-in-list, $(TARGETS_THAT_NEED_SW_VDEC)),true)
 
 LOCAL_MODULE                  := libOmxSwVdec
 LOCAL_MODULE_TAGS             := optional
+LOCAL_VENDOR_MODULE           := true
 LOCAL_CFLAGS                  := $(libmm-vdec-def)
 LOCAL_C_INCLUDES              += $(libmm-vdec-inc)
 LOCAL_ADDITIONAL_DEPENDENCIES := $(libmm-vdec-add-dep)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2013-2017, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -39,6 +39,11 @@
 #include "platform.h"
 #include "platform_api.h"
 
+#ifdef DYNAMIC_LOG_ENABLED
+#include <log_xml_parser.h>
+#define LOG_MASK HAL_MOD_FILE_HW_INFO
+#include <log_utils.h>
+#endif
 
 struct hardware_info {
     char name[HW_INFO_ARRAY_MAX_SIZE];
@@ -205,6 +210,10 @@ static const snd_device_t tasha_liquid_variant_devices[] = {
     SND_DEVICE_IN_SPEAKER_STEREO_DMIC,
 };
 
+static const snd_device_t tavil_qrd_variant_devices[] = {
+    SND_DEVICE_OUT_SPEAKER
+};
+
 static void  update_hardware_info_8084(struct hardware_info *hw_info, const char *snd_card_name)
 {
     if (!strcmp(snd_card_name, "apq8084-taiko-mtp-snd-card") ||
@@ -246,6 +255,20 @@ static void  update_hardware_info_8084(struct hardware_info *hw_info, const char
         strlcpy(hw_info->dev_extn, "-sbc", sizeof(hw_info->dev_extn));
     } else {
         ALOGW("%s: Not an 8084 device", __func__);
+    }
+}
+
+static void  update_hardware_info_8096(struct hardware_info *hw_info, const char *snd_card_name)
+{
+    if (!strcmp(snd_card_name, "apq8096-tasha-i2c-snd-card")) {
+        ALOGW("%s: Updating hardware info for APQ 8096", __func__);
+        strlcpy(hw_info->type, "mtp", sizeof(hw_info->type));
+        strlcpy(hw_info->name, "apq8096", sizeof(hw_info->name));
+        hw_info->snd_devices = NULL;
+        hw_info->num_snd_devices = 0;
+        strlcpy(hw_info->dev_extn, "", sizeof(hw_info->dev_extn));
+    } else {
+        ALOGW("%s: Not an 8096 device", __func__);
     }
 }
 
@@ -347,6 +370,20 @@ static void  update_hardware_info_msm8998(struct hardware_info *hw_info, const c
     }
 }
 
+static void  update_hardware_info_sdm845(struct hardware_info *hw_info, const char *snd_card_name)
+{
+    if (!strcmp(snd_card_name, "sdm845-tavil-qrd-snd-card")) {
+        strlcpy(hw_info->type, " qrd", sizeof(hw_info->type));
+        strlcpy(hw_info->name, "sdm845", sizeof(hw_info->name));
+        hw_info->snd_devices = (snd_device_t *)tavil_qrd_variant_devices;
+        hw_info->num_snd_devices = ARRAY_SIZE(tavil_qrd_variant_devices);
+        hw_info->is_stereo_spkr = false;
+        strlcpy(hw_info->dev_extn, "-qrd", sizeof(hw_info->dev_extn));
+    } else {
+        ALOGW("%s: Not a sdm845 device", __func__);
+    }
+}
+
 static void  update_hardware_info_8974(struct hardware_info *hw_info, const char *snd_card_name)
 {
     if (!strcmp(snd_card_name, "msm8974-taiko-mtp-snd-card")) {
@@ -440,6 +477,17 @@ static void update_hardware_info_8226(struct hardware_info *hw_info, const char 
     }
 }
 
+static void update_hardware_info_bear(struct hardware_info *hw_info, const char *snd_card_name)
+{
+    if (!strcmp(snd_card_name, "sdm660-snd-card")) {
+        strlcpy(hw_info->name, "sdm660", sizeof(hw_info->name));
+    } else if (!strcmp(snd_card_name, "sdm660-tavil-snd-card")) {
+        strlcpy(hw_info->name, "sdm660", sizeof(hw_info->name));
+    } else {
+        ALOGW("%s: Not an SDM device", __func__);
+    }
+}
+
 void *hw_info_init(const char *snd_card_name)
 {
     struct hardware_info *hw_info;
@@ -473,12 +521,21 @@ void *hw_info_init(const char *snd_card_name)
     } else if(strstr(snd_card_name, "msm8994")) {
         ALOGV("8994 - variant soundcard");
         update_hardware_info_8994(hw_info, snd_card_name);
+    } else if(strstr(snd_card_name, "apq8096")) {
+        ALOGV("8096 - variant soundcard");
+        update_hardware_info_8096(hw_info, snd_card_name);
     } else if(strstr(snd_card_name, "msm8996")) {
         ALOGV("8996 - variant soundcard");
         update_hardware_info_8996(hw_info, snd_card_name);
-    } else if(strstr(snd_card_name, "msm8998")) {
+    } else if((strstr(snd_card_name, "msm8998")) || (strstr(snd_card_name, "apq8098_latv"))) {
         ALOGV("MSM8998 - variant soundcard");
         update_hardware_info_msm8998(hw_info, snd_card_name);
+    } else if(strstr(snd_card_name, "sdm845")) {
+        ALOGV("SDM845 - variant soundcard");
+        update_hardware_info_sdm845(hw_info, snd_card_name);
+    } else if (strstr(snd_card_name, "sdm660")) {
+        ALOGV("Bear - variant soundcard");
+        update_hardware_info_bear(hw_info, snd_card_name);
     } else {
         ALOGE("%s: Unsupported target %s:",__func__, snd_card_name);
         free(hw_info);

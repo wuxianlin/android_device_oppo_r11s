@@ -1,0 +1,26 @@
+##################################################################################
+### VENDOR_EDIT, OPPO All rights reserved.
+###
+### File: - init.oppo.reserve.rc
+###
+### ------------------------------- Revision History: ----------------------------
+### <author>                        <data>       <version>   <desc>
+### ------------------------------------------------------------------------------
+### Runsheng.Pei@PSW.AD.Storage.ReservePartition.1207580, 2017/12/29, Add for new reserve partition
+##################################################################################
+on post-fs-data
+  mkdir /opporeserve/radio 0770 radio system
+  mkdir /opporeserve/system 0770 system system
+  mkdir /opporeserve/system/config 0770 system system
+  mkdir /opporeserve/media 0770 system system
+# mount sdcardfs /dev/block/bootdevice/by-name/opporeserve2 /opporeserve/media reserved_mb=24
+  mkdir /opporeserve/media/dropbox 0770 system system
+  mkdir /opporeserve/media/log 0770 system system
+  mkdir /opporeserve/media/log/usage 0770 system system
+  mkdir /opporeserve/media/log/criticalLog 0770 system system
+  mkdir /opporeserve/media/log/criticalLog/persist 0770 system system
+  mkdir /opporeserve/media/log/criticalLog/cache 0770 system system
+  mkdir /opporeserve/media/engineermode 0770 system system
+  mkdir /opporeserve/media/ColorOS 0770 system system
+  mkdir /opporeserve/media/Camera 0770 system system
+  restorecon_recursive /opporeserve

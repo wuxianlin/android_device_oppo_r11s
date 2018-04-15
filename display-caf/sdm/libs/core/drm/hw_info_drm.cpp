@@ -33,6 +33,7 @@
 #include <drm_master.h>
 #include <drm_res_mgr.h>
 #include <fcntl.h>
+#include <media/msm_sde_rotator.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -52,6 +53,16 @@
 #include <vector>
 
 #include "hw_info_drm.h"
+
+#ifndef DRM_FORMAT_MOD_QCOM_COMPRESSED
+#define DRM_FORMAT_MOD_QCOM_COMPRESSED fourcc_mod_code(QCOM, 1)
+#endif
+#ifndef DRM_FORMAT_MOD_QCOM_DX
+#define DRM_FORMAT_MOD_QCOM_DX fourcc_mod_code(QCOM, 0x2)
+#endif
+#ifndef DRM_FORMAT_MOD_QCOM_TIGHT
+#define DRM_FORMAT_MOD_QCOM_TIGHT fourcc_mod_code(QCOM, 0x4)
+#endif
 
 #define __CLASS__ "HWInfoDRM"
 
@@ -94,7 +105,12 @@ HWResourceInfo *HWInfoDRM::hw_resource_ = nullptr;
 
 HWInfoDRM::HWInfoDRM() {
   DRMLogger::Set(new DRMLoggerImpl());
-  default_mode_ = (DRMLibLoader::GetInstance()->IsLoaded() == false);
+  drm_lib = DRMLibLoader::GetInstance();
+  if (drm_lib == nullptr) {
+    DLOGE("Failed to load DRM Library");
+    return;
+  }
+  default_mode_ = (drm_lib->IsLoaded() == false);
   if (!default_mode_) {
     DRMMaster *drm_master = {};
     int dev_fd = -1;
@@ -104,18 +120,26 @@ HWInfoDRM::HWInfoDRM() {
       return;
     }
     drm_master->GetHandle(&dev_fd);
-    DRMLibLoader::GetInstance()->FuncGetDRMManager()(dev_fd, &drm_mgr_intf_);
+    drm_lib->FuncGetDRMManager()(dev_fd, &drm_mgr_intf_);
   }
 }
 
 HWInfoDRM::~HWInfoDRM() {
-  delete hw_resource_;
-  hw_resource_ = nullptr;
+  if (hw_resource_ != nullptr) {
+    delete hw_resource_;
+    hw_resource_ = nullptr;
+  }
 
   if (drm_mgr_intf_) {
-    DRMLibLoader::GetInstance()->FuncDestroyDRMManager()();
+    if (drm_lib != nullptr) {
+      drm_lib->FuncDestroyDRMManager()();
+    }
     drm_mgr_intf_ = nullptr;
   }
+
+  drm_lib->Destroy();
+  drm_lib = nullptr;
+  DRMMaster::DestroyInstance();
 }
 
 DisplayError HWInfoDRM::GetDynamicBWLimits(HWResourceInfo *hw_resource) {
@@ -238,91 +262,79 @@ void HWInfoDRM::GetSystemInfo(HWResourceInfo *hw_resource) {
   hw_resource->is_src_split = info.has_src_split;
   hw_resource->has_qseed3 = (info.qseed_version == sde_drm::QSEEDVersion::V3);
   hw_resource->num_blending_stages = info.max_blend_stages;
+  hw_resource->smart_dma_rev = (info.smart_dma_rev == sde_drm::SmartDMARevision::V2) ?
+    SmartDMARevision::V2 : SmartDMARevision::V1;
 }
 
 void HWInfoDRM::GetHWPlanesInfo(HWResourceInfo *hw_resource) {
-  DRMPlanesInfo info;
-  drm_mgr_intf_->GetPlanesInfo(&info);
-  for (auto &pipe_obj : info.planes) {
+  DRMPlanesInfo planes;
+  drm_mgr_intf_->GetPlanesInfo(&planes);
+  for (auto &pipe_obj : planes) {
     HWPipeCaps pipe_caps;
     string name = {};
-    switch (pipe_obj.second) {
-      case DRMPlaneType::RGB:
-        pipe_caps.type = kPipeTypeRGB;
-        hw_resource->num_rgb_pipe++;
-        name = "RGB";
+    switch (pipe_obj.second.type) {
+      case DRMPlaneType::DMA:
+        name = "DMA";
+        pipe_caps.type = kPipeTypeDMA;
+        if (!hw_resource->num_dma_pipe) {
+          PopulateSupportedFmts(kHWDMAPipe, pipe_obj.second, hw_resource);
+        }
+        hw_resource->num_dma_pipe++;
         break;
       case DRMPlaneType::VIG:
-        pipe_caps.type = kPipeTypeVIG;
-        hw_resource->num_vig_pipe++;
         name = "VIG";
-        break;
-      case DRMPlaneType::DMA:
-        pipe_caps.type = kPipeTypeDMA;
-        hw_resource->num_dma_pipe++;
-        name = "DMA";
+        pipe_caps.type = kPipeTypeVIG;
+        if (!hw_resource->num_vig_pipe) {
+          PopulatePipeCaps(pipe_obj.second, hw_resource);
+          PopulateSupportedFmts(kHWVIGPipe, pipe_obj.second, hw_resource);
+        }
+        hw_resource->num_vig_pipe++;
         break;
       case DRMPlaneType::CURSOR:
-        pipe_caps.type = kPipeTypeCursor;
-        hw_resource->num_cursor_pipe++;
         name = "CURSOR";
+        pipe_caps.type = kPipeTypeCursor;
+        if (!hw_resource->num_cursor_pipe) {
+          PopulateSupportedFmts(kHWCursorPipe, pipe_obj.second, hw_resource);
+          hw_resource->max_cursor_size = pipe_obj.second.max_linewidth;
+        }
+        hw_resource->num_cursor_pipe++;
         break;
       default:
-        break;
+        continue;  // Not adding any other pipe type
     }
     pipe_caps.id = pipe_obj.first;
-    pipe_caps.max_rects = 1;
-    DLOGI("%s Pipe : Id %d", name.c_str(), pipe_obj.first);
+    pipe_caps.master_pipe_id = pipe_obj.second.master_plane_id;
+    DLOGI("Adding %s Pipe : Id %d", name.c_str(), pipe_obj.first);
     hw_resource->hw_pipes.push_back(std::move(pipe_caps));
   }
+}
 
-  for (auto &pipe_type : info.types) {
-    vector<LayerBufferFormat> supported_sdm_formats = {};
-    for (auto &fmts : pipe_type.second.formats_supported) {
-      GetSDMFormat(fmts.first, fmts.second, &supported_sdm_formats);
+void HWInfoDRM::PopulatePipeCaps(const sde_drm::DRMPlaneTypeInfo &info,
+                                    HWResourceInfo *hw_resource) {
+  hw_resource->max_pipe_width = info.max_linewidth;
+  hw_resource->max_scale_down = info.max_downscale;
+  hw_resource->max_scale_up = info.max_upscale;
+  hw_resource->has_decimation = info.max_horizontal_deci > 1 && info.max_vertical_deci > 1;
+}
+
+void HWInfoDRM::PopulateSupportedFmts(HWSubBlockType sub_blk_type,
+                                      const sde_drm::DRMPlaneTypeInfo  &info,
+                                      HWResourceInfo *hw_resource) {
+  vector<LayerBufferFormat> sdm_formats;
+  FormatsMap &fmts_map = hw_resource->supported_formats_map;
+
+  if (fmts_map.find(sub_blk_type) == fmts_map.end()) {
+    for (auto &fmts : info.formats_supported) {
+      GetSDMFormat(fmts.first, fmts.second, &sdm_formats);
     }
 
-    HWSubBlockType sub_blk_type = kHWSubBlockMax;
-    switch (pipe_type.first) {
-      case DRMPlaneType::RGB:
-        sub_blk_type = kHWRGBPipe;
-        // These properties are per plane but modeled in SDM as system-wide.
-        hw_resource->max_pipe_width = pipe_type.second.max_linewidth;
-        hw_resource->max_scale_down = pipe_type.second.max_downscale;
-        hw_resource->max_scale_up = pipe_type.second.max_upscale;
-        hw_resource->has_decimation =
-            pipe_type.second.max_horizontal_deci > 1 && pipe_type.second.max_vertical_deci > 1;
-        break;
-      case DRMPlaneType::VIG:
-        sub_blk_type = kHWVIGPipe;
-        // These properties are per plane but modeled in SDM as system-wide.
-        hw_resource->max_pipe_width = pipe_type.second.max_linewidth;
-        hw_resource->max_scale_down = pipe_type.second.max_downscale;
-        hw_resource->max_scale_up = pipe_type.second.max_upscale;
-        hw_resource->has_decimation =
-            pipe_type.second.max_horizontal_deci > 1 && pipe_type.second.max_vertical_deci > 1;
-        break;
-      case DRMPlaneType::DMA:
-        sub_blk_type = kHWDMAPipe;
-        break;
-      case DRMPlaneType::CURSOR:
-        sub_blk_type = kHWCursorPipe;
-        hw_resource->max_cursor_size = pipe_type.second.max_linewidth;
-        break;
-      default:
-        break;
-    }
-
-    if (sub_blk_type != kHWSubBlockMax) {
-      hw_resource->supported_formats_map.erase(sub_blk_type);
-      hw_resource->supported_formats_map.insert(make_pair(sub_blk_type, supported_sdm_formats));
-    }
+    fmts_map.insert(make_pair(sub_blk_type, sdm_formats));
   }
 }
 
 void HWInfoDRM::GetWBInfo(HWResourceInfo *hw_resource) {
   HWSubBlockType sub_blk_type = kHWWBIntfOutput;
-  vector<LayerBufferFormat> supported_sdm_formats = {};
+  vector<LayerBufferFormat> supported_sdm_formats;
   sde_drm::DRMDisplayToken token;
 
   // Fake register
@@ -342,12 +354,97 @@ void HWInfoDRM::GetWBInfo(HWResourceInfo *hw_resource) {
   drm_mgr_intf_->UnregisterDisplay(token);
 }
 
-DisplayError HWInfoDRM::GetHWRotatorInfo(HWResourceInfo *hw_resource) {
-  const uint32_t kMaxV4L2Nodes = 64;
-  bool found = false;
+void HWInfoDRM::GetSDMFormat(uint32_t v4l2_format, LayerBufferFormat *sdm_format) {
+  switch (v4l2_format) {
+    case SDE_PIX_FMT_ARGB_8888:         *sdm_format = kFormatARGB8888;                 break;
+    case SDE_PIX_FMT_RGBA_8888:         *sdm_format = kFormatRGBA8888;                 break;
+    case SDE_PIX_FMT_BGRA_8888:         *sdm_format = kFormatBGRA8888;                 break;
+    case SDE_PIX_FMT_RGBX_8888:         *sdm_format = kFormatRGBX8888;                 break;
+    case SDE_PIX_FMT_BGRX_8888:         *sdm_format = kFormatBGRX8888;                 break;
+    case SDE_PIX_FMT_RGBA_5551:         *sdm_format = kFormatRGBA5551;                 break;
+    case SDE_PIX_FMT_RGBA_4444:         *sdm_format = kFormatRGBA4444;                 break;
+    case SDE_PIX_FMT_RGB_888:           *sdm_format = kFormatRGB888;                   break;
+    case SDE_PIX_FMT_BGR_888:           *sdm_format = kFormatBGR888;                   break;
+    case SDE_PIX_FMT_RGB_565:           *sdm_format = kFormatRGB565;                   break;
+    case SDE_PIX_FMT_BGR_565:           *sdm_format = kFormatBGR565;                   break;
+    case SDE_PIX_FMT_Y_CB_CR_H2V2:      *sdm_format = kFormatYCbCr420Planar;           break;
+    case SDE_PIX_FMT_Y_CR_CB_H2V2:      *sdm_format = kFormatYCrCb420Planar;           break;
+    case SDE_PIX_FMT_Y_CR_CB_GH2V2:     *sdm_format = kFormatYCrCb420PlanarStride16;   break;
+    case SDE_PIX_FMT_Y_CBCR_H2V2:       *sdm_format = kFormatYCbCr420SemiPlanar;       break;
+    case SDE_PIX_FMT_Y_CRCB_H2V2:       *sdm_format = kFormatYCrCb420SemiPlanar;       break;
+    case SDE_PIX_FMT_Y_CBCR_H1V2:       *sdm_format = kFormatYCbCr422H1V2SemiPlanar;   break;
+    case SDE_PIX_FMT_Y_CRCB_H1V2:       *sdm_format = kFormatYCrCb422H1V2SemiPlanar;   break;
+    case SDE_PIX_FMT_Y_CBCR_H2V1:       *sdm_format = kFormatYCbCr422H2V1SemiPlanar;   break;
+    case SDE_PIX_FMT_Y_CRCB_H2V1:       *sdm_format = kFormatYCrCb422H2V1SemiPlanar;   break;
+    case SDE_PIX_FMT_YCBYCR_H2V1:       *sdm_format = kFormatYCbCr422H2V1Packed;       break;
+    case SDE_PIX_FMT_Y_CBCR_H2V2_VENUS: *sdm_format = kFormatYCbCr420SemiPlanarVenus;  break;
+    case SDE_PIX_FMT_Y_CRCB_H2V2_VENUS: *sdm_format = kFormatYCrCb420SemiPlanarVenus;  break;
+    case SDE_PIX_FMT_RGBA_8888_UBWC:    *sdm_format = kFormatRGBA8888Ubwc;             break;
+    case SDE_PIX_FMT_RGBX_8888_UBWC:    *sdm_format = kFormatRGBX8888Ubwc;             break;
+    case SDE_PIX_FMT_RGB_565_UBWC:      *sdm_format = kFormatBGR565Ubwc;               break;
+    case SDE_PIX_FMT_Y_CBCR_H2V2_UBWC:  *sdm_format = kFormatYCbCr420SPVenusUbwc;      break;
+    case SDE_PIX_FMT_RGBA_1010102:      *sdm_format = kFormatRGBA1010102;              break;
+    case SDE_PIX_FMT_ARGB_2101010:      *sdm_format = kFormatARGB2101010;              break;
+    case SDE_PIX_FMT_RGBX_1010102:      *sdm_format = kFormatRGBX1010102;              break;
+    case SDE_PIX_FMT_XRGB_2101010:      *sdm_format = kFormatXRGB2101010;              break;
+    case SDE_PIX_FMT_BGRA_1010102:      *sdm_format = kFormatBGRA1010102;              break;
+    case SDE_PIX_FMT_ABGR_2101010:      *sdm_format = kFormatABGR2101010;              break;
+    case SDE_PIX_FMT_BGRX_1010102:      *sdm_format = kFormatBGRX1010102;              break;
+    case SDE_PIX_FMT_XBGR_2101010:      *sdm_format = kFormatXBGR2101010;              break;
+    case SDE_PIX_FMT_RGBA_1010102_UBWC: *sdm_format = kFormatRGBA1010102Ubwc;          break;
+    case SDE_PIX_FMT_RGBX_1010102_UBWC: *sdm_format = kFormatRGBX1010102Ubwc;          break;
+    case SDE_PIX_FMT_Y_CBCR_H2V2_P010:  *sdm_format = kFormatYCbCr420P010;             break;
+    case SDE_PIX_FMT_Y_CBCR_H2V2_TP10_UBWC: *sdm_format = kFormatYCbCr420TP10Ubwc;     break;
+    /* TODO(user) : enable when defined in uapi
+      case SDE_PIX_FMT_Y_CBCR_H2V2_P010_UBWC: *sdm_format = kFormatYCbCr420P010Ubwc;     break; */
+    default: *sdm_format = kFormatInvalid;
+  }
+}
 
-  for (uint32_t i = 0; (i < kMaxV4L2Nodes) && (false == found); i++) {
-    string path = "/sys/class/video4linux/video" + to_string(i) + "/name";
+void HWInfoDRM::GetRotatorFormatsForType(int fd, uint32_t type,
+                                         vector<LayerBufferFormat> *supported_formats) {
+  struct v4l2_fmtdesc fmtdesc = {};
+  fmtdesc.type = type;
+  while (!Sys::ioctl_(fd, static_cast<int>(VIDIOC_ENUM_FMT), &fmtdesc)) {
+    LayerBufferFormat sdm_format = kFormatInvalid;
+    GetSDMFormat(fmtdesc.pixelformat, &sdm_format);
+    if (sdm_format != kFormatInvalid) {
+      supported_formats->push_back(sdm_format);
+    }
+    fmtdesc.index++;
+  }
+}
+
+DisplayError HWInfoDRM::GetRotatorSupportedFormats(uint32_t v4l2_index,
+                                                   HWResourceInfo *hw_resource) {
+  string path = "/dev/video" + to_string(v4l2_index);
+  int fd = Sys::open_(path.c_str(), O_RDONLY);
+  if (fd < 0) {
+    DLOGE("Failed to open %s with error %d", path.c_str(), errno);
+    return kErrorNotSupported;
+  }
+
+  vector<LayerBufferFormat> supported_formats = {};
+  GetRotatorFormatsForType(fd, V4L2_BUF_TYPE_VIDEO_OUTPUT, &supported_formats);
+  hw_resource->supported_formats_map.erase(kHWRotatorInput);
+  hw_resource->supported_formats_map.insert(make_pair(kHWRotatorInput, supported_formats));
+
+  supported_formats = {};
+  GetRotatorFormatsForType(fd, V4L2_BUF_TYPE_VIDEO_CAPTURE, &supported_formats);
+  hw_resource->supported_formats_map.erase(kHWRotatorOutput);
+  hw_resource->supported_formats_map.insert(make_pair(kHWRotatorOutput, supported_formats));
+
+  Sys::close_(fd);
+
+  return kErrorNone;
+}
+
+DisplayError HWInfoDRM::GetHWRotatorInfo(HWResourceInfo *hw_resource) {
+  string v4l2_path = "/sys/class/video4linux/video";
+  const uint32_t kMaxV4L2Nodes = 64;
+
+  for (uint32_t i = 0; i < kMaxV4L2Nodes; i++) {
+    string path = v4l2_path + to_string(i) + "/name";
     Sys::fstream fs(path, fstream::in);
     if (!fs.is_open()) {
       continue;
@@ -359,13 +456,34 @@ DisplayError HWInfoDRM::GetHWRotatorInfo(HWResourceInfo *hw_resource) {
       hw_resource->hw_rot_info.num_rotator++;
       hw_resource->hw_rot_info.type = HWRotatorInfo::ROT_TYPE_V4L2;
       hw_resource->hw_rot_info.has_downscale = true;
+      GetRotatorSupportedFormats(i, hw_resource);
+
+      string caps_path = v4l2_path + to_string(i) + "/device/caps";
+      Sys::fstream caps_fs(caps_path, fstream::in);
+
+      if (caps_fs.is_open()) {
+        string caps;
+        while (Sys::getline_(caps_fs, caps)) {
+          const string downscale_compression = "downscale_compression=";
+          const string min_downscale = "min_downscale=";
+          if (caps.find(downscale_compression) != string::npos) {
+            hw_resource->hw_rot_info.downscale_compression =
+              std::stoi(string(caps, downscale_compression.length()));
+          } else if (caps.find(min_downscale) != string::npos) {
+            hw_resource->hw_rot_info.min_downscale =
+              std::stof(string(caps, min_downscale.length()));
+          }
+        }
+      }
+
       // We support only 1 rotator
-      found = true;
+      break;
     }
   }
 
-  DLOGI("V4L2 Rotator: Count = %d, Downscale = %d", hw_resource->hw_rot_info.num_rotator,
-        hw_resource->hw_rot_info.has_downscale);
+  DLOGI("V4L2 Rotator: Count = %d, Downscale = %d, Min_downscale = %f, Downscale_compression = %d",
+        hw_resource->hw_rot_info.num_rotator, hw_resource->hw_rot_info.has_downscale,
+        hw_resource->hw_rot_info.min_downscale, hw_resource->hw_rot_info.downscale_compression);
 
   return kErrorNone;
 }
@@ -374,79 +492,83 @@ void HWInfoDRM::GetSDMFormat(uint32_t drm_format, uint64_t drm_format_modifier,
                              vector<LayerBufferFormat> *sdm_formats) {
   vector<LayerBufferFormat> &fmts(*sdm_formats);
   switch (drm_format) {
-    case DRM_FORMAT_ARGB8888:
+    case DRM_FORMAT_BGRA8888:
       fmts.push_back(kFormatARGB8888);
       break;
-    case DRM_FORMAT_RGBA8888:
+    case DRM_FORMAT_ABGR8888:
       fmts.push_back(drm_format_modifier ? kFormatRGBA8888Ubwc : kFormatRGBA8888);
       break;
-    case DRM_FORMAT_BGRA8888:
+    case DRM_FORMAT_ARGB8888:
       fmts.push_back(kFormatBGRA8888);
       break;
-    case DRM_FORMAT_XRGB8888:
+    case DRM_FORMAT_BGRX8888:
       fmts.push_back(kFormatXRGB8888);
       break;
-    case DRM_FORMAT_RGBX8888:
+    case DRM_FORMAT_XBGR8888:
       fmts.push_back(drm_format_modifier ? kFormatRGBX8888Ubwc : kFormatRGBX8888);
       break;
-    case DRM_FORMAT_BGRX8888:
+    case DRM_FORMAT_XRGB8888:
       fmts.push_back(kFormatBGRX8888);
       break;
-    case DRM_FORMAT_RGBA5551:
+    case DRM_FORMAT_ABGR1555:
       fmts.push_back(kFormatRGBA5551);
       break;
-    case DRM_FORMAT_RGBA4444:
+    case DRM_FORMAT_ABGR4444:
       fmts.push_back(kFormatRGBA4444);
       break;
-    case DRM_FORMAT_RGB888:
+    case DRM_FORMAT_BGR888:
       fmts.push_back(kFormatRGB888);
       break;
-    case DRM_FORMAT_BGR888:
+    case DRM_FORMAT_RGB888:
       fmts.push_back(kFormatBGR888);
       break;
-    case DRM_FORMAT_RGB565:
-      fmts.push_back(drm_format_modifier ? kFormatBGR565Ubwc : kFormatBGR565);
-      break;
     case DRM_FORMAT_BGR565:
+      fmts.push_back(drm_format_modifier ? kFormatBGR565Ubwc : kFormatRGB565);
+      break;
+    case DRM_FORMAT_RGB565:
       fmts.push_back(kFormatBGR565);
       break;
-    case DRM_FORMAT_RGBA1010102:
+    case DRM_FORMAT_ABGR2101010:
       fmts.push_back(drm_format_modifier ? kFormatRGBA1010102Ubwc : kFormatRGBA1010102);
       break;
-    case DRM_FORMAT_ARGB2101010:
+    case DRM_FORMAT_BGRA1010102:
       fmts.push_back(kFormatARGB2101010);
       break;
-    case DRM_FORMAT_RGBX1010102:
+    case DRM_FORMAT_XBGR2101010:
       fmts.push_back(drm_format_modifier ? kFormatRGBX1010102Ubwc : kFormatRGBX1010102);
       break;
-    case DRM_FORMAT_XRGB2101010:
+    case DRM_FORMAT_BGRX1010102:
       fmts.push_back(kFormatXRGB2101010);
       break;
-    case DRM_FORMAT_BGRA1010102:
+    case DRM_FORMAT_ARGB2101010:
       fmts.push_back(kFormatBGRA1010102);
       break;
-    case DRM_FORMAT_ABGR2101010:
+    case DRM_FORMAT_RGBA1010102:
       fmts.push_back(kFormatABGR2101010);
       break;
-    case DRM_FORMAT_BGRX1010102:
+    case DRM_FORMAT_XRGB2101010:
       fmts.push_back(kFormatBGRX1010102);
       break;
-    case DRM_FORMAT_XBGR2101010:
+    case DRM_FORMAT_RGBX1010102:
       fmts.push_back(kFormatXBGR2101010);
       break;
-    /* case DRM_FORMAT_P010:
-         fmts.push_back(drm_format_modifier == (DRM_FORMAT_MOD_QCOM_COMPRESSED |
-       DRM_FORMAT_MOD_QCOM_TIGHT) ?
-         kFormatYCbCr420TP10Ubwc : kFormatYCbCr420P010; */
     case DRM_FORMAT_YVU420:
       fmts.push_back(kFormatYCrCb420PlanarStride16);
       break;
     case DRM_FORMAT_NV12:
-      if (drm_format_modifier) {
-        fmts.push_back(kFormatYCbCr420SPVenusUbwc);
+      if (drm_format_modifier == (DRM_FORMAT_MOD_QCOM_COMPRESSED |
+          DRM_FORMAT_MOD_QCOM_DX | DRM_FORMAT_MOD_QCOM_TIGHT)) {
+          fmts.push_back(kFormatYCbCr420TP10Ubwc);
+      } else if (drm_format_modifier == (DRM_FORMAT_MOD_QCOM_COMPRESSED |
+                                         DRM_FORMAT_MOD_QCOM_DX)) {
+        fmts.push_back(kFormatYCbCr420P010Ubwc);
+      } else if (drm_format_modifier == DRM_FORMAT_MOD_QCOM_COMPRESSED) {
+         fmts.push_back(kFormatYCbCr420SPVenusUbwc);
+      } else if (drm_format_modifier == DRM_FORMAT_MOD_QCOM_DX) {
+         fmts.push_back(kFormatYCbCr420P010);
       } else {
-        fmts.push_back(kFormatYCbCr420SemiPlanarVenus);
-        fmts.push_back(kFormatYCbCr420SemiPlanar);
+         fmts.push_back(kFormatYCbCr420SemiPlanarVenus);
+         fmts.push_back(kFormatYCbCr420SemiPlanar);
       }
       break;
     case DRM_FORMAT_NV21:

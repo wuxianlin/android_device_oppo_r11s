@@ -41,6 +41,12 @@
 #include "platform_api.h"
 #include "sound_trigger_prop_intf.h"
 
+#ifdef DYNAMIC_LOG_ENABLED
+#include <log_xml_parser.h>
+#define LOG_MASK HAL_MOD_FILE_SND_TRIGGER
+#include <log_utils.h>
+#endif
+
 #define XSTR(x) STR(x)
 #define STR(x) #x
 #define MAX_LIBRARY_PATH 100
@@ -71,7 +77,7 @@ static void get_library_path(char *lib_path)
 static void get_library_path(char *lib_path)
 {
     snprintf(lib_path, MAX_LIBRARY_PATH,
-             "/system/vendor/lib/hw/sound_trigger.primary.%s.so",
+             "/vendor/lib/hw/sound_trigger.primary.%s.so",
              XSTR(SOUND_TRIGGER_PLATFORM_NAME));
 }
 #endif
@@ -89,6 +95,15 @@ get_sound_trigger_info(int capture_handle)
             return st_ses_info;
     }
     return NULL;
+}
+
+static void stdev_snd_mon_cb(void * stream __unused, struct str_parms * parms)
+{
+    if (!parms)
+        return;
+
+    audio_extn_sound_trigger_set_parameters(NULL, parms);
+    return;
 }
 
 int audio_hw_call_back(sound_trigger_event_type_t event,
@@ -420,6 +435,7 @@ int audio_extn_sound_trigger_init(struct audio_device *adev)
 
     st_dev->adev = adev;
     list_init(&st_dev->st_ses_list);
+    audio_extn_snd_mon_register_listener(st_dev, stdev_snd_mon_cb);
 
     return 0;
 
@@ -436,6 +452,7 @@ void audio_extn_sound_trigger_deinit(struct audio_device *adev)
 {
     ALOGI("%s: Enter", __func__);
     if (st_dev && (st_dev->adev == adev) && st_dev->lib_handle) {
+        audio_extn_snd_mon_unregister_listener(st_dev);
         dlclose(st_dev->lib_handle);
         free(st_dev);
         st_dev = NULL;

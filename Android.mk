@@ -1,5 +1,6 @@
 #
 # Copyright (C) 2016 The CyanogenMod Project
+# Copyright (C) 2017-2018 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -37,15 +38,11 @@ include device/oppo/r11s/kernel/AndroidKernel.mk
 
 # Create a link for the WCNSS config file, which ends up as a writable
 # version in /data/misc/wifi
-$(shell mkdir -p $(TARGET_OUT_ETC)/firmware/wlan/qca_cld; \
+$(shell mkdir -p $(TARGET_OUT_VENDOR)/firmware/wlan/qca_cld; \
 	ln -sf /persist/wlan_mac.bin \
-	    $(TARGET_OUT_ETC)/firmware/wlan/qca_cld/wlan_mac.bin; \
+	    $(TARGET_OUT_VENDOR)/firmware/wlan/qca_cld/wlan_mac.bin; \
 	ln -sf /persist/WCNSS_qcom_cfg.ini \
-	    $(TARGET_OUT_ETC)/firmware/wlan/qca_cld/WCNSS_qcom_cfg.ini)
-
-$(shell mkdir -p $(TARGET_OUT)/lib/modules; \
-    ln -sf /system/lib/modules/qca_cld3/qca_cld3_wlan.ko \
-        $(TARGET_OUT)/lib/modules/wlan.ko)
+	    $(TARGET_OUT_VENDOR)/firmware/wlan/qca_cld/WCNSS_qcom_cfg.ini)
 
 # Create symbolic links for msadp
 $(shell mkdir -p $(TARGET_OUT_VENDOR)/firmware; \

@@ -42,10 +42,12 @@
 
 namespace sdm {
 
-int HWCDisplayVirtual::Create(CoreInterface *core_intf, HWCCallbacks *callbacks, uint32_t width,
+int HWCDisplayVirtual::Create(CoreInterface *core_intf, HWCBufferAllocator *buffer_allocator,
+                              HWCCallbacks *callbacks, uint32_t width,
                               uint32_t height, int32_t *format, HWCDisplay **hwc_display) {
   int status = 0;
-  HWCDisplayVirtual *hwc_display_virtual = new HWCDisplayVirtual(core_intf, callbacks);
+  HWCDisplayVirtual *hwc_display_virtual = new HWCDisplayVirtual(core_intf, buffer_allocator,
+                                                                 callbacks);
 
   // TODO(user): Populate format correctly
   DLOGI("Creating virtual display: w: %d h:%d format:0x%x", width, height, *format);
@@ -89,9 +91,10 @@ void HWCDisplayVirtual::Destroy(HWCDisplay *hwc_display) {
   delete hwc_display;
 }
 
-HWCDisplayVirtual::HWCDisplayVirtual(CoreInterface *core_intf, HWCCallbacks *callbacks)
+HWCDisplayVirtual::HWCDisplayVirtual(CoreInterface *core_intf, HWCBufferAllocator *buffer_allocator,
+                                     HWCCallbacks *callbacks)
     : HWCDisplay(core_intf, callbacks, kVirtual, HWC_DISPLAY_VIRTUAL, false, NULL,
-                 DISPLAY_CLASS_VIRTUAL) {
+                 DISPLAY_CLASS_VIRTUAL, buffer_allocator) {
 }
 
 int HWCDisplayVirtual::Init() {
@@ -120,6 +123,11 @@ HWC2::Error HWCDisplayVirtual::Validate(uint32_t *out_num_types, uint32_t *out_n
 
   BuildLayerStack();
   layer_stack_.output_buffer = output_buffer_;
+
+  if (layer_set_.empty()) {
+    DLOGI("Skipping Validate and Commit");
+    return status;
+  }
   status = PrepareLayerStack(out_num_types, out_num_requests);
   return status;
 }
@@ -128,6 +136,7 @@ HWC2::Error HWCDisplayVirtual::Present(int32_t *out_retire_fence) {
   auto status = HWC2::Error::None;
   if (display_paused_) {
     DisplayError error = display_intf_->Flush();
+    validated_.reset();
     if (error != kErrorNone) {
       DLOGE("Flush failed. Error = %d", error);
     }
@@ -135,10 +144,18 @@ HWC2::Error HWCDisplayVirtual::Present(int32_t *out_retire_fence) {
     status = HWCDisplay::CommitLayerStack();
     if (status == HWC2::Error::None) {
       if (dump_frame_count_ && !flush_ && dump_output_layer_) {
-        if (output_handle_ && output_handle_->base) {
+        if (output_handle_) {
           BufferInfo buffer_info;
           const private_handle_t *output_handle =
               reinterpret_cast<const private_handle_t *>(output_buffer_->buffer_id);
+          DisplayError error = kErrorNone;
+          if (!output_handle->base) {
+            error = buffer_allocator_->MapBuffer(output_handle, -1);
+            if (error != kErrorNone) {
+              DLOGE("Failed to map output buffer, error = %d", error);
+              return HWC2::Error::BadParameter;
+            }
+          }
           buffer_info.buffer_config.width = static_cast<uint32_t>(output_handle->width);
           buffer_info.buffer_config.height = static_cast<uint32_t>(output_handle->height);
           buffer_info.buffer_config.format =
@@ -146,6 +163,13 @@ HWC2::Error HWCDisplayVirtual::Present(int32_t *out_retire_fence) {
           buffer_info.alloc_buffer_info.size = static_cast<uint32_t>(output_handle->size);
           DumpOutputBuffer(buffer_info, reinterpret_cast<void *>(output_handle->base),
                            layer_stack_.retire_fence_fd);
+
+          int release_fence = -1;
+          error = buffer_allocator_->UnmapBuffer(output_handle, &release_fence);
+          if (error != kErrorNone) {
+            DLOGE("Failed to unmap buffer, error = %d", error);
+            return HWC2::Error::BadParameter;
+          }
         }
       }
 
@@ -205,8 +229,7 @@ HWC2::Error HWCDisplayVirtual::SetOutputBuffer(buffer_handle_t buf, int32_t rele
     output_buffer_->flags.secure = 0;
     output_buffer_->flags.video = 0;
 
-    const MetaData_t *meta_data = reinterpret_cast<MetaData_t *>(output_handle->base_metadata);
-    if (meta_data && SetCSC(meta_data, &output_buffer_->color_metadata) != kErrorNone) {
+    if (sdm::SetCSC(output_handle, &output_buffer_->color_metadata) != kErrorNone) {
       return HWC2::Error::BadParameter;
     }
 

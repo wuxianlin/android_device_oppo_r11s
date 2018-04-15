@@ -45,9 +45,8 @@ inline Type ALIGN(Type x, Type align) {
 
 class HWCBufferAllocator : public BufferAllocator {
  public:
-  HWCBufferAllocator();
-  ~HWCBufferAllocator();
-
+  DisplayError Init();
+  DisplayError Deinit();
   DisplayError AllocateBuffer(BufferInfo *buffer_info);
   DisplayError FreeBuffer(BufferInfo *buffer_info);
   uint32_t GetBufferSize(BufferInfo *buffer_info);
@@ -57,13 +56,20 @@ class HWCBufferAllocator : public BufferAllocator {
                                 int *aligned_width, int *aligned_height);
   DisplayError GetAllocatedBufferInfo(const BufferConfig &buffer_config,
                                       AllocatedBufferInfo *allocated_buffer_info);
-  int SetBufferInfo(LayerBufferFormat format, int *target, int *flags);
+  DisplayError GetBufferLayout(const AllocatedBufferInfo &buf_info,
+                               uint32_t stride[4], uint32_t offset[4],
+                               uint32_t *num_planes);
+  int SetBufferInfo(LayerBufferFormat format, int *target, uint64_t *flags);
+  DisplayError MapBuffer(const private_handle_t *handle, int acquire_fence);
+  DisplayError UnmapBuffer(const private_handle_t *handle, int* release_fence);
 
  private:
   gralloc1_device_t *gralloc_device_ = nullptr;
   const hw_module_t *module_;
   GRALLOC1_PFN_RELEASE ReleaseBuffer_ = nullptr;
   GRALLOC1_PFN_PERFORM Perform_ = nullptr;
+  GRALLOC1_PFN_LOCK Lock_ = nullptr;
+  GRALLOC1_PFN_UNLOCK Unlock_ = nullptr;
 };
 
 }  // namespace sdm
