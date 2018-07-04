@@ -292,10 +292,3 @@
 
 # Kmsg device
 /dev/kmsg                                               0620   root       system
-
-
-#ifdef VENDOR_EDIT
-#liangkun@Swdp.shanghai 2017.05.18, change default owner for /dev/kneuron node
-/dev/kneuron              0660   system     system
-#endif /* VENDOR_EDIT */
-

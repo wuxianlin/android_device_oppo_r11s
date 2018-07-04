@@ -2,10 +2,11 @@
 # system.prop for R11s
 #
 persist.power.useautobrightadj=true
-ro.telephony.default_network=22,18
+ro.telephony.default_network=22,22
 persist.radio.multisim.config=dsds
 gsm.lte.ca.support=1
 persist.dbg.vt_avail_ovr=1
+persist.dbg.volte_avail_ovr=1
 ro.qualcomm.foss=1
 ro.qualcomm.display.paneltype=1
 config.foss.xml=1
@@ -26,7 +27,6 @@ ro.vendor.sensors.wu=false
 persist.bluetooth.disableabsvol=true
 persist.bt.iot.enablelogging=true
 persist.bt.soc.alwayson=true
-persist.rcs.supported=0
 #
 # system.prop for sdm660
 #

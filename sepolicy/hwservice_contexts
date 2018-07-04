@@ -1,0 +1,4 @@
+vendor.oppo.hardware.ktv::IKtv     u:object_r:hal_ktv_hwservice:s0
+android.hardware.camera.oppopostproc::ICameraPostProc           u:object_r:hal_camera_hwservice:s0
+vendor.oppo.hardware.biometrics.fingerprint::IBiometricsFingerprint     u:object_r:hal_fingerprint_hwservice:s0
+vendor.oppo.hardware.biometrics.fingerprintpay::IFingerprintPay     u:object_r:hal_fingerprintpay_hwservice:s0

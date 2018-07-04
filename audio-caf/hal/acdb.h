@@ -30,7 +30,7 @@
 #ifdef LINUX_ENABLED
 #define PLATFORM_INFO_XML_PATH "/etc/audio_platform_info.xml"
 #else
-#define PLATFORM_INFO_XML_PATH "/vendor/etc/audio_platform_info.xml"
+#define PLATFORM_INFO_XML_PATH "/vendor/etc/audio_platform_info_oppo.xml"
 #endif
 
 /* Audio calibration related functions */

@@ -378,9 +378,5 @@ Only the three quirks included above are recognized at this point:
             <Limit name="concurrent-instances" max="6" />
         </MediaCodec>
     </Decoders>
-<!--#ifdef VENDOR_EDIT-->
-<!--//XingLong.Tang@PSW.MM.MediaServer.Log, 2017/10/12, Add for ffmpeg integration-->
-    <Include href="media_codecs_ffmpeg.xml" />
-<!--#endif /* VENDOR_EDIT */-->
     <Include href="media_codecs_google_video.xml" />
 </MediaCodecs>

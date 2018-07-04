@@ -73,7 +73,7 @@ PRODUCT_SHIPPING_API_LEVEL := 25
 TARGET_SCREEN_HEIGHT := 2160
 TARGET_SCREEN_WIDTH := 1080
 
-# Haters gonna hate..
+# Characteristics
 PRODUCT_CHARACTERISTICS := default
 
 # Alipay & WeChat fingerprint payment
@@ -112,7 +112,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/audio_tuning_mixer.txt:$(TARGET_COPY_OUT_VENDOR)/etc/audio_tuning_mixer.txt \
     $(LOCAL_PATH)/audio/audio_effects.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.conf \
     $(LOCAL_PATH)/audio/audio_output_policy.conf:$(TARGET_COPY_OUT_VENDOR)/etc/audio_output_policy.conf \
-    $(LOCAL_PATH)/audio/audio_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_platform_info.xml \
+    $(LOCAL_PATH)/audio/audio_platform_info_oppo.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_platform_info_oppo.xml \
     $(LOCAL_PATH)/audio/audio_platform_info_extcodec.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_platform_info_extcodec.xml \
     $(LOCAL_PATH)/audio/audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_policy_configuration.xml \
     $(LOCAL_PATH)/audio/listen_platform_info.xml:$(TARGET_COPY_OUT_VENDOR)/etc/listen_platform_info.xml \
@@ -195,7 +195,6 @@ PRODUCT_PACKAGES += \
 
 # Display calibration
 PRODUCT_PACKAGES += \
-    OPPO_OLED_AD_calib.cfg \
     FOSSConfig.xml \
     qdcm_calib_data_oppo17021samsung_sofeg01_s_1080p_cmd_mode_dsi_panel.xml \
     qdcm_calib_data_oppo17011samsung_sofeg01_s_1080p_cmd_mode_dsi_panel.xml
@@ -211,8 +210,8 @@ PRODUCT_PACKAGES += \
     android.hardware.drm@1.0-service.widevine
 
 # Fingerprint
-PRODUCT_PACKAGES += \
-    android.hardware.biometrics.fingerprint@2.1-service
+#PRODUCT_PACKAGES += \
+#    android.hardware.biometrics.fingerprint@2.1-service
 
 # Gatekeeper
 PRODUCT_PACKAGES += \
@@ -229,6 +228,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/gps/etc/flp.conf:$(TARGET_COPY_OUT_VENDOR)/etc/flp.conf \
+    $(LOCAL_PATH)/gps/etc/gps.conf:$(TARGET_COPY_OUT_VENDOR)/etc/gps.conf \
     $(LOCAL_PATH)/gps/etc/izat.conf:$(TARGET_COPY_OUT_VENDOR)/etc/izat.conf \
     $(LOCAL_PATH)/gps/etc/sap.conf:$(TARGET_COPY_OUT_VENDOR)/etc/sap.conf \
     $(LOCAL_PATH)/gps/etc/xtwifi.conf:$(TARGET_COPY_OUT_VENDOR)/etc/xtwifi.conf

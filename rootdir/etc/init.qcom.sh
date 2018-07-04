@@ -461,17 +461,10 @@ buildvariant=`getprop ro.build.type`
 case "$buildvariant" in
     "userdebug" | "eng")
         #set default loglevel to KERN_INFO
-        #ifdef VENDOR_EDIT
-        #Hui.Fan@SWDP.BSP.Kernel, 2017-3-22, delete and leave it to init rc
-        #echo "6 6 1 7" > /proc/sys/kernel/printk
-        #endif
+        echo "6 6 1 7" > /proc/sys/kernel/printk
         ;;
     *)
         #set default loglevel to KERN_WARNING
-        #set default loglevel to KERN_WARNING
-        #ifdef VENDOR_EDIT
-        #Hui.Fan@SWDP.BSP.Kernel, 2017-3-22, delete and leave it to init rc
-        #echo "4 4 1 4" > /proc/sys/kernel/printk
-        #endif
+        echo "4 4 1 4" > /proc/sys/kernel/printk
         ;;
 esac

@@ -37,6 +37,14 @@ vendor/etc/acdbdata/17021/Bluetooth_cal.acdb
 vendor/etc/acdbdata/17021/Speaker_cal.acdb
 vendor/etc/acdbdata/17021/Handset_cal.acdb
 
+# Audio KTV
+vendor/etc/init/vendor.oppo.hardware.ktv@1.0-service.rc
+vendor/lib64/hw/vendor.oppo.hardware.ktv@1.0-impl.so
+vendor/lib/hw/vendor.oppo.hardware.ktv@1.0-impl.so
+vendor/bin/hw/vendor.oppo.hardware.ktv@1.0-service
+lib64/vendor.oppo.hardware.ktv@1.0.so:vendor/lib64/vendor.oppo.hardware.ktv@1.0.so
+lib/vendor.oppo.hardware.ktv@1.0.so:vendor/lib/vendor.oppo.hardware.ktv@1.0.so
+
 # Camera
 bin/mm-qcamera-daemon:vendor/bin/mm-qcamera-daemon
 etc/camera/cp/CPCalibrationData.bin:vendor/etc/camera/cp/CPCalibrationData.bin
@@ -913,6 +921,9 @@ vendor/lib64/libalipay_factory.so
 vendor/lib/libalipay_factory.so
 vendor/etc/init/vendor.oppo.hardware.biometrics.fingerprint@2.1-service.rc
 vendor/bin/hw/vendor.oppo.hardware.biometrics.fingerprint@2.1-service
+framework/vendor.oppo.hardware.biometrics.fingerprint-V2.1-java.jar:vendor/framework/vendor.oppo.hardware.biometrics.fingerprint-V2.1-java.jar
+lib/vendor.oppo.hardware.biometrics.fingerprint@2.1.so:vendor/lib/vendor.oppo.hardware.biometrics.fingerprint@2.1.so
+lib64/vendor.oppo.hardware.biometrics.fingerprint@2.1.so:vendor/lib64/vendor.oppo.hardware.biometrics.fingerprint@2.1.so
 
 # Firmware
 vendor/etc/hbtp/hbtpcfg2.dat
@@ -957,3 +968,16 @@ vendor/lib/modules/qca_cld3/qca_cld3_wlan.ko
 # WLAN Firmware
 vendor/etc/wifi/bdwlan_17011.bin
 vendor/etc/wifi/bdwlan_17021.bin
+
+# XXX
+vendor/lib/hw/audio.primary.sdm660.so
+vendor/lib/libaudioEngineerTest.so
+vendor/lib/libMMListParser.so
+vendor/lib/libVoiceScenceDiscern.so
+vendor/lib64/hw/audio.primary.sdm660.so
+vendor/lib64/libaudioEngineerTest.so
+vendor/lib64/libMMListParser.so
+vendor/lib64/libVoiceScenceDiscern.so
+vendor/lib/libril.so
+vendor/lib64/libril.so
+

@@ -123,14 +123,14 @@ void vendor_load_properties() {
                 property_override_dual("ro.product.device", "ro.vendor.product.device", "R11s");
                 property_override("ro.product.name", "R11s");
                 property_override("ro.build.product", "R11s");
-                property_set("ro.rf_version", "TDD_FDD_Ch_A_17011");
+                property_set("ro.rf_version", "TDD_FDD_CH_A_17011");
             } else if (strstr(operator_name, "2")) {
                 property_override_dual("ro.product.model", "ro.vendor.product.model", "OPPO R11st");
                 property_set("ro.separate.soft", "17013");
                 property_override_dual("ro.product.device", "ro.vendor.product.device", "R11s");
                 property_override("ro.product.name", "R11st");
                 property_override("ro.build.product", "R11st");
-                property_set("ro.rf_version", "TDD_FDD_Ch_17013");
+                property_set("ro.rf_version", "TDD_FDD_CH_17013");
             }
             property_set("ro.audio.customplatform", "17011");
             property_set("ro.power_profile.override", "zzz_power_profile_17011");
@@ -141,14 +141,14 @@ void vendor_load_properties() {
                 property_override_dual("ro.product.device", "ro.vendor.product.device", "R11sPlus");
                 property_override("ro.product.name", "R11sPlus");
                 property_override("ro.build.product", "R11sPlus");
-                property_set("ro.rf_version", "TDD_FDD_Ch_A_17021");
+                property_set("ro.rf_version", "TDD_FDD_CH_A_17021");
             } else if (strstr(operator_name, "2")) {
                 property_override_dual("ro.product.model", "ro.vendor.product.model", "OPPO R11s Plust");
                 property_set("ro.separate.soft", "17023");
                 property_override_dual("ro.product.device", "ro.vendor.product.device", "R11sPlus");
                 property_override("ro.product.name", "R11sPlust");
                 property_override("ro.build.product", "R11sPlust");
-                property_set("ro.rf_version", "TDD_FDD_Ch_17023");
+                property_set("ro.rf_version", "TDD_FDD_CH_17023");
             }
             property_set("ro.audio.customplatform", "17021");
             property_set("ro.power_profile.override", "zzz_power_profile_17021");
