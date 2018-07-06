@@ -4,21 +4,22 @@ import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
-import android.os.IBinder.DeathRecipient;
+import android.os.IHwBinder.DeathRecipient;
+import android.os.RemoteException;
 import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.util.Log;
+import java.util.ArrayList;
+import vendor.oppo.hardware.biometrics.fingerprintpay.V1_0.IFingerprintPay;
 
 public class IFAAManagerFactory {
     public static final String TAG = "IFAAManagerFactory";
     private static IFAAManager sFAAManager;
 
     private static class IFAAManagerOppo extends IFAAManagerV2 implements DeathRecipient {
-        private int mAlikeyStatus;
-        private FingerprintManager mFingerprintManager;
-        private boolean mHasAlikeyStatus;
+
+        private IFingerprintPay mFingerprintPay = null;
 
         private static final int BIOTypeFingerprint = 0x01;
         private static final int BIOTypeIris = 0x02;
@@ -27,15 +28,13 @@ public class IFAAManagerFactory {
         private static final int ACTIVITY_START_FAILED = -1;
 
         private IFAAManagerOppo() {
-            mHasAlikeyStatus = false;
-            mFingerprintManager = null;
         }
 
         static {
             try {
                 System.loadLibrary("teeclientjni");
             } catch (UnsatisfiedLinkError e) {
-                Log.e(IFAAManagerFactory.TAG, e.toString());
+                Log.e(TAG, e.toString());
             }
         }
 
@@ -89,14 +88,29 @@ public class IFAAManagerFactory {
         }
 
         public byte[] processCmdV2(Context context, byte[] param) {
-            if (mFingerprintManager == null) {
-                mFingerprintManager = (FingerprintManager) context.getSystemService("fingerprint");
+            if (mFingerprintPay == null) {
+                mFingerprintPay = getAliPayService();
             }
-            if (mFingerprintManager != null) {
-                return mFingerprintManager.alipayInvokeCommand(param);
+            if (mFingerprintPay != null) {
+                Log.w(TAG, "processCmdV2: no FingerprintPayService!");
+                return null;
             }
-            Log.w(IFAAManagerFactory.TAG, "processCmdV2: no FingerprintManager!");
-            return null;
+            byte[] outbuf = null;
+            try {
+                ArrayList<Byte> inbuf = new ArrayList();
+                for (byte b : param) {
+                    inbuf.add(new Byte(b));
+                }
+                ArrayList<Byte> buf = new ArrayList();
+                buf = mFingerprintPay.alipay_invoke_command(inbuf);
+                outbuf = new byte[buf.size()];
+                for (int i = 0; i < buf.size(); i++) {
+                    outbuf[i] = ((Byte) buf.get(i)).byteValue();
+                }
+            } catch (RemoteException e) {
+                Log.e(TAG, "processCmdV2 failed", e);
+            }
+            return outbuf;
         }
 
         public String bytesToHexString(byte[] src) {
@@ -114,7 +128,23 @@ public class IFAAManagerFactory {
             return stringBuilder.toString();
         }
 
-        public void binderDied() {
+        public void serviceDied(long cookie) {
+            Log.d(TAG, "fingerprintAlipayService died");
+            mFingerprintPay = null;
+        }
+
+        public IFingerprintPay getAliPayService() {
+            IFingerprintPay fingerprintPay = null;
+            try {
+                fingerprintPay = IFingerprintPay.getService();
+                fingerprintPay.asBinder().linkToDeath(this, 0);
+            } catch (RemoteException e) {
+                Log.e(TAG, "Failed to open fingerprintAlipayService HAL", e);
+            }
+            if (fingerprintPay == null) {
+                Log.e(TAG, "fingerprintPay = null, Failed to open fingerprintAlipayService HAL");
+            }
+            return fingerprintPay;
         }
     }
 

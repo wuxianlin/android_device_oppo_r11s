@@ -77,13 +77,13 @@ TARGET_SCREEN_WIDTH := 1080
 PRODUCT_CHARACTERISTICS := default
 
 # Alipay & WeChat fingerprint payment
-#PRODUCT_PACKAGES += \
-#    ifaamanager \
-#    soter
+PRODUCT_PACKAGES += \
+    ifaamanager \
+    soter
 
-#PRODUCT_BOOT_JARS += \
-#    ifaamanager \
-#    soter
+PRODUCT_BOOT_JARS += \
+    ifaamanager \
+    soter
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ifaamanager/etc/org.ifaa.android.manager.permissions.xml:system/etc/permissions/org.ifaa.android.manager.permissions.xml

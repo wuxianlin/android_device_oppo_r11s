@@ -2,3 +2,5 @@
 /dev/block/bootdevice/by-name/oppodycnvbk                       u:object_r:modem_efs_partition_device:s0
 /dev/block/bootdevice/by-name/oppostanvbk                       u:object_r:modem_efs_partition_device:s0
 
+/(vendor|system/vendor)/bin/init\.oppo\.fingerprints\.sh		u:object_r:oppo_fingerprints_init_shell_exec:s0
+

@@ -1,0 +1,9 @@
+type oppo_fingerprints_init_shell, domain;
+type oppo_fingerprints_init_shell_exec, exec_type, vendor_file_type, file_type;
+
+init_daemon_domain(oppo_fingerprints_init_shell)
+
+allow oppo_fingerprints_init_shell oppo_fingerprints_init_shell_exec:file { rx_file_perms entrypoint };
+allow oppo_fingerprints_init_shell vendor_shell_exec:file {rx_file_perms entrypoint };
+allow oppo_fingerprints_init_shell vendor_toolbox_exec:file  rx_file_perms;
+
